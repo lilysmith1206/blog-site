@@ -1,0 +1,18 @@
+table {
+    margin: 15px auto;
+    border: 3px outset #f2c5f7;
+    background-color: transparent;
+    width: 80%;
+    text-align: left;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+table.mobile {
+    display: none;
+}
+
+table td, table th {
+    border: 1px solid #c991d0;
+    padding: 3px 2px;
+}

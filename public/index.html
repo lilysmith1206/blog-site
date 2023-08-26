@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Lylink - Home</title>
+        
+        <link rel="stylesheet" href="site_style">
+        <link rel="stylesheet" href="mobile_style">
+
+        <link rel="icon" type="image/x-icon" href="lylink_icon.ico">
+
+        <meta charset="UTF-8" />
+        <meta name="keywords" content="lylink, blog, content, posts, code" />
+        <meta name="description" content="Lylink's Topical Posts - Blog, Math, Code" />
+        <meta name="author" content="Lylink">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <header>
+                    <h1 id="website-header">
+                        Lylink's Topical Topics
+                    </h1>
+                    <h4 id="title-splash-text"></h4>
+                </header>
+                <div class="container">
+                    <main>
+                        <h2>
+                            Topical Topics
+                        </h2>
+                        <ul>
+                            <li><a href="code">Code</a></li>
+                            <li><a href="blog">Blog</a></li>
+                            <li><a href="narcissism">About Me</a></li>
+                        </ul>
+
+                        <h2>Recent Updates</h2>
+                        <ul>
+                            <li><a href="hovering">Hover Text on Mobile Sites</a></li>
+                            <li><a href="code">Code Homepage</a></li>
+                            <li><a href="narcissism">About Me</a></li>
+                            <li><a href="mullvad">Switching from ExpressVPN to Mullvad VPN</a></li>
+                        </ul>
+                    </main>
+                </div>
+            </div>
+            <footer>
+                <p>
+                    Copyright 2023, All Rights Reserved
+                </p>
+            </footer>
+        </div>
+    </body>
+    <script>
+        let splashTexts = [
+            "Apply once a day!",
+            "No asbestos included!",
+            "Careful, it's hot!",
+            `Warning! <em class="illegible">you are hella gay</em>`,
+            "Help! I'm stuck in a splash text factory!",
+            "google en passant",
+            `You just lost <a href="https://en.wikipedia.org/wiki/The_Game_(mind_game)">the game</a>.`
+        ];
+
+        const dayInMilliseconds = 1000 * 60 * 60 * 24;
+        const currentDaySinceEpoch = Math.floor(new Date().getTime() / dayInMilliseconds);
+
+        let titleSplashTextElement = document.getElementById("title-splash-text");
+        
+        titleSplashTextElement.innerHTML = splashTexts[currentDaySinceEpoch % splashTexts.length];
+    </script>
+</html>
