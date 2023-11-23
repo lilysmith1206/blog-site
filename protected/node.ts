@@ -10,8 +10,12 @@ const appRoutes = [
     { url: '/narcissism', page: '/narcissism.html' },
     { url: '/code', page: '/code-dir/code.html' },
     { url: '/hovering', page: '/code-dir/hovering.html' },
+    { url: '/backend', page: '/code-dir/backend.html' },
     { url: '/blog', page: '/blog-dir/blog.html' },
     { url: '/mullvad', page: '/blog-dir/mullvad.html' },
+];
+
+const styleRoutes = [
     { url: '/site_style', page: '/style-dir/site_style.css' },
     { url: '/mobile_style', page: '/style-dir/mobile_style.css' },
     { url: '/table_style', page: '/style-dir/table_style.css'},
@@ -19,10 +23,24 @@ const appRoutes = [
     { url: '/lylink_icon', page: '/style-dir/lylink_icon.ico' }
 ];
 
-appRoutes.forEach(({url, page}) => {
+// necessary
+let result = [...appRoutes, ...styleRoutes].forEach(({url, page}) => {
     app.get(url, (req, res) => {
         res.sendFile(page, sendFileOptions());
     });
+});
+
+app.get('/site_color', (req, res) => {
+    let currentTime: number = new Date().getHours();
+
+    currentTime = 4;
+
+    if (currentTime >= 19 || currentTime < 7) {
+        res.sendFile('/style-dir/dark_mode.css', sendFileOptions());
+    }
+    else {
+        res.sendFile('/style-dir/light_mode.css', sendFileOptions());
+    }
 });
 
 app.get('*', (req, res) => {

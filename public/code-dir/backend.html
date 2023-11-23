@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Lylink - Writing a Backend</title>
+        
+        <link rel="stylesheet" href="site_style" />
+        <link rel="stylesheet" href="site_color">
+        <link rel="stylesheet" href="mobile_style">
+        
+        <link rel="icon" type="image/x-icon" href="lylink_icon">
+
+        <meta charset="UTF-8" />
+        <meta name="keywords" content="lylink, code, content, posts, design, node, development" />
+        <meta name="description" content="Writing a Backend - Lylink" />
+        <meta name="author" content="Lylink">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <header>
+                    <h3><a href="/">index</a> → <a href="code">code</a> →</h3>
+                    <h1 id="website-header">
+                        Writing a backend for my site
+                    </h1>
+                    <h5>Updated 19:50 on 8/26/2023</h4>
+                </header>
+                <div class="container">
+                    <main>
+                        <h2>What's a Backend?</h2>
+                        <p>
+                            A backend is the part of a website you don't get to directly access; it handles requests that you make to any URL on the page. So, for instance, this page is titled "backend", and you access it through [url].org/backend. The server sees that and sends you this page.
+                        </p>
+                        <p>
+                            It can also handle queries; say I wanted to build a "comments" feature, where anyone can leave a comment on any post I make. I can set up a request handler on a backend for a specific URL, say [url].org/comment?name={name}&body={body}, and it can handle that request, store it, and then attach it to my page so everyone else can see it!
+                        </p>
+                        <h2>What I Used</h2>
+                        <p>
+                            I previously used an Apache .htaccess file to control the way the site was presented; this had several disadvantages, namely:
+                        </p>
+                        <ul>
+                            <li>I don't know Apache that well.</li>
+                            <li>It was cumbersome to adjust, and it didn't really work for what I had in mind.</li>
+                            <li>It wasn't set up to be a "true" backend; all I had was the .htaccess file, and the Apache documentation made my head spin.</li>
+                            <li>I couldn't find a good way to set up a testing environment for it.</li>
+                        </ul>
+                        <p>
+                            Given, a lot of that would have been minimized by things like.. "learning" "Apache", but who's got the time for that in this economy? So, I swapped to a node.js backend, and <em>that's</em> handling all my requests.
+                        </p>
+                        <p>
+                            It honestly wasn't that hard to set up. Just get <span title="Yeah, I use ChatGPT, yuk it up. It's easy to write out boilerplate code with it.">ChatGPT to write a basic template</span>, optimize it, test it locally, then set it up on the web hosting service I use. Easy peasy.
+                        </p>
+                        <h2>What's next?</h2>
+                        <p>Honestly, I'm not sure. I think I need to rewrite the backend to serve up the CSS and other static content better, and then <em>maybe</em> work on a comment system? It probably isn't too hard. Probably. Then write more posts.</p>
+                        <p>Thank you for reading.</p>
+                    </main>
+                </div>
+            </div>
+            <footer>
+                <p>
+                    Copyright 2023, All Rights Reserved
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

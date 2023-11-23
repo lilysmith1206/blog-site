@@ -1,6 +1,7 @@
 table {
     margin: 15px auto;
-    border: 3px outset #f2c5f7;
+    border-width: 3px;
+    border-style: outset;
     background-color: transparent;
     width: 80%;
     text-align: left;
@@ -13,6 +14,7 @@ table.mobile {
 }
 
 table td, table th {
-    border: 1px solid #c991d0;
+    border-width: 1px;
+    border-style: solid;
     padding: 3px 2px;
 }

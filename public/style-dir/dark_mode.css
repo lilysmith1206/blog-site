@@ -1,0 +1,60 @@
+/* Dark Mode Styles with Dark Lilac Color Scheme and Darker Title Text */
+
+body {
+    background-color: #312d3f; /* Dark lilac background */
+    color: rgb(240, 235, 242);
+}
+
+body header {
+    background-color: #3f3a52; /* Darker lilac shade */
+    border-bottom: 7px #5d547c inset; /* Dark lilac accent */
+}
+
+body main {
+    background-color: #474168; /* Another shade of dark lilac */
+    border-color: #3f3a52;
+}
+
+body a {
+    color: #c390e8; /* Light lilac link color */
+}
+
+body a:visited {
+    color: #9c75ac; /* Light lilac visited link color */
+}
+
+body hr {
+    border-top-color: 1px solid #3e3e3e;
+}
+
+body h2 {
+    border-bottom-color: 1px solid #3e3e3e;
+}
+
+body h3 {
+    border-bottom-color: 1px solid #3e3e3e;
+    border-left-color: 1px solid #3e3e3e;
+}
+
+body header h3 {
+    border-left-color: #3e3e3e;
+}
+
+body header #title-splash-text {
+    color: #7b6d99; /* Darker purple/lilac mix for title text */
+}
+
+body footer {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+
+/* Dark Mode Table Styles */
+
+table {
+    border-color: #593876; /* Dark lilac border color */
+}
+
+table td, table th {
+    border-color: #ae85b6; /* Light lilac border color */
+}
