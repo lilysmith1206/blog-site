@@ -1,18 +1,19 @@
-import express from 'express';
+import * as express from 'express';
+import * as fs from 'fs';
+import * as path from 'path';
+import { generatePost } from './post-generation';
 
 const app = express();
 const port = 5000;
 const sendFileOptions = () => { return { root: '../public'} };
 
 const appRoutes = [
-    { url: '/', page: '/index.html' },
-    { url: '/404', page: '/404.html' },
-    { url: '/narcissism', page: '/narcissism.html' },
-    { url: '/code', page: '/code-dir/code.html' },
-    { url: '/hovering', page: '/code-dir/hovering.html' },
-    { url: '/backend', page: '/code-dir/backend.html' },
-    { url: '/blog', page: '/blog-dir/blog.html' },
-    { url: '/mullvad', page: '/blog-dir/mullvad.html' },
+    { url: '/narcissism', page: 'narcissism.post', post: "" },
+    { url: '/code', page: 'code-dir/code.post', post: "" },
+    { url: '/hovering', page: 'code-dir/hovering.post', post: "" },
+    { url: '/backend', page: 'code-dir/backend.post', post: "" },
+    { url: '/blog', page: 'blog-dir/blog.post', post: "" },
+    { url: '/mullvad', page: 'blog-dir/mullvad.post', post: "" },
 ];
 
 const styleRoutes = [
@@ -23,8 +24,39 @@ const styleRoutes = [
     { url: '/lylink_icon', page: '/style-dir/lylink_icon.ico' }
 ];
 
-// necessary
-let result = [...appRoutes, ...styleRoutes].forEach(({url, page}) => {
+appRoutes.map((route) => {
+    const stats = fs.statSync(path.resolve(`../public/${route.page}`));
+
+    const modificationDate = new Date(stats.mtime);
+
+    const updateTime = `${modificationDate.getMinutes()}:${modificationDate.getHours()}`;
+    const updateDate = `${modificationDate.getMonth() + 1}/${modificationDate.getDate() + 1}/${modificationDate.getFullYear()}`
+
+    route.post = generatePost(fs.readFileSync(path.resolve(`../public/${route.page}`), "utf8"), updateTime, updateDate);
+
+    return route;
+
+}).forEach(({url, post}) => {
+    app.get(url, (req, res) => {
+        console.log(url, "directed");
+
+        res.send(post);
+    });
+})
+
+app.get("/", (req, res) => {
+    console.log("index directed");
+
+    res.sendFile("/index.html", sendFileOptions());
+});
+
+app.get("/404", (req, res) => {
+    console.log(404);
+
+    res.status(404).sendFile("/404.html", sendFileOptions());
+});
+
+[...styleRoutes].forEach(({url, page}) => {
     app.get(url, (req, res) => {
         res.sendFile(page, sendFileOptions());
     });
@@ -32,8 +64,6 @@ let result = [...appRoutes, ...styleRoutes].forEach(({url, page}) => {
 
 app.get('/site_color', (req, res) => {
     let currentTime: number = new Date().getHours();
-
-    currentTime = 4;
 
     if (currentTime >= 19 || currentTime < 7) {
         res.sendFile('/style-dir/dark_mode.css', sendFileOptions());

@@ -1,0 +1,18 @@
+Blog---lylink, blog, content, posts---Lylink's Blog - Stuff That Happens to Me
+index---Blog
+<h2>
+    What is this?
+</h2>
+<p>
+    You know how, some stuff you do is interesting to you, but there's nobody immediately willing to be able to listen to it? That's what this is.
+</p>
+<p>
+    This is where I put the stuff that no one gives a rat's ass about right now, but might later. Enjoy your browsing, netizen.
+</p>
+
+<h2 title="These are sorted chronologically, just so you know.">
+    Posts
+</h2>
+<ul>
+    <li><a href="mullvad">Switching from ExpressVPN to Mullvad VPN</a></li>
+</ul>

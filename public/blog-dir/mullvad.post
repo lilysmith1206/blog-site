@@ -1,0 +1,135 @@
+Switching To Mullvad---lylink, blog, content, posts, mullvad, expressvpn, switching vpns---Lylink's Blog - Switching From ExpressVPN to Mullvad VPN"
+index===blog---Switching to Mullvad from ExpressVPN
+<h2 title="Sounds like an esoteric soft drink based on a show">What even is Mullvad?</h2>
+
+<p>Mullvad VPN is an independently owned Swedish VPN company that offers the most privacy I could find; only a single 16 digit number associated with your account, which you use to manage your account. It also allows to pay in cash, which really speaks to its commitment to privacy, but I digress.</p>
+
+<p>I previously used ExpressVPN, which had I had some problems with; it costed around $10/mo, yet gave me a third of my usual internet speed (360 mib/s), caused issues relating to needing to authenticate that I was a person, failing to load online games, it caused a fair bit of hassle. I was hoping that Mullvad, being a relatively unknown VPN service, would mitigate a lot of those issues.</p>
+
+<h2>Turning off ExpressVPN</h2>
+
+<p>You want to know something? You're reading this article, so I assume so: the process to cancel most services in the modern age is not very easy. I couldn't "cancel" the membership, I could only "disable automatic renewal". I couldn't even remove my credit card, only modify it, so if they decide to charge me anyway it will not be fun. At least uninstalling the applications on the phone and PC were easy enough.</p>
+
+<p>Sidenote: you ever wonder how much work goes into making it <em>just</em> hard enough to cancel a service, without making it downright impossible? There has to be so many meetings in the corporate world about the best way to do it. I mean, they've gotta justify their jobs <em>somehow</em>, right? Gotta make the user experience worse.. back on topic, though.</p>
+
+<h2>Creating an account and installing Mullvad VPN</h2>
+
+<p>Creating an account was as easy as getting the 16 digit number. No surprises during installation, which is great too. Their commitment to exposing privacy concerns was palpable in their payment portal as well; they explained that they used Stripe and linked to their privacy policy. It was very easy to sign into the application as well, just pasting in the 16 digit number and going forward. It felt very streamlined compared to ExpressVPN, with their email links and passwords.</p>
+
+<p>For a later portion, I actually had to <em>reinstall</em> ExpressVPN, which really put it into perspective how much easier it was to login and turn on Mullvad VPN in comparison to ExpressVPN.</p>
+
+<h2 title="Because that's all we really care about, right?">Speedtest</h2>
+
+<p>Below is a table of my internet speed measures when on no VPN, ExpressVPN, and Mullvad VPN. I took 4 measures on each one, and averaged them out, so it shouldn't be down to the whims of a single errant issue.</p>
+
+<p>All speeds are in megabits per second (Mbps).</p>
+
+<table class="desktop">
+    <thead>
+        <tr>
+            <th>VPN</th>
+            <th>First</th>
+            <th>Second</th>
+            <th>Third</th>
+            <th>Fourth</th>
+            <th>Average Speed</th>
+            <th>Slowest Response Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>None</td>
+            <td>810</td>
+            <td>840</td>
+            <td>1100</td>
+            <td>1000</td>
+            <td>937.5</td>
+            <td>810</td>
+        </tr>
+        <tr>
+            <td>ExpressVPN</td>
+            <td>310</td>
+            <td>320</td>
+            <td>270</td>
+            <td>340</td>
+            <td>310</td>
+            <td>270</td>
+        </tr>
+        <tr>
+            <td>Mullvad VPN</td>
+            <td>540</td>
+            <td>840</td>
+            <td>920</td>
+            <td>670</td>
+            <td>742.5</td>
+            <td>540</td>
+        </tr>
+    </tbody>
+</table>
+
+<table class="mobile">
+    <colgroup>
+        <col span="1" style="width: 22%" />
+        <col span="1" style="width: 22%" />
+        <col span="1" style="width: 34%" />
+        <col span="1" style="width: 22%" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>VPN</th>
+            <td>None</td>
+            <td>ExpressVPN</td>
+            <td>Mullvad</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>First</th>
+            <td>810</td>
+            <td>310</td>
+            <td>540</td>
+        </tr>
+        <tr>
+            <th>Second</th>
+            <td>840</td>
+            <td>320</td>
+            <td>840</td>
+        </tr>
+        <tr>
+            <th>Third</th>
+            <td>1100</td>
+            <td>270</td>
+            <td>920</td>
+        </tr>
+        <tr>
+            <th>Fourth</th>
+            <td>1000</td>
+            <td>340</td>
+            <td>670</td>
+        </tr>
+        <tr>
+            <th>Average</th>
+            <td>937.5</td>
+            <td>310</td>
+            <td>742.5</td>
+        </tr>
+        <tr>
+            <th>Slowest</th>
+            <td>810</td>
+            <td>270</td>
+            <td>540</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>Sidenote: while testing speeds, I got 77 Kbps through ExpressVPN. It did not seem like a rate-limiting issue by my IP, because when testing by Mullvad VPN and an unsecured connection, I got similar results to what they had in the other trials. I have not included it in the table, because that seems like an unfair comparison against ExpressVPN's regular speeds, however, it is something to consider.</p>
+
+<p>To me, this points to a very clear measure against ExpressVPN. While I do live in a fairly urban area, and the many people here may put more strain on the ExpressVPN infrastructure, ExpressVPN should be able to handle that large of a load. They have the income and infrastructure to do so, so I don't consider that a good reason for the apparent slowdown compared to Mullvad.</p>
+
+<p>Even at the worst speeds I got off Mullvad VPN, it was still faster by 200 Mbps than ExpressVPN's highest speed. Which.. uh, wow.</p>
+
+<h2>Conclusion</h2>
+
+<p>I did just switch to Mullvad VPN; however, it does seem to perform a fair sight better than ExpressVPN even at its best. It does seem to fluctuate a bit, though, which is a cause for concern, but not something that overly concerns me. This gives me hope that it will perform consistently better than ExpressVPN even at its best, which is all I really wanted from a new VPN.</p>
+
+<p>Thank you for reading.</p>
