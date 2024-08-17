@@ -56,7 +56,7 @@ function generatePost(post: string, timeUpdated: string, dateUpdated: string) {
                             </div>
                             <footer>
                                 <p>
-                                    Copyright 2023, All Rights Reserved
+                                    Copyright 2024, All Rights Reserved
                                 </p>
                             </footer>
                         </div>
