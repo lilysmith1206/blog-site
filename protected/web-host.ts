@@ -1,9 +1,9 @@
 import * as express from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as crypto from 'crypto';
+// import * as crypto from 'crypto';
 import { generatePost } from './post-generation';
-import { styleRoutes, mainRoutes, sendFileOptions, port } from './site-consts';
+import { styleRoutes, mainRoutes, sendFileOptions, port, scriptRoutes } from './site-consts';
 import { AdminAccessToken, BlogRoute, CsvBlogRoute, PostType, PostGenre } from './site-types';
 
 export class WebHost {
@@ -26,6 +26,8 @@ export class WebHost {
 
         WebHost.hosting = true;
 
+        this.app.use(express.static("public/javascript"));
+
         mainRoutes.forEach(({url, page}) => {
             this.app.get(url, (req, res) => {
                 this.sendPagePath(res, `../public/${page}`);
@@ -36,6 +38,7 @@ export class WebHost {
         this.createStoryRouting();
         // this.createSiteManagementRouting();
         this.createStyleRouting();
+        this.createScriptRouting();
         
         this.app.get('*', (req, res) => {
             res.redirect('/404');
@@ -103,24 +106,6 @@ export class WebHost {
         })
     }
     */
-    private static createStyleRouting() {
-        styleRoutes.forEach(({ url, page }) => {
-            this.app.get(url, (req, res) => {
-                res.sendFile(page, sendFileOptions());
-            });
-        });
-
-        this.app.get('/site_color', (req, res) => {
-            let currentTime: number = new Date().getHours();
-
-            if (currentTime >= 19 || currentTime < 7) {
-                res.sendFile('/style-dir/dark_mode.css', sendFileOptions());
-            }
-            else {
-                res.sendFile('/style-dir/light_mode.css', sendFileOptions());
-            }
-        });
-    }
 
     private static createPostRouting() {
         const blogRoutes: CsvBlogRoute[] = this.readBlogPostCsv();
@@ -128,7 +113,22 @@ export class WebHost {
         blogRoutes.forEach(({ url, filePath }) => {
             this.app.get(`/${url}`, (_req, res) => {
                 this.sendPagePath(res, filePath);
-                res.send(content);
+            });
+        });
+    }
+    
+    private static createStyleRouting() {
+        styleRoutes.forEach(({ url, page: styleRoute }) => {
+            this.app.get(url, (req, res) => {
+                res.sendFile(styleRoute, sendFileOptions());
+            });
+        });
+    }
+
+    private static createScriptRouting() {
+        scriptRoutes.forEach(({ url, page: scriptRoute }) => {
+            this.app.get(url, (req, res) => {
+                res.sendFile(scriptRoute, sendFileOptions());
             });
         });
     }
