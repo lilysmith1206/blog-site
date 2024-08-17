@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Lylink - Publisher</title> 
+        
+        <link rel="stylesheet" href="site_style">
+        <link rel="stylesheet" href="site_color">
+        <link rel="stylesheet" href="mobile_style">
+        
+        <link rel="icon" type="image/x-icon" href="lylink_icon">
+
+        <meta charset="UTF-8" />
+        <meta name="keywords" content="lylink, post, manager" />
+        <meta name="description" content="Lylink - Publisher" />
+        <meta name="author" content="Lylink">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            textarea {
+                border: 1px solid #c390e8;
+                background-color: #312d3f;
+                width: 100%;
+                box-sizing: border-box;
+                color: white;
+                resize: vertical;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="page-container">
+            <div id="content-wrap">
+                <header>
+                    <div style="width: 40%; display: inline-block">
+                        <h3><a href="/">index</a> → <a href="/management?accessToken=ACCESSTOKENREPLACEHERE">management</a> →</h3>
+                        <h1 id="website-header">
+                            Publisher
+                        </h1>
+                        <h5>Updated 23:36 on 8/25/2023</h4>
+                    </div>
+                    <div style="width: 39%; display: inline-block">
+                        <button onclick="saveDraft()">Save Draft</button>
+                        <select>
+                        </select>
+                    </div>
+                </header>
+                <div class="container">
+                <main contenteditable="true" onclick="">
+                    <h2>Lorem Ipsum</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Amet venenatis urna cursus eget nunc scelerisque viverra mauris. Pulvinar neque laoreet suspendisse interdum. Turpis cursus in hac habitasse platea dictumst quisque sagittis purus. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Ullamcorper morbi tincidunt ornare massa eget egestas. Libero justo laoreet sit amet cursus sit amet. Non odio euismod lacinia at quis risus sed. Euismod in pellentesque massa placerat duis ultricies lacus sed. Lorem ipsum dolor sit amet consectetur. Porta non pulvinar neque laoreet suspendisse interdum consectetur libero id.</p>
+                </main>
+                </div>
+            </div>
+            <footer>
+                <p>
+                    Copyright 2024, All Rights Reserved
+                </p>
+            </footer>
+        </div>
+    </body>
+    <script defer>
+        function saveDraft() {
+            console.log("test");
+
+            console.log(window.getSelection());
+        }
+    </script>
+</html>
