@@ -28,7 +28,7 @@ export class WebHost {
 
         mainRoutes.forEach(({url, page}) => {
             this.app.get(url, (req, res) => {
-                res.sendFile(page, sendFileOptions());
+                this.sendPagePath(res, `../public/${page}`);
             });
         })
         
@@ -125,19 +125,9 @@ export class WebHost {
     private static createPostRouting() {
         const blogRoutes: CsvBlogRoute[] = this.readBlogPostCsv();
 
-        blogRoutes.map(route => {
-            const stats = fs.statSync(route.filePath);
-            const modificationDate = new Date(stats.mtime);
-
-            const updateTime = `${modificationDate.getMinutes()}:${modificationDate.getHours()}`;
-            const updateDate = `${modificationDate.getMonth() + 1}/${modificationDate.getDate() + 1}/${modificationDate.getFullYear()}`;
-
-            const post = generatePost(fs.readFileSync(route.filePath, "utf8"), updateTime, updateDate);
-
-            return { url: route.url, content: post } as BlogRoute;
-
-        }).forEach(({ url, content }) => {
+        blogRoutes.forEach(({ url, filePath }) => {
             this.app.get(`/${url}`, (_req, res) => {
+                this.sendPagePath(res, filePath);
                 res.send(content);
             });
         });
@@ -151,5 +141,17 @@ export class WebHost {
 
                 return { url: rowData[0], filePath: path.resolve(`../public/${rowData[1]}`) } as CsvBlogRoute;
             });
+    }
+
+    private static sendPagePath(res: any, pagePath: string): void {
+        const stats = fs.statSync(pagePath);
+        const modificationDate = new Date(stats.mtime);
+
+        const updateTime = `${modificationDate.getMinutes()}:${modificationDate.getHours()}`;
+        const updateDate = `${modificationDate.getMonth() + 1}/${modificationDate.getDate() + 1}/${modificationDate.getFullYear()}`;
+
+        const post = generatePost(fs.readFileSync(pagePath, "utf8"), updateTime, updateDate);
+
+        res.send(post);
     }
 }

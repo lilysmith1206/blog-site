@@ -1,7 +1,7 @@
 export const mainRoutes = [
-    { url: '/', page: 'index.html' },
-    { url: '/403', page: '403.html' },
-    { url: '/404', page: '404.html' },
+    { url: '/', page: '/index.post' },
+    { url: '/403', page: '/403.post' },
+    { url: '/404', page: '/404.post' },
 ];
 
 export const styleRoutes = [
