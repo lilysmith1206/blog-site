@@ -15,36 +15,50 @@ export function generatePost(post: string, timeUpdated: string, dateUpdated: str
     });
 
     let headerTitle = postHeader[1];
-    let headerUpdatedOn = `Updated ${timeUpdated} on ${dateUpdated}`
+    let headerUpdatedOn = `Updated ${timeUpdated} on ${dateUpdated} GMT`
     
     const doesPostContainTable = checkPostBodyForTableElement(postBody);
 
     return `<!DOCTYPE html>
                 <html lang="en">
                     <head>
+                        <script src="/adblocker_popup.js"></script>
+
                         <title>Lylink - ${postMetadata[0]}</title>
                         
-                        <link rel="stylesheet" href="site_style" />
-                        <link rel="stylesheet" href="mobile_style">
-                        <link rel="stylesheet" href="slider_style">
+                        <link id="siteStyle" rel="stylesheet" href="/site_style.css" onerror="showAdblockPopup()" />
+                        <link id="mobileStyle" rel="stylesheet" href="/mobile_style.css" onerror="showAdblockPopup()" />
+                        <link id="sliderStyle"rel="stylesheet" href="/slider_style.css" onerror="showAdblockPopup()" />
+                        <link id="adblockStyle"rel="stylesheet" href="/adblock_style.css" onerror="showAdblockPopup()" />
 
-                        ${doesPostContainTable ? "<link rel=\"stylesheet\" href=\"table_style\" />" : ""}
+                        <link id="lightStyle" rel="stylesheet" href="/light_mode.css" disabled onerror="showAdblockPopup()" />
+                        <link id="darkStyle" rel="stylesheet" href="/dark_mode.css" disabled onerror="showAdblockPopup()" />
+
+                        ${doesPostContainTable ? `<link id="tableStyle" rel="stylesheet" href="public/style-dir/table_style.css" onerror="showAdblockPopup()" />` : ""}
                         
-                        <link rel="icon" type="image/x-icon" href="lylink_icon">
+                        <link id="icon" rel="icon" type="image/x-icon" href="/lylink_icon.ico" onerror="showAdblockPopup()" />
 
-                        <script src="color_slider" defer> </script>
+                        <script src="/color_slider.js" defer></script>
 
                         <meta charset="UTF-8" />
                         <meta name="keywords" content="${postMetadata[1]}" />
                         <meta name="description" content="${postMetadata[2]}" />
                         <meta name="author" content="Lylink">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
                         <script>
                             /*to prevent Firefox FOUC, this must be here*/
                             let FF_FOUC_FIX;
                         </script>
                     </head>
                     <body>
+                        <div id="adblock-background">
+                        </div>
+                        <div id="adblock-popup">
+                            <p>Hey, it looks like a resource failed to load. If you have an ad-blocker, please turn it off.</p>
+                            <p>This site will never have ads. Please turn off your ad-blocker so my stylesheets load properly.</p>
+                            <p>Thank you.</p>
+                            <button onclick="closePopup()">Close</button>
+                        </div>
                         <div id="page-container">
                             <label id="colorStyleSwitch" class="switch">
                                 <input id="colorStyleSwitchCheckbox" type="checkbox">

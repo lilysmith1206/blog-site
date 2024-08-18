@@ -1,8 +1,6 @@
 let currentColorStatus = localStorage.getItem("currentColor");
 let colorStyleSwitch = document.getElementById("colorStyleSwitchCheckbox");
 
-console.log(currentColorStatus);
-
 if (currentColorStatus !== null) {
     if (currentColorStatus === "dark") {
         setColorStyle("dark");
@@ -10,7 +8,7 @@ if (currentColorStatus !== null) {
     }
     else if (currentColorStatus === "light") {
         setColorStyle("light");
-        colorStyleSwitch = false;
+        colorStyleSwitch.checked = false;
     }
     else {
         throw `${currentColorStatus} is not a valid color style.`;
@@ -18,15 +16,10 @@ if (currentColorStatus !== null) {
 }
 else {
     setColorStyle("light");
-    colorStyleSwitch = false;
+    colorStyleSwitch.checked = false;
 }
 
 function handleColorStyleSwitching() {
-    console.clear();
-
-    console.log("checkbox clicked");
-    console.log("checkbox status" + colorStyleSwitch.checked);
-
     if (colorStyleSwitch.checked === true) {
         setColorStyle("light");
     }
@@ -38,32 +31,16 @@ function handleColorStyleSwitching() {
 function setColorStyle(color) {
     localStorage.setItem("currentColor", color);
 
-    let oppositeColor;
-
-    if (color === "light") {
-        oppositeColor = "dark";
+    if (color == "dark") {
+        // Enable dark mode, disable light mode
+        document.getElementById('darkStyle').removeAttribute('disabled');
+        document.getElementById('lightStyle').setAttribute('disabled', 'true');
+    } else {
+        // Enable light mode, disable dark mode
+        document.getElementById('lightStyle').removeAttribute('disabled');
+        document.getElementById('darkStyle').setAttribute('disabled', 'true');
     }
-    else {
-        oppositeColor = "light";
-    }
 
-    console.log("Color: " + color);
-    console.log("Existing: " + oppositeColor);
-
-    const headElement = document.getElementsByTagName('head')[0];
-
-    [...headElement.children].forEach(child => {
-        if (child.href == `${oppositeColor}_mode`) {
-            headElement.removeChild(child);
-        }
-    });
-
-    var styles = document.createElement('link');
-    
-    styles.rel = 'stylesheet';
-    styles.type = 'text/css';
-    styles.media = 'screen';
-    styles.href = `${color}_mode`;
-
-    headElement.appendChild(styles);
+    // Optionally, save the preference to localStorage
+    localStorage.setItem('theme', this.checked ? 'dark' : 'light');
 }

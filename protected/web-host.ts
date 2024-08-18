@@ -3,8 +3,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 // import * as crypto from 'crypto';
 import { generatePost } from './post-generation';
-import { styleRoutes, mainRoutes, sendFileOptions, port, scriptRoutes } from './site-consts';
-import { AdminAccessToken, BlogRoute, CsvBlogRoute, PostType, PostGenre } from './site-types';
+import { mainRoutes, sendFileOptions, port } from './site-consts';
+import { AdminAccessToken, CsvBlogRoute, PostType, PostGenre } from './site-types';
 
 export class WebHost {
     static app = express();
@@ -26,7 +26,8 @@ export class WebHost {
 
         WebHost.hosting = true;
 
-        this.app.use(express.static("public/javascript"));
+        this.app.use(express.static(path.resolve('../public/javascript-dir')));
+        this.app.use(express.static(path.resolve('../public/style-dir')));
 
         mainRoutes.forEach(({url, page}) => {
             this.app.get(url, (req, res) => {
@@ -37,11 +38,17 @@ export class WebHost {
         this.createPostRouting();
         this.createStoryRouting();
         // this.createSiteManagementRouting();
-        this.createStyleRouting();
-        this.createScriptRouting();
         
         this.app.get('*', (req, res) => {
-            res.redirect('/404');
+            const acceptHeader = req.headers['accept'] || '';
+            
+            // Check if the request is expecting HTML
+            if (acceptHeader.includes('text/html')) {
+                res.redirect('/404');
+            } else {
+                // Handle non-HTML requests differently, or send a 404 status without redirect
+                res.status(404).send('Not Found');
+            }
         });
         
         this.app.listen(port, () => {
@@ -116,22 +123,6 @@ export class WebHost {
             });
         });
     }
-    
-    private static createStyleRouting() {
-        styleRoutes.forEach(({ url, page: styleRoute }) => {
-            this.app.get(url, (req, res) => {
-                res.sendFile(styleRoute, sendFileOptions());
-            });
-        });
-    }
-
-    private static createScriptRouting() {
-        scriptRoutes.forEach(({ url, page: scriptRoute }) => {
-            this.app.get(url, (req, res) => {
-                res.sendFile(scriptRoute, sendFileOptions());
-            });
-        });
-    }
 
     private static readBlogPostCsv(): CsvBlogRoute[] {
         return fs
@@ -147,7 +138,7 @@ export class WebHost {
         const stats = fs.statSync(pagePath);
         const modificationDate = new Date(stats.mtime);
 
-        const updateTime = `${modificationDate.getMinutes()}:${modificationDate.getHours()}`;
+        const updateTime = `${modificationDate.getHours()}:${modificationDate.getMinutes()}`;
         const updateDate = `${modificationDate.getMonth() + 1}/${modificationDate.getDate() + 1}/${modificationDate.getFullYear()}`;
 
         const post = generatePost(fs.readFileSync(pagePath, "utf8"), updateTime, updateDate);

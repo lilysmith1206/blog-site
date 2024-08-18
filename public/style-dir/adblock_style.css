@@ -1,0 +1,35 @@
+#adblock-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-align: center;
+    line-height: 1.5;
+}
+
+#adblock-popup p {
+    margin: 0;
+    font-size: 16px;
+}
+
+#adblock-popup button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#adblock-background {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    position: absolute;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.2);
+}

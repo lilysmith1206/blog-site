@@ -1,7 +1,7 @@
 /* fonts */
 @font-face {
     font-family: "MonospaceTypewriter";
-    src: url("monospacetypewriter");
+    src: url("fonts-dir/monospacetypewriter.ttf");
 }
 
 /* general page container style */
