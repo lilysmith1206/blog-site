@@ -8,27 +8,60 @@ export type BlogRoute = {
     content: string
 }
 
-export type PostGenre = {
-    postType: PostType,
-    blogDir: string
-}
-
 export type AdminAccessToken = {
     guid: string,
     expiration: Date
 };
 
-export type BlogPost = {
-    metadata: { key: string, data: string }[],
-    directory: PostType,
-    title: string,
-    updateTime: string,
-    updateDate: string,
-    postContent: string
-}
-
 export enum PostType {
     Blog = "BLOG",
     Code = "CODE",
     Stories = "WRITINGS"
+};
+
+export type GenericPage = {
+    slug: string,
+    name: string
+}
+
+export type Post = {
+    slug: string;
+    title: string;
+    parentId: string;
+    dateModified: Date;
+    name: string;
+    keywords: string;
+    description: string;
+    body: string;
+};
+
+export type PostCategory = {
+    categoryId: string,
+    parentId: string,
+    name: string,
+    slug: string,
+    title: string,
+    keywords: string,
+    description: string,
+    body: string,
+};
+
+export type Page = {
+    dateModified: Date,
+    title: string,
+    keywords: string,
+    description: string,
+    parentId: string,
+    nameOf: string,
+    body: string
+}
+
+export type RemotePost = {
+    slug: string;
+    title: string;
+    parentSlug: string;
+    name: string;
+    keywords: string;
+    description: string;
+    body: string;
 }

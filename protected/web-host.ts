@@ -3,43 +3,61 @@ import * as fs from 'fs';
 import * as path from 'path';
 // import * as crypto from 'crypto';
 import { generatePost } from './post-generation';
-import { mainRoutes, sendFileOptions, port } from './site-consts';
-import { AdminAccessToken, CsvBlogRoute, PostType, PostGenre } from './site-types';
+import { sendFileOptions, port } from './site-consts';
+import { AdminAccessToken, Post, PostCategory, RemotePost } from './site-types';
+import { Database } from './database';
+import { generateCategoryPage } from './category-page-generation';
 
 export class WebHost {
     static app = express();
     static hosting = false;
     static managementAccessTokens: AdminAccessToken[] = [];
-    static dirPaths: PostGenre[] = [
-        { postType: PostType.Blog, blogDir: "blog-dir" },
-        { postType: PostType.Code, blogDir: "code-dir" },
-        // { postType: PostType.Stories, blogDir: "stories-dir" }
-    ]
 
     private constructor() {
     }
 
-    public static startHosting() {
+    public static async startHosting() {
         if (WebHost.hosting) {
             return;
         }
 
         WebHost.hosting = true;
+        
+        this.app.use((req, res, next) => {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+            next();
+        });
 
         this.app.use(express.static(path.resolve('../public/javascript-dir')));
         this.app.use(express.static(path.resolve('../public/style-dir')));
+        this.app.use(express.json()); // Middleware to parse JSON bodies
 
-        mainRoutes.forEach(({url, page}) => {
-            this.app.get(url, (req, res) => {
-                this.sendPagePath(res, `../public/${page}`);
+        const allPostSlugsFromDb: string[] = await Database.GetAllPostSlugs();
+
+        // Step 1: Handle defined routes (dynamic routes from your database)
+        allPostSlugsFromDb.forEach(slug => {
+            this.app.get(`/${slug}`, sendPage(slug));
+        });
+
+        const allCategoryPageSlugsFromDb: string[] = await Database.GetAllCategorySlugs();
+
+        allCategoryPageSlugsFromDb.forEach(slug => {
+            this.app.get(`/${slug}`, async (req, res) => {
+                const postContent = await generateCategoryPage(slug);
+                
+                if (postContent) {
+                    res.send(postContent);
+                } else {
+                    res.redirect('/404');  // Or return res.status(404).send('Not Found');
+                }
             });
-        })
-        
-        this.createPostRouting();
-        this.createStoryRouting();
-        // this.createSiteManagementRouting();
-        
-        this.app.get('*', (req, res) => {
+        });
+                
+        this.createSiteManagementRouting();
+        this.createRequestRouting();
+
+        // Step 2: Catch-all 404 handler for any undefined routes
+        this.app.use((req, res) => {
             const acceptHeader = req.headers['accept'] || '';
             
             // Check if the request is expecting HTML
@@ -56,17 +74,11 @@ export class WebHost {
         });
     }
 
-    public static createStoryRouting() {
-        this.app.get("/ocean", (req, res) => {
-            res.sendFile("/stories-dir/ocean.html", sendFileOptions())
-        })
-    }
-/*
     private static createSiteManagementRouting() {
         this.app.get("/login", (req, res) => {
             const password = "v1p0v5h7LsqnHhGnC88mPgmE06xfD57bK5xLagPiiRDg3dx3Wh"
 
-            if (req.query.password !== null && req.query.password === password) {
+            if (req?.query?.password !== null && req.query.password === password) {
                 const guidToken = crypto.randomUUID();
                 const expirationDate = new Date(new Date().getTime() + 86400000);
 
@@ -78,7 +90,7 @@ export class WebHost {
                 res.redirect(`/management?accessToken=${guidToken}`);
             }
             else {
-                res.sendFile("/site-management-dir/login.html", sendFileOptions());
+                res.sendFile("/site-management-dir/login.html", sendFileOptions);
             }
         });
 
@@ -112,37 +124,120 @@ export class WebHost {
             }
         })
     }
-    */
 
-    private static createPostRouting() {
-        const blogRoutes: CsvBlogRoute[] = this.readBlogPostCsv();
+    static createRequestRouting() {
+        this.app.post("/ping", (req, res) => {
+            console.log(req.body);
 
-        blogRoutes.forEach(({ url, filePath }) => {
-            this.app.get(`/${url}`, (_req, res) => {
-                this.sendPagePath(res, filePath);
-            });
+            res.status(200).send("yeah?");
         });
+
+        this.app.get("/getAllSlugs", async (req, res) => {
+            const accessToken: string = req.query.accessToken.toString();
+
+            if (accessToken == null || this.managementAccessTokens.find(tokens => tokens.guid === accessToken) === null) {
+                res.status(403).send();
+            }
+
+            res.status(200).send(JSON.stringify(await Database.GetAllPostSlugs()));
+        });
+
+        this.app.get("/getAllCategoryNames", async (req, res) => {
+            const accessToken: string = req.query.accessToken.toString();
+
+            if (accessToken == null || this.managementAccessTokens.find(tokens => tokens.guid === accessToken) === null) {
+                res.status(403).send();
+            }
+
+            res.status(200).send(JSON.stringify(await Database.GetAllCategorySlugs()));
+        });
+
+        this.app.get("/getSlugPost", async (req, res) => {
+            const accessToken: string = req.query.accessToken.toString();
+
+            if (accessToken == null || this.managementAccessTokens.find(tokens => tokens.guid === accessToken) === null) {
+                res.status(403).send();
+            }
+
+            const slug: string = req.query.slug.toString();
+
+            const post: Post = await Database.GetPostFromDb(slug);
+            const postCategory: PostCategory = await Database.GetCategoryFromId(post.parentId);
+
+            const remotePost: RemotePost = {
+                slug: post.slug,
+                title: post.title,
+                parentSlug: postCategory?.slug,
+                name: post.name,
+                keywords: post.keywords,
+                description: post.description,
+                body: post.body
+            };
+
+            res.status(200).send(JSON.stringify(remotePost));
+        });
+
+        this.app.post("/sendPost", async (req, res) => {
+            const accessToken: string = req.query.accessToken.toString();
+
+            if (accessToken == null || this.managementAccessTokens.find(tokens => tokens.guid === accessToken) === null) {
+                res.status(403).send();
+            }
+
+            const remotePost: RemotePost = req.body;
+
+            let parentSlug;
+
+            if (remotePost.parentSlug === 'none') {
+                parentSlug = null;
+            }
+            else if (remotePost.parentSlug === '') {
+                parentSlug = '';
+            }
+            else {
+                parentSlug = remotePost.parentSlug;
+            }
+
+            const post: Post = {
+                slug: remotePost.slug,
+                dateModified: new Date(),
+                name: remotePost.name,
+                title: remotePost.title,
+                parentId: (await Database.GetCategoryFromSlug(parentSlug)).categoryId,
+                keywords: remotePost.keywords,
+                description: remotePost.description,
+                body: remotePost.body,
+            }
+
+            try {
+                if (await Database.GetPostFromDb(post.slug) !== undefined) {
+                    console.log(await Database.GetPostFromDb(post.slug));
+
+                    Database.updatePost(post);
+                }
+                else {
+                    await Database.createPost(post);
+
+                    this.app.get(`/${post.slug}`, sendPage);
+                }
+
+                res.status(200).send("Successful addition/update of post " + post.name);
+            }
+            catch {
+                res.status(500).send("Issue adding/updating post" + post.name);
+            }
+        })
     }
+}
 
-    private static readBlogPostCsv(): CsvBlogRoute[] {
-        return fs
-            .readFileSync("./blog-posts.csv", "utf-8").split("\n")
-            .map(blogCsvRow => {
-                const rowData: string[] = blogCsvRow.split(",");
+function sendPage(slug: string) {
+    return async (req, res) => {
+        const postContent = await generatePost(slug);
 
-                return { url: rowData[0], filePath: path.resolve(`../public/${rowData[1]}`) } as CsvBlogRoute;
-            });
-    }
-
-    private static sendPagePath(res: any, pagePath: string): void {
-        const stats = fs.statSync(pagePath);
-        const modificationDate = new Date(stats.mtime);
-
-        const updateTime = `${modificationDate.getHours()}:${modificationDate.getMinutes()}`;
-        const updateDate = `${modificationDate.getMonth() + 1}/${modificationDate.getDate() + 1}/${modificationDate.getFullYear()}`;
-
-        const post = generatePost(fs.readFileSync(pagePath, "utf8"), updateTime, updateDate);
-
-        res.send(post);
-    }
+        if (postContent) {
+            res.send(postContent);
+        } else {
+            res.redirect('/404');
+        }
+    };
 }
