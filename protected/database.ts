@@ -1,16 +1,21 @@
 import * as mariadb from 'mariadb';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Post, PostCategory } from './site-types';
 
-export class Database {
-    private static pool: mariadb.Pool = mariadb.createPool({host: 'localhost', user: 'root', password: 'root', database: 'lylinkdb', connectionLimit: 5});
+const sqlInfo: string = fs.readFileSync(path.resolve("./sql-user-pass"), "utf-8");
 
+const host = sqlInfo.split(",")[0];
+const user = sqlInfo.split(",")[1];
+const password = sqlInfo.split(",")[2];
+
+export class Database {
+    private static pool: mariadb.Pool = mariadb.createPool({host: host, user: user, password: password, database: 'lylinkdb', connectionLimit: 5});
 
     static async GetAllCategorySlugs() {
-        let conn: mariadb.PoolConnection;
+        const conn: mariadb.PoolConnection = await this.pool.getConnection();
 
         try {
-            conn = await this.pool.getConnection();
-
             const postsFromDb: PostCategory[] = await conn.query('select * from post_hierarchy');
             
             return postsFromDb
@@ -25,11 +30,9 @@ export class Database {
     }
 
     static async GetAllPostSlugs() {
-        let conn: mariadb.PoolConnection;
+        const conn: mariadb.PoolConnection = await this.pool.getConnection();
 
         try {
-            conn = await this.pool.getConnection();
-
             const postsFromDb: Post[] = await conn.query('select * from posts');
 
             return postsFromDb.map(dbPost => dbPost.slug);
@@ -43,11 +46,9 @@ export class Database {
     }
 
     static async GetPostFromDb(slug: string) {
-        let conn: mariadb.PoolConnection;
-    
+        const conn: mariadb.PoolConnection = await this.pool.getConnection();
+
         try {
-            conn = await this.pool.getConnection();
-            
             const postFromDb: Post = (await conn.query(`select * from posts where slug = '${slug}'`))[0];
 
             return postFromDb;
@@ -63,12 +64,10 @@ export class Database {
     }
     
     static async GetAllPostsWithParentCategory(parentId: string): Promise<Post[]> {
-        let conn: mariadb.PoolConnection;
+        const conn: mariadb.PoolConnection = await this.pool.getConnection();
 
         try {
-            conn = await this.pool.getConnection();
-
-            const posts: Post[] = await conn.query(`select * from posts where parentId = '${parentId}'`);
+            const posts: Post[] = await conn.query(`select * from posts where parentId = '${parentId}' order by dateModified asc`);
 
             return posts;
         }
@@ -83,11 +82,9 @@ export class Database {
     }
 
     static async GetMostRecentUpdatedPosts(amount: number) {
-        let conn: mariadb.PoolConnection;
+        const conn: mariadb.PoolConnection = await this.pool.getConnection();
 
         try {
-            conn = await this.pool.getConnection();
-
             const posts: Post[] = await conn.query(`select * from posts order by dateModified desc`);
 
             return posts.slice(0, amount);
@@ -103,11 +100,9 @@ export class Database {
     }
 
     static async GetCategoryFromSlug(slug: string): Promise<PostCategory> {
-        let conn: mariadb.PoolConnection;
+        const conn: mariadb.PoolConnection = await this.pool.getConnection();
 
         try {
-            conn = await this.pool.getConnection();
-
             const postCategory: PostCategory = (await conn.query(`select * from post_hierarchy where slug = '${slug}'`))[0];
 
             return postCategory;
@@ -123,11 +118,9 @@ export class Database {
     }
 
     static async GetCategoryFromId(id: string): Promise<PostCategory> {
-        let conn: mariadb.PoolConnection;
+        const conn: mariadb.PoolConnection = await this.pool.getConnection();
 
         try {
-            conn = await this.pool.getConnection();
-
             const postCategory: PostCategory = (await conn.query(`select * from post_hierarchy where categoryId = '${id}'`))[0];
 
             return postCategory;
@@ -199,8 +192,8 @@ export class Database {
 
             const insertResult = await conn.query(
                 `INSERT INTO posts (slug, title, parentId, dateModified, name, keywords, description, body) 
-                VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)`, 
-                [post.slug, post.title, post.parentId, post.name, post.keywords, post.description, post.body]
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, 
+                [post.slug, post.title, post.parentId, post.dateModified, post.name, post.keywords, post.description, post.body]
             );
 
             console.log('Post inserted successfully:', insertResult);

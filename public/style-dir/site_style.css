@@ -89,11 +89,14 @@ body h2 {
 header h3 {
     border-width: 0px 0px 1px 1px;
     border-style: solid;
-    width: 25%;
+    display: inline-block;  /* Allows the div to shrink or grow based on its content */
+    white-space: nowrap;    /* Prevents the text from wrapping, ensuring the div expands horizontally */
 }
 
 body header h3 {
     text-indent: 5%;
+    box-sizing: content-box;
+    padding-right: 5%;
 }
 
 /* misc/irrelevant css */

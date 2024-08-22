@@ -122,6 +122,8 @@ async function getParentHeader(parentId: string) {
     const firstParent = parents.pop();
     const indexSlugCheck = (slug: string) => slug === '' ? '/' : slug;
 
+    parents.reverse();
+
     let parentsHeader = `<a href="${indexSlugCheck(firstParent.slug)}">${firstParent.name.toLowerCase()}</a> → `;
 
     for (let i = 0; i < parents.length; i++) {

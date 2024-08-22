@@ -64,5 +64,5 @@ input:checked + .slider:before {
 #colorStyleSwitch {
     position: absolute;
     right: 2.5%;
-    top: 3.5%;
+    top: 60px;
 }

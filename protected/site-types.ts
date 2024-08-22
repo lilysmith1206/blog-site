@@ -28,7 +28,7 @@ export type Post = {
     slug: string;
     title: string;
     parentId: string;
-    dateModified: Date;
+    dateModified: string;
     name: string;
     keywords: string;
     description: string;
@@ -59,6 +59,7 @@ export type Page = {
 export type RemotePost = {
     slug: string;
     title: string;
+    dateModifiedISO: string,
     parentSlug: string;
     name: string;
     keywords: string;

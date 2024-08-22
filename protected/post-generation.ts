@@ -6,7 +6,7 @@ export async function generatePost(slug: string) {
     const dbPost: Post = await Database.GetPostFromDb(slug);
     
     let page: Page = {
-        dateModified: dbPost.dateModified,
+        dateModified: new Date(dbPost.dateModified),
         description: dbPost.description,
         keywords: dbPost.keywords,
         title: dbPost.title,

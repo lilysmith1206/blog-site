@@ -43,6 +43,10 @@
         </div>
         <div id="page-container">
             <div id="content-wrap">
+                <label id="colorStyleSwitch" class="switch">
+                    <input id="colorStyleSwitchCheckbox" type="checkbox">
+                    <span class="slider" onclick="handleColorStyleSwitching()"></span>
+                </label>
                 <header>
                     <div style="width: 40%; display: inline-block">
                         <h3><a href="/">index</a> → <a href="/management?accessToken=ACCESSTOKENREPLACEHERE">management</a> →</h3>
@@ -212,6 +216,7 @@
                 title: document.getElementById('title').value, 
                 keywords: document.getElementById('keywords').value, 
                 description: document.getElementById('description').value, 
+                dateModified: new Date().toISOString(), 
                 name: document.getElementById('name').value, 
                 slug: document.getElementById('slug').value, 
                 body: document.getElementById('body').value,
