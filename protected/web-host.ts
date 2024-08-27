@@ -228,6 +228,10 @@ export class WebHost {
                 body: remotePost.body,
             }
 
+            if (post.dateModified.includes("NaN")) {
+                post.dateModified = toMariaDbDateTime(new Date());
+            }
+
             try {
                 if (await Database.GetPostFromDb(post.slug) !== undefined) {
                     console.log(await Database.GetPostFromDb(post.slug));

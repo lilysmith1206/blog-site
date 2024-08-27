@@ -93,12 +93,6 @@ header h3 {
     white-space: nowrap;    /* Prevents the text from wrapping, ensuring the div expands horizontally */
 }
 
-body header h3 {
-    text-indent: 5%;
-    box-sizing: content-box;
-    padding-right: 5%;
-}
-
 /* misc/irrelevant css */
 .illegible {
     color: transparent;
@@ -109,4 +103,41 @@ body header h3 {
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
+}
+.breadcrumb {
+    padding-left: 5%;
+    box-sizing: border-box;
+    overflow-x: visible; /* Allow content to be visible outside the box */
+    border-bottom: 2px solid; /* Border for style */
+    padding-bottom: 5px; /* Space between text and border */
+}
+
+.breadcrumb ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: nowrap; /* Prevents wrapping on larger screens */
+}
+
+.breadcrumb li::after {
+    margin-left: 5px;
+    margin-right: 5px;
+    content: "→";
+}
+
+@media (max-width: 800px) {
+    .breadcrumb ul {
+        flex-direction: column; /* Stack vertically on mobile */
+        align-items: flex-start;
+    }
+
+    .breadcrumb li {
+        margin-bottom: 5px; /* Space between items on mobile */
+    }
+
+    .breadcrumb li::after {
+        content: "↓"; /* Add a down arrow instead of a right arrow */
+        margin-left: 5px;
+    }
 }

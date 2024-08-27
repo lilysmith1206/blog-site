@@ -251,12 +251,23 @@
                 document.getElementById('body').value = document.getElementById('preview').innerHTML;
                 document.getElementById('body').style.display = 'block';
                 document.getElementById('preview').style.display = 'none';
-            }
-            else {
-                document.getElementById('preview').innerHTML = document.getElementById('body').value;
+            } else {
+                let parsedText = parseMarkdown(document.getElementById('body').value);
+                document.getElementById('preview').innerHTML = parsedText;
                 document.getElementById('preview').style.display = 'block';
                 document.getElementById('body').style.display = 'none';
             }
         }
+
+        function parseMarkdown(text) {
+            // Replace *Bold* with <strong>Bold</strong>
+            text = text.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+
+            // Replace _Italicized_ with <em>Italicized</em>
+            text = text.replace(/_(.*?)_/g, '<em>$1</em>');
+
+            return text;
+        }
+
     </script>
 </html>

@@ -124,10 +124,10 @@ async function getParentHeader(parentId: string) {
 
     parents.reverse();
 
-    let parentsHeader = `<a href="${indexSlugCheck(firstParent.slug)}">${firstParent.name.toLowerCase()}</a> → `;
+    let parentsHeader = `<li><a href="${indexSlugCheck(firstParent.slug)}">${firstParent.name.toLowerCase()}</a>`;
 
     for (let i = 0; i < parents.length; i++) {
-        parentsHeader += `<a href="${indexSlugCheck(parents[i].slug)}">${parents[i].name.toLowerCase()}</a> → `;
+        parentsHeader += `<li><a href="${indexSlugCheck(parents[i].slug)}">${parents[i].name.toLowerCase()}</a></li>`;
     }
-    return parentsHeader;
+    return `<nav class="breadcrumb"><ul>${parentsHeader}</ul></nav>`;
 }
