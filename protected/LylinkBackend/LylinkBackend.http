@@ -1,0 +1,6 @@
+@LylinkBackend_HostAddress = http://localhost:5184
+
+GET {{LylinkBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

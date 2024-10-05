@@ -1,2 +1,2 @@
 #!/bin/sh
-exec npx ts-node node.ts
+exec dotnet LylinkBackend_API.dll

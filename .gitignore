@@ -2,3 +2,6 @@ node_modules
 private/lylink-db-client.sql
 protected/sql-user-pass
 private/mysqldump.sql
+**/bin/
+**/obj/
+**/.vs/
