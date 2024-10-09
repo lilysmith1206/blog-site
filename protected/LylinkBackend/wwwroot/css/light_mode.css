@@ -54,3 +54,24 @@ table {
 table td, table th {
     border-color: #c991d0;
 }
+
+/* Dark mode tab colors */
+.tab-button {
+    background-color: #E7C7ED;
+    border-color: #D7AED8;
+    color: black;
+    font-weight: bold;
+}
+
+.tab-button:hover {
+    background-color: #D8B1E0;
+}
+
+.tab-button.active {
+    background-color: #CDA4D6;
+}
+
+.tab-content {
+    background-color: #E7C7ED;
+    border-color: #D7AED8;
+}

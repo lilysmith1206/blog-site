@@ -1,0 +1,33 @@
+﻿.tab-container {
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.tab-button {
+    border-width: 2px;
+    border-style: outset;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+    border-width: 1px;
+    border-style: outset;
+    margin-top: 20px;
+}
+
+.tab-content h2 {
+    margin-top: 0;
+}
+
+/* By default, show the first tab content */
+.tab-content:first-child {
+    display: block;
+}
