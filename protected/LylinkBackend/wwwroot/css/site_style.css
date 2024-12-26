@@ -14,9 +14,14 @@ html {
     background-color: #888;
 }
 
+pre {
+    white-space: pre-wrap;
+    font-family: 'MonospaceTypewriter' !important;
+}
+
 body {
     margin: 0;
-    font-family: 'MonospaceTypewriter';
+    font-family: 'MonospaceTypewriter' !important;
 }
 
 body > #page-container {
