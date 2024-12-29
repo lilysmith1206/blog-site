@@ -42,7 +42,7 @@ namespace LylinkBackend_API.Controllers
                 Description = post?.Description ?? string.Empty,
                 Keywords = post?.Keywords ?? string.Empty,
                 PageName = post?.Name ?? string.Empty,
-                ParentHeader = BuildParentHeader(post?.ParentId ?? string.Empty),
+                ParentHeader = GetParentCategories(post?.ParentId ?? string.Empty),
                 Title = post?.Title ?? string.Empty,
                 UpdatedDateTime = ConvertDateTimeToWebsiteFormat(post?.DateModified ?? DateTime.Now)
             });
@@ -72,7 +72,7 @@ namespace LylinkBackend_API.Controllers
                 Description = postCategory.Description ?? string.Empty,
                 Keywords = postCategory.Keywords ?? string.Empty,
                 PageName = postCategory.Name ?? string.Empty,
-                ParentHeader = BuildParentHeader(postCategory.ParentId ?? string.Empty),
+                ParentHeader = GetParentCategories(postCategory.ParentId ?? string.Empty),
                 Title = postCategory.Title ?? string.Empty,
                 UpdatedDateTime = string.Empty
             });
@@ -132,25 +132,22 @@ namespace LylinkBackend_API.Controllers
             return sb.ToString();
         }
 
-        protected string BuildParentHeader(string parentId)
+        protected IEnumerable<ParentHeader> GetParentCategories(string parentId)
         {
             List<PostHierarchy> parents = database.GetParentCategories(parentId);
-            PostHierarchy firstParent = parents.Last();
 
-            parents.RemoveAt(parents.Count - 1);
-
-            static string IndexSlugCheck(string? slug) => string.IsNullOrEmpty(slug) ? "/" : slug;
+            parents.Single(parent => string.IsNullOrEmpty(parent.Slug)).Slug = "/"; 
 
             parents.Reverse();
 
-            var parentsHeader = @$"<li><a href=""{IndexSlugCheck(firstParent?.Slug)}"">{firstParent?.Name?.ToLower()}</a></li>";
-
-            foreach (PostHierarchy parent in parents)
+            return parents.Select(parent =>
             {
-                parentsHeader += @$"<li><a href=""{IndexSlugCheck(parent.Slug)}"">{parent?.Name?.ToLower()}</a></li>";
-            }
-
-            return @$"<nav class=""breadcrumb""><ul>{parentsHeader}</ul></nav>";
+                return new ParentHeader()
+                {
+                    Slug = parent.Slug ?? "404",
+                    Name = parent.Name ?? "Parent category not found!",
+                };
+            });
         }
 
         protected static bool CheckPostBodyForTableElement(string? postBody)
