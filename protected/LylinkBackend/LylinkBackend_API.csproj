@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\BasePage.cshtml" />
+    <None Include="Views\Page\PostPage.cshtml" />
   </ItemGroup>
 
 </Project>

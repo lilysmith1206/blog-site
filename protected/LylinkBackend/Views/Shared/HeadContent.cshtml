@@ -1,0 +1,38 @@
+﻿@using LylinkBackend_API.Models
+@model HeadContent
+<head>
+    <script src="js/adblocker_popup.js"></script>
+
+    <title>@(Model.Title)</title>
+
+    <link id="siteStyle" rel="stylesheet" href="css/site_style.css" onerror="showAdblockPopup()" />
+    <link id="mobileStyle" rel="stylesheet" href="css/mobile_style.css" onerror="showAdblockPopup()" />
+    <link id="sliderStyle" rel="stylesheet" href="css/slider_style.css" onerror="showAdblockPopup()" />
+    <link id="adblockStyle" rel="stylesheet" href="css/adblock_style.css" onerror="showAdblockPopup()" />
+
+    <link id="lightStyle" rel="stylesheet" href="css/light_mode.css" disabled onerror="showAdblockPopup()" />
+    <link id="darkStyle" rel="stylesheet" href="css/dark_mode.css" disabled onerror="showAdblockPopup()" />
+
+    @if (Model.NeedsTableStyling)
+    {
+        <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" />
+    }
+
+    <link id="tabsStyle" rel="stylesheet" href="css/tabs_style.css" onerror="showAdblockPopup()" />
+
+    <link id="icon" rel="icon" type="image/x-icon" href="css/lylink_icon.ico" onerror="showAdblockPopup()" />
+
+    <script src="js/color_slider.js" defer></script>
+    <script src="js/tabs.js" defer></script>
+
+    @if (Model.NeedsEditorTooling)
+    {
+        <link rel="stylesheet" href="css/recogito.min.css" onerror="showAdblockPopup()" />
+    }
+
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="@(Model.Keywords)" />
+    <meta name="description" content="@(Model.Description)" />
+    <meta name="author" content="Lylink">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
