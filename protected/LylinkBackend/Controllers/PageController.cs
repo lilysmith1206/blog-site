@@ -104,6 +104,7 @@ namespace LylinkBackend_API.Controllers
         private static IEnumerable<PageLink> GetPostsUnderCategory(IDatabaseService database, string categoryId)
         {
             return database.GetAllPostsWithParentId(categoryId)
+                .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
                 .Select(post => new PageLink()
                 {
                     Name = post?.Name ?? "Unnamed Post",
