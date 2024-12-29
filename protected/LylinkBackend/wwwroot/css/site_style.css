@@ -95,13 +95,6 @@ body h2 {
     max-width: 50%;
 }
 
-header h3 {
-    border-width: 0px 0px 1px 1px;
-    border-style: solid;
-    display: inline-block;  /* Allows the div to shrink or grow based on its content */
-    white-space: nowrap;    /* Prevents the text from wrapping, ensuring the div expands horizontally */
-}
-
 /* misc/irrelevant css */
 .illegible {
     color: transparent;
@@ -113,12 +106,15 @@ header h3 {
     -o-user-select: none;
     user-select: none;
 }
+
 .breadcrumb {
-    padding-left: 5%;
     box-sizing: border-box;
     overflow-x: visible; /* Allow content to be visible outside the box */
+    border-width: 0px;
     border-bottom: 2px solid; /* Border for style */
-    padding-bottom: 5px; /* Space between text and border */
+    border-style: solid;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 .breadcrumb ul {
@@ -129,8 +125,17 @@ header h3 {
     flex-wrap: nowrap; /* Prevents wrapping on larger screens */
 }
 
+.breadcrumb ul > li > a {
+    display: inline-block;
+    font-size: 1.17em;
+    margin-top: 0.5em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
 .breadcrumb li::after {
-    margin-left: 5px;
+    margin-left: 10px;
     margin-right: 5px;
     content: "→";
 }
@@ -141,12 +146,9 @@ header h3 {
         align-items: flex-start;
     }
 
-    .breadcrumb li {
-        margin-bottom: 5px; /* Space between items on mobile */
-    }
-
     .breadcrumb li::after {
         content: "↓"; /* Add a down arrow instead of a right arrow */
-        margin-left: 5px;
+        margin-left: 15px;
+        margin-right: 5px;
     }
 }

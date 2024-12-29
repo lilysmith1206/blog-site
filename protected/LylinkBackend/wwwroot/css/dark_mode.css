@@ -21,31 +21,29 @@ body a:visited {
     color: #9c75ac; /* Light lilac visited link color */
 }
 
+header li::after {
+    color: #c390e8;
+}
+
 body hr {
-    border-top-color: 1px solid #b891b9;
+    border-top-color: #b891b9;
 }
 
 body h2 {
-    border-bottom-color: 1px solid #3e3e3e;
+    border-bottom-color: #3e3e3e;
 }
 
-body h3 {
-    border-bottom-color: 1px solid #3e3e3e;
-    border-left-color: 1px solid #3e3e3e;
-}
-
-body header h3 {
-    border-left-color: #3e3e3e;
+body header .breadcrumb {
+    border-bottom-color: #5d547c;
 }
 
 body header #title-splash-text {
-    color: #7b6d99; /* Darker purple/lilac mix for title text */
+    color: #7b6d99;
 }
 
 body footer {
     background-color: rgba(255, 255, 255, 0.05);
 }
-
 
 /* Dark Mode Table Styles */
 

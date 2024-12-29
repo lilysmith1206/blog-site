@@ -34,12 +34,6 @@
         max-width: 80%; 
         margin-left: 2.5%;
     }
-
-    body header h3 {
-        border-bottom: 1px solid #d09dd7;
-        border-left: 1px solid #d09dd7;
-        width: 60%;
-    }
 }
 
 /* mobile table layout */

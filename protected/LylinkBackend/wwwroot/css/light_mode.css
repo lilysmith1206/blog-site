@@ -5,7 +5,7 @@ body {
 
 body header {
     background-color: #ffe6ff;
-    border-bottom: 7px #fef0ff inset;
+    border-bottom: 7px #fddfff inset;
 }
 
 body main {
@@ -22,6 +22,10 @@ body a:visited {
 }
 
 
+header li::after {
+    color: #d621ee;
+}
+
 body hr {
     border-top-color:#804388;
 }
@@ -30,13 +34,8 @@ body h2 {
     border-bottom-color:#d09dd7;
 }
 
-body h3 {
-    border-bottom-color:#d09dd7;
-    border-left-color:#d09dd7;
-}
-
-body header h3 {
-    border-left-color: #d09dd7;
+body header .breadcrumb {
+    border-bottom-color: #d09dd7;
 }
 
 body header #title-splash-text {
