@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LylinkBackend_API.Controllers
 {
     [ApiController]
-    public class ManagementRoutingController(IDatabaseService database, List<ManagementToken> managementAccessTokens) : ControllerBase
+    public class ManagementController(IDatabaseService database, List<ManagementToken> managementAccessTokens) : Controller
     {
         [HttpGet("/login")]
         public IActionResult Login([FromQuery] string? password)
@@ -34,12 +34,12 @@ namespace LylinkBackend_API.Controllers
         {
             StatusCodeResult? result = VerifyAccessToken(accessToken);
 
-            if (result == null)
+            if (result == null && accessToken is not null)
             {
-                string pageHtml = System.IO.File.ReadAllText("./wwwroot/html/management.html")
-                    .Replace("ACCESSTOKENREPLACEHERE", accessToken);
-
-                return base.Content(pageHtml, "text/html");
+                return View(nameof(ManagementHome), new ManagementHome()
+                {
+                    AccessToken = accessToken
+                });
             }
 
             return Redirect("/403");
@@ -50,12 +50,12 @@ namespace LylinkBackend_API.Controllers
         {
             StatusCodeResult? result = VerifyAccessToken(accessToken);
 
-            if (result == null)
+            if (result == null && accessToken is not null)
             {
-                string pageHtml = System.IO.File.ReadAllText("./wwwroot/html/publisher.html")
-                    .Replace("ACCESSTOKENREPLACEHERE", accessToken);
-
-                return Content(pageHtml, "text/html");
+                return View(nameof(Models.Publisher), new Publisher()
+                {
+                    AccessToken = accessToken
+                });
             }
 
             return Redirect("/403");

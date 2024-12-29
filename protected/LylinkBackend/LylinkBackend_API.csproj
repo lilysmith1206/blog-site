@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\html\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <UpToDateCheckInput Remove="BasePage.cshtml" />
   </ItemGroup>
 
