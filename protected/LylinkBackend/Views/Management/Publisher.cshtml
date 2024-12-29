@@ -19,10 +19,9 @@
             <button onclick="closePopup()">Close</button>
         </div>
         <div id="page-container">
-            <label id="colorStyleSwitch" class="switch">
-                <input id="colorStyleSwitchCheckbox" type="checkbox">
-                <span class="slider" onclick="handleColorStyleSwitching()"></span>
-            </label>
+            @await Html.PartialAsync(nameof(SiteColorToggle), new SiteColorToggle
+            {
+            })
             <div id="content-wrap">
                 <header>
                     <div style="width: 40%; display: inline-block">

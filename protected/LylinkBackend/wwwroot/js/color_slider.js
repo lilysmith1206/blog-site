@@ -1,46 +1,75 @@
 let currentColorStatus = localStorage.getItem("currentColor");
-let colorStyleSwitch = document.getElementById("colorStyleSwitchCheckbox");
+let darkMoon = document.getElementById("darkMoon");
+let lightSun = document.getElementById("lightSun");
 
 if (currentColorStatus !== null) {
-    if (currentColorStatus === "dark") {
-        setColorStyle("dark");
-        colorStyleSwitch.checked = true;
+    if (currentColorStatus == "dark") {
+        showDarkMode();
+
+        darkMoon.style.display = 'inline';
     }
-    else if (currentColorStatus === "light") {
-        setColorStyle("light");
-        colorStyleSwitch.checked = false;
+    else if (currentColorStatus == "light") {
+        showLightMode();
+
+        lightSun.style.display = 'inline';
     }
-    else {
-        throw `${currentColorStatus} is not a valid color style.`;
-    }
-}
-else {
-    setColorStyle("light");
-    colorStyleSwitch.checked = false;
 }
 
-function handleColorStyleSwitching() {
-    if (colorStyleSwitch.checked === true) {
-        setColorStyle("light");
-    }
-    else {
-        setColorStyle("dark");
-    }
-}
+document.getElementById("darkMoon").addEventListener("click", handleDarkMoonClick);
+document.getElementById("lightSun").addEventListener("click", handleLightSunClick);
+
+setTimeout(() => {
+    document.getElementById('colorTransitionStyle').removeAttribute('disabled');
+}, 300)
 
 function setColorStyle(color) {
     localStorage.setItem("currentColor", color);
 
     if (color == "dark") {
-        // Enable dark mode, disable light mode
-        document.getElementById('darkStyle').removeAttribute('disabled');
-        document.getElementById('lightStyle').setAttribute('disabled', 'true');
-    } else {
-        // Enable light mode, disable dark mode
-        document.getElementById('lightStyle').removeAttribute('disabled');
-        document.getElementById('darkStyle').setAttribute('disabled', 'true');
+        hideImage(lightSun, darkMoon);
+
+        showDarkMode();
+    }
+    else if (color == "light") {
+        hideImage(darkMoon, lightSun);
+
+        showLightMode();
+    }
+    else {
+        throw `${currentColorStatus} is not a valid color style.`;
     }
 
-    // Optionally, save the preference to localStorage
     localStorage.setItem('theme', this.checked ? 'dark' : 'light');
+}
+
+function hideImage(element, newElement) {
+    newElement.style.display = 'inline';
+
+    element.classList.add('hideImage');
+    newElement.classList.add('showImage');
+
+    setTimeout(() => {
+        element.style.display = 'none';
+
+        element.classList.remove('hideImage');
+        newElement.classList.remove('showImage');
+    }, 300);
+}
+
+function showDarkMode() {
+    document.getElementById('darkStyle').removeAttribute('disabled');
+    document.getElementById('lightStyle').setAttribute('disabled', 'true');
+}
+
+function showLightMode() {
+    document.getElementById('lightStyle').removeAttribute('disabled');
+    document.getElementById('darkStyle').setAttribute('disabled', 'true');
+}
+
+function handleDarkMoonClick() {
+    setColorStyle("light");
+}
+
+function handleLightSunClick() {
+    setColorStyle("dark");
 }
