@@ -2,7 +2,7 @@
 {
     public struct IndexPage
     {
-        public IEnumerable<PageLink> ParentHeader { get; set; }
+        public IEnumerable<PageLink> ParentCategories { get; set; }
 
         public IEnumerable<PageLink> SubCategories { get; set; }
 

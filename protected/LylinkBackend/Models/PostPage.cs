@@ -6,7 +6,7 @@
 
         public DateTime DateUpdated { get; set; }
 
-        public IEnumerable<PageLink> ParentHeader { get; set; }
+        public IEnumerable<PageLink> ParentCategories { get; set; }
 
         public string PageName { get; set; }
 

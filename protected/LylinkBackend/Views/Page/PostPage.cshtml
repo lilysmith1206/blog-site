@@ -32,19 +32,11 @@
         </label>
         <div id="content-wrap">
             <header>
-                <h3>
-                    <div class="breadcrumb">
-                        <ul>
-                            @foreach (var parent in Model.ParentHeader)
-                            {
-                                <li><a href="@parent.Slug">@parent.Name.ToLower()</a></li>
-                            }
-                        </ul>
-                    </div>
-                </h3>
-                <h1 id="website-header">
-                    @Model.PageName
-                </h1>
+               @await Html.PartialAsync("PageHeader", new PageHeader
+               {
+                   Name = Model.PageName,
+                   ParentCategories = Model.ParentCategories
+               })
 
                 @{
                     string updateTime = $"{Model.DateUpdated.Hour}:{Model.DateUpdated.Minute:D2}";

@@ -46,7 +46,7 @@ namespace LylinkBackend_API.Controllers
                 Description = post?.Description ?? string.Empty,
                 Keywords = post?.Keywords ?? string.Empty,
                 PageName = post?.Name ?? string.Empty,
-                ParentHeader = GetParentCategories(post?.ParentId ?? string.Empty),
+                ParentCategories = GetParentCategories(post?.ParentId ?? string.Empty),
                 Title = post?.Title ?? string.Empty,
                 DateUpdated = post?.DateModified ?? DateTime.Now
             });
@@ -65,7 +65,7 @@ namespace LylinkBackend_API.Controllers
                 Description = postCategory?.Description ?? string.Empty,
                 Keywords = postCategory?.Keywords ?? string.Empty,
                 PageName = postCategory?.Name ?? string.Empty,
-                ParentHeader = GetParentCategories(postCategory?.ParentId ?? string.Empty),
+                ParentCategories = GetParentCategories(postCategory?.ParentId ?? string.Empty),
                 Posts = posts,
                 SubCategories = childCategories,
                 Title = postCategory?.Title ?? string.Empty
@@ -94,7 +94,7 @@ namespace LylinkBackend_API.Controllers
                 Keywords = postCategory?.Keywords ?? string.Empty,
                 MostRecentPosts = mostRecentPosts,
                 PageName = postCategory?.Name ?? string.Empty,
-                ParentHeader = GetParentCategories(postCategory?.ParentId ?? string.Empty),
+                ParentCategories = GetParentCategories(postCategory?.ParentId ?? string.Empty),
                 Posts = posts,
                 SubCategories = childCategories,
                 Title = postCategory?.Title ?? string.Empty

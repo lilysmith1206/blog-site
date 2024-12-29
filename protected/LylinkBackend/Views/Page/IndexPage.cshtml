@@ -28,18 +28,13 @@
         </label>
         <div id="content-wrap">
             <header>
-                <h3>
-                    <ul class="breadcrumb">
-                        @foreach (var parent in Model.ParentHeader)
-                        {
-                            <li><a href="@parent.Slug">@parent.Name.ToLower()</a></li>
-                        }
-                    </ul>
-                </h3>
-                <h1 id="website-header">
-                    @Model.PageName
-                </h1>
+               @await Html.PartialAsync("PageHeader", new PageHeader
+               {
+                   Name = Model.PageName,
+                   ParentCategories = Model.ParentCategories
+               })
             </header>
+
             <div class="container">
                 <main>
                     @Html.Raw(Model.Body)
