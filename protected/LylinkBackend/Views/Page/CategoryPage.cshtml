@@ -1,19 +1,15 @@
 ﻿@using LylinkBackend_API.Models
-@using System.Text.RegularExpressions
-@model PostPage
+@model CategoryPage
 
 <!DOCTYPE html>
 <html lang="en">
-@{
-    Regex tableTagRegex = new(@"<table\b[^>]*>", RegexOptions.IgnoreCase);
-}
 
 @await Html.PartialAsync("HeadContent", new HeadContent
 {
     Description = Model.Description,
     Keywords = Model.Keywords,
-    NeedsTableStyling = tableTagRegex.IsMatch(Model.Body),
-    NeedsEditorTooling = Model.EditorName != null,
+    NeedsTableStyling = false,
+    NeedsEditorTooling = false,
     Title = Model.Title,
 })
 
@@ -45,30 +41,36 @@
                 <h1 id="website-header">
                     @Model.PageName
                 </h1>
-
-                @{
-                    string updateTime = $"{Model.DateUpdated.Hour}:{Model.DateUpdated.Minute:D2}";
-                    string updateDate = $"{Model.DateUpdated.Month}/{Model.DateUpdated.Day}/{Model.DateUpdated.Year}";
-                }
-                
-                <h5>Updated @updateTime on @updateDate</h5>
             </header>
             <div class="container">
                 <main>
                     @Html.Raw(Model.Body)
+
+                    <h3>Sub-categories</h3>
+                    <ul>
+                        @foreach (var postCategory in Model.SubCategories)
+                        {
+                            <li>
+                                <a href="@postCategory.Slug">@postCategory.Name</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <h3>Posts</h3>
+                    <ul>
+                        @foreach (var posts in Model.Posts)
+                        {
+                            <li>
+                                <a href="@posts.Slug">@posts.Name</a>
+                            </li>
+                        }
+                    </ul>
                 </main>
             </div>
         </div>
         <footer>
             <p>Copyright 2024, All Rights Reserved</p>
         </footer>
-
-        @if (Model.EditorName != null)
-        {
-            <script src="js/recogito-polyfills.js" onerror="showAdblockPopup()"></script>
-            <script src="js/recogito.min.js" onerror="showAdblockPopup()"></script>
-            <script src="js/annotation.js" onerror="showAdblockPopup()"></script>
-        }
 
         <script defer>
             let FF_FOUC_FIX;

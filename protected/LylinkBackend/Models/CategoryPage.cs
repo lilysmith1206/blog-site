@@ -1,12 +1,12 @@
 ﻿namespace LylinkBackend_API.Models
 {
-    public struct PostPage
+    public struct CategoryPage
     {
-        public string? EditorName { get; set; }
-
-        public DateTime DateUpdated { get; set; }
-
         public IEnumerable<PageLink> ParentHeader { get; set; }
+
+        public IEnumerable<PageLink> SubCategories { get; set; }
+
+        public IEnumerable<PageLink> Posts { get; set; }
 
         public string PageName { get; set; }
 

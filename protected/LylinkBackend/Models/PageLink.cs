@@ -1,6 +1,6 @@
 ﻿namespace LylinkBackend_API.Models
 {
-    public struct ParentHeader
+    public struct PageLink
     {
         public string Slug { get; set; }
 
