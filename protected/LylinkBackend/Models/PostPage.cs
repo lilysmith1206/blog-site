@@ -4,7 +4,7 @@
     {
         public string? EditorName { get; set; }
 
-        public string UpdatedDateTime { get; set; }
+        public DateTime? DateUpdated { get; set; }
 
         public IEnumerable<ParentHeader> ParentHeader { get; set; }
 

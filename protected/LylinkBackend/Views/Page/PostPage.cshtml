@@ -45,7 +45,14 @@
                 <h1 id="website-header">
                     @Model.PageName
                 </h1>
-                <h5>@Model.UpdatedDateTime</h5>
+
+                @if (Model.DateUpdated != null)
+                {
+                    string updateTime = $"{Model.DateUpdated.Value.Hour}:{Model.DateUpdated.Value.Minute:D2}";
+                    string updateDate = $"{Model.DateUpdated.Value.Month}/{Model.DateUpdated.Value.Day}/{Model.DateUpdated.Value.Year}";
+                
+                    <h5>Updated @updateTime on @updateDate</h5>
+                }
             </header>
             <div class="container">
                 <main>

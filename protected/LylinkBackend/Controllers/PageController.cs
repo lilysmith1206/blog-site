@@ -44,7 +44,7 @@ namespace LylinkBackend_API.Controllers
                 PageName = post?.Name ?? string.Empty,
                 ParentHeader = GetParentCategories(post?.ParentId ?? string.Empty),
                 Title = post?.Title ?? string.Empty,
-                UpdatedDateTime = ConvertDateTimeToWebsiteFormat(post?.DateModified ?? DateTime.Now)
+                DateUpdated = post?.DateModified ?? DateTime.Now
             });
         }
 
@@ -74,7 +74,7 @@ namespace LylinkBackend_API.Controllers
                 PageName = postCategory.Name ?? string.Empty,
                 ParentHeader = GetParentCategories(postCategory.ParentId ?? string.Empty),
                 Title = postCategory.Title ?? string.Empty,
-                UpdatedDateTime = string.Empty
+                DateUpdated = null
             });
         }
 
@@ -155,14 +155,6 @@ namespace LylinkBackend_API.Controllers
             Regex tableTagRegex = new(@"<table\b[^>]*>", RegexOptions.IgnoreCase);
 
             return tableTagRegex.IsMatch(postBody ?? string.Empty);
-        }
-
-        protected static string ConvertDateTimeToWebsiteFormat(DateTime dateTime)
-        {
-            string updateTime = $"{dateTime.Hour}:{dateTime.Minute:D2}";
-            string updateDate = $"{dateTime.Month}/{dateTime.Day}/{dateTime.Year}";
-
-            return $"Updated {updateTime} on ${updateDate}";
         }
     }
 }
