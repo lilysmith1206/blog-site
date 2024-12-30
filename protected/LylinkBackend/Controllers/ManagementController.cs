@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LylinkBackend_API.Controllers
 {
     [ApiController]
+    [Route("Management")]
     public class ManagementController(IDatabaseService database, List<ManagementToken> managementAccessTokens) : Controller
     {
         [HttpGet("/login")]
@@ -46,15 +47,18 @@ namespace LylinkBackend_API.Controllers
         }
 
         [HttpGet("/publisher")]
-        public IActionResult Publisher([FromQuery] string? accessToken)
+        public IActionResult Publisher([FromQuery] string? accessToken, [FromQuery] bool? successfulPostSubmit)
         {
             StatusCodeResult? result = VerifyAccessToken(accessToken);
 
             if (result == null && accessToken is not null)
             {
-                return View(nameof(Models.Publisher), new Publisher()
+                return base.View(nameof(Models.Publisher), new Publisher()
                 {
-                    AccessToken = accessToken
+                    AccessToken = accessToken,
+                    NavigatedFromFormSubmit = successfulPostSubmit == true,
+                    AvailableCategories = database.GetAllCategorySlugs(),
+                    AvailableSlugs = database.GetAllPostSlugs(),
                 });
             }
 
@@ -65,36 +69,6 @@ namespace LylinkBackend_API.Controllers
         public IActionResult Ping([FromBody] object body)
         {
             return Ok("yeah?");
-        }
-
-        [HttpGet("/getAllSlugs")]
-        public IActionResult GetAllSlugs([FromQuery] string accessToken)
-        {
-            StatusCodeResult? tokenVerificationResult = VerifyAccessToken(accessToken);
-
-            if (tokenVerificationResult != null)
-            {
-                return tokenVerificationResult;
-            }
-
-            IEnumerable<string?> slugs = database.GetAllPostSlugs();
-
-            return Ok(slugs);
-        }
-
-        [HttpGet("/getAllCategoryNames")]
-        public IActionResult GetAllCategoryNames([FromQuery] string accessToken)
-        {
-            StatusCodeResult? tokenVerificationResult = VerifyAccessToken(accessToken);
-
-            if (tokenVerificationResult != null)
-            {
-                return tokenVerificationResult;
-            }
-
-            IEnumerable<string?> categorySlugs = database.GetAllCategorySlugs();
-            
-            return Ok(categorySlugs);
         }
 
         [HttpGet("/getSlugPost")]
@@ -120,8 +94,6 @@ namespace LylinkBackend_API.Controllers
             {
                 Slug = post?.Slug,
                 Title = post?.Title,
-                DateModifiedISO = post?.DateModified?.ToString("o"),
-                DateCreatedISO = post?.DateCreated?.ToString("o"),
                 ParentSlug = postCategory?.Slug,
                 Name = post?.Name,
                 Keywords = post?.Keywords,
@@ -132,8 +104,8 @@ namespace LylinkBackend_API.Controllers
             return Ok(remotePost);
         }
 
-        [HttpPost("/sendPost")]
-        public IActionResult SendPost([FromQuery] string accessToken, [FromBody] RemotePost remotePost)
+        [HttpPost("/saveDraft")]
+        public IActionResult SaveDraft([FromForm] string accessToken, [FromForm] RemotePost remotePost)
         {
             StatusCodeResult? tokenVerificationResult = VerifyAccessToken(accessToken);
 
@@ -154,11 +126,16 @@ namespace LylinkBackend_API.Controllers
                 _ => remotePost.ParentSlug
             };
 
+            Post? existingPost = database.GetPost(remotePost.Slug);
+            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+
+            DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
+
             var post = new Post
             {
                 Slug = remotePost.Slug,
-                DateModified = DateTime.Parse(remotePost.DateModifiedISO ?? DateTime.UtcNow.ToString()),
-                DateCreated = DateTime.Parse(remotePost.DateCreatedISO ?? DateTime.UtcNow.ToString()),
+                DateModified = currentEasternTime,
+                DateCreated = existingPost == null ? currentEasternTime : existingPost.DateCreated,
                 Name = remotePost.Name,
                 Title = remotePost.Title,
                 ParentId = database.GetCategoryFromSlug(parentSlug ?? string.Empty)?.CategoryId,
@@ -169,8 +146,6 @@ namespace LylinkBackend_API.Controllers
 
             try
             {
-                var existingPost = database.GetPost(post.Slug);
-
                 if (existingPost != null)
                 {
                     database.UpdatePost(post);
@@ -180,7 +155,7 @@ namespace LylinkBackend_API.Controllers
                     database.CreatePost(post);
                 }
 
-                return Ok($"Successful addition/update of post {post.Name}");
+                return RedirectToAction("Publisher", "Management", new { accessToken, successfulPostSubmit = true });
             }
             catch (Exception)
             {

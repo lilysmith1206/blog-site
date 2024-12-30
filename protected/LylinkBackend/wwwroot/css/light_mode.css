@@ -8,7 +8,7 @@ body header {
     border-bottom: 7px #fddfff inset;
 }
 
-body main {
+body main, body aside {
     background-color: #f6d1fb;
     border-color: #fde3ff;
 }
@@ -55,18 +55,18 @@ table td, table th {
 }
 
 /* Dark mode tab colors */
-.tab-button {
+button {
     background-color: #E7C7ED;
     border-color: #D7AED8;
     color: black;
     font-weight: bold;
 }
 
-.tab-button:hover {
+button:hover {
     background-color: #D8B1E0;
 }
 
-.tab-button.active {
+button.active {
     background-color: #CDA4D6;
 }
 

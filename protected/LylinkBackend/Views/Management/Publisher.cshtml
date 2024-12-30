@@ -10,6 +10,44 @@
         NeedsEditorTooling = false,
         Title = "Lylink - Publisher",
     })
+
+    <style>
+        body .container {
+            width: 97.5%;
+            margin: 0 auto;
+        }
+
+        body main {
+            width: 70%;
+        }
+
+        body aside {
+            position: fixed;
+            top: 20%;
+            right: 0;
+        }
+
+        .tab-content {
+            top: 30%;
+            padding: 0px;
+            border-width: 0px;
+            border-style: none;
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        .tab-container {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        button {
+            margin: 0 auto;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+    
     <body>
         <div id="adblock-background"></div>
         <div id="adblock-popup">
@@ -24,34 +62,83 @@
             })
             <div id="content-wrap">
                 <header>
-                    <div style="width: 40%; display: inline-block">
-                        @await Html.PartialAsync("PageHeader", new PageHeader
+                    @await Html.PartialAsync("PageHeader", new PageHeader
+                    {
+                        Name = "Publisher",
+                        ParentCategories = new List<PageLink>()
                         {
-                            Name = "Publisher",
-                            ParentCategories = new List<PageLink>()
-                            {
-                                new PageLink() { Name = "index", Slug = "/" },
-                                new PageLink() { Name = "management", Slug = "/management?accessToken=" + Model.AccessToken },
-                            }
-                        })
-                    </div>
-
-                    <form style="width: 39%; display: inline-block">
-                        <button onclick="saveDraft()" type="button">Save Draft</button><br />
-                        <label>View HTML <input id="showHTML" type="checkbox" checked onchange="swapView(this)" /></label><br />
-                        <label>Disable Text Editor <input id="disableEditor" type="checkbox" checked onchange="toggleEditor(this)" disabled /></label><br />
-                        <label>Posts <select onchange="getSlugBody(this)" id="slugBox"></select></label><br />
-                        <label>Category <select id="categoryBox"></select></label><br />
-                    </form>
+                            new PageLink() { Name = "index", Slug = "/" },
+                            new PageLink() { Name = "management", Slug = "/management?accessToken=" + Model.AccessToken },
+                        }
+                    })
                 </header>
                 <div class="container">
-                    <input type="text" width="22%" id="title" placeholder="title" /><input type="text" width="22%" id="description" placeholder="description" />
-                    <input type="text" width="22%" id="keywords" placeholder="keywords" /><input type="text" width="22%" id="slug" placeholder="slug" />
-                    <input type="text" width="22%" id="name" placeholder="name" />
-                    <main>
-                        <div width="100%"><pre width="100%" id="body" contenteditable="true"></pre></div>
-                        <div id="preview"></div>
-                    </main>
+                    <div class="tab-container">
+                        <main>
+                            <div class="tab-buttons">
+                                <button class="tab-button" onclick="showHtmlView()">HTML View</button>
+                                <button class="tab-button" onclick="showRenderedView()">Rendered View</button>
+                            </div>
+                            <div width="100%"><pre width="100%" id="html" class="tab-content" contenteditable="true" style="display: block;"></pre></div>
+                            <div id="rendered" class="tab-content" style="display: none;"></div>
+                        </main>
+                        <aside>
+                            <form style="display: inline-block">
+                                <label>
+                                    Posts
+                                    <select onchange="getSlugBody(this)">
+                                        <option value="">Select a slug</option>
+                                        @foreach (string? slug in Model.AvailableSlugs)
+                                        {
+                                            <option value="@slug">@slug</option>
+                                        }
+                                    </select>
+                                </label>
+                            </form>
+                            <form action="/saveDraft" method="post" style="display: inline-block">
+                                <label>
+                                    Title
+                                    <input type="text" id="title" name="Title" placeholder="Title" required />
+                                </label>
+
+                                <label>
+                                    Description
+                                    <input type="text" id="description" name="Description" placeholder="Description" required />
+                                </label>
+
+                                <label>
+                                    Keywords
+                                    <input type="text" id="keywords" name="Keywords" placeholder="Keywords" required />
+                                </label>
+
+                                <label>
+                                    Slug
+                                    <input type="text" id="slug" name="Slug" placeholder="Slug" required />
+                                </label>
+
+                                <label>
+                                    Categories
+                                    <select id="categoryBox" name="ParentSlug" required>
+                                        <option value="">Select a category</option>
+                                        @foreach (string? slug in Model.AvailableCategories)
+                                        {
+                                            <option value="@slug">@slug</option>
+                                        }
+                                    </select>
+                                </label>
+
+                                <label>
+                                    Name
+                                    <input type="text" id="name" name="Name" placeholder="Name" required />
+                                </label>
+
+                                <input type="hidden" id="body" name="Body" />
+                                <input type="hidden" name="accessToken" value="@Model.AccessToken" />
+
+                                <button type="submit">Save Draft</button>
+                            </form>
+                        </aside>
+                    </div>
                 </div>
             </div>
             <footer>
@@ -64,8 +151,10 @@
         <script src="https://cdn.jsdelivr.net/npm/simply-beautiful@latest/dist/index.min.js"></script>
 
         <script defer>
-            const urlParams = new URLSearchParams(window.location.search);
-            let allSlugs;
+            @if (Model.NavigatedFromFormSubmit)
+            {
+                Html.Raw(@"alert(""Post update successful.""");            
+            }
 
             var options = {
                 indent_size: 4,
@@ -74,33 +163,49 @@
 
             var beautify = SimplyBeautiful();
 
-            document.getElementById('body').addEventListener('keydown', function (event) {
-                if (event.key === 'Tab') {
-                    event.preventDefault(); // Prevent the default tab behavior
+            function showHtmlView() {
+                let htmlView = document.getElementById('html');
+                let renderedView = document.getElementById('rendered');
 
-                    // Get the current selection
+                if (htmlView.style.display === 'none') {
+                    htmlView.innerText = beautify.html(renderedView.innerHTML, options);
+
+                    showTabContent(event, 'html');
+                }
+            }
+
+            function showRenderedView() {
+                let htmlView = document.getElementById('html');
+                let renderedView = document.getElementById('rendered');
+
+                if (renderedView.style.display === 'none') {
+                    renderedView.innerHTML = htmlView.innerText;
+                    
+                    showTabContent(event, 'rendered');
+                }
+            }
+
+            document.getElementById('html').addEventListener('keydown', function (event) {
+                if (event.key === 'Tab') {
+                    event.preventDefault();
+
                     const selection = window.getSelection();
                     const range = selection.getRangeAt(0);
 
-                    // Create a text node containing 4 spaces
                     const spaceNode = document.createTextNode('    ');
 
-                    // Insert the 4 spaces at the cursor position
                     range.insertNode(spaceNode);
 
-                    // Move the cursor to after the inserted spaces
                     range.setStartAfter(spaceNode);
                     range.setEndAfter(spaceNode);
 
-                    // Clear the selection and update the cursor position
                     selection.removeAllRanges();
                     selection.addRange(range);
                 }
 
                 if (event.ctrlKey && event.key === 'i') {
-                    event.preventDefault(); // Prevent the default behavior of Ctrl+I
+                    event.preventDefault();
 
-                    // Get the current selection
                     const selection = window.getSelection();
                     const range = selection.getRangeAt(0);
                     const selectedText = selection.toString();
@@ -108,219 +213,61 @@
                     if (selectedText.length > 0) {
                         const textWithEm = `<em>${selectedText}</em>`;
 
-                        // Check if the selection already contains <em> and </em>
                         if (selectedText.startsWith('<em>') && selectedText.endsWith('</em>')) {
-                            // Remove the <em> and </em> tags from the selected text
                             const newText = selectedText.slice(4, -5); // Remove the <em> and </em> part
                             range.deleteContents(); // Clear the selected text
                             range.insertNode(document.createTextNode(newText)); // Insert plain text
                         } else {
-                            // Add <em> and </em> around the selected text
                             range.deleteContents(); // Clear the selected text
                             range.insertNode(document.createTextNode(textWithEm)); // Insert <em>wrapped</em> text
                         }
                     }
                 }
+
+                setTimeout(() => document.getElementById("body").value = event.target.innerText, 50);
             });
 
-            const accessToken = urlParams.get("accessToken");
-
-            getAllCategoryNames();
-            getAllSlugs();
-
-            function getAllSlugs() {
-                // Make a POST request to the /test endpoint
-                fetch(`/getAllSlugs?accessToken=${accessToken}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json' // Assuming you're sending JSON
-                    },
-                })
-                .then(async response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-
-                    response = await response.text();
-
-                    return JSON.parse(response);
-                })
-                .then(data => {
-                    const slugBox = document.getElementById('slugBox');
-
-                    let blankOpt = document.createElement("option");
-                    blankOpt.value = null;
-                    blankOpt.innerHTML = '';
-                    slugBox.append(blankOpt);
-
-                    allSlugs = data;
-
-                    console.log(allSlugs);
-
-                    data.map((slug, i) => {
-                        let opt = document.createElement("option");
-                        opt.value = slug;
-                        opt.innerHTML = slug;
-                        slugBox.append(opt);
-                    });
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-            }
-
-            async function getAllCategoryNames() {
-                // Make a POST request to the /test endpoint
-                await fetch(`/getAllCategoryNames?accessToken=${accessToken}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json' // Assuming you're sending JSON
-                    },
-                })
-                .then(async response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
-                    }
-
-                    response = await response.text();
-
-                    return JSON.parse(response);
-                })
-                .then(data => {
-                    const categoryBox = document.getElementById('categoryBox');
-
-                    let blankOpt = document.createElement("option");
-                    blankOpt.value = 'none';
-                    blankOpt.innerHTML = 'none';
-                    categoryBox.append(blankOpt);
-
-                    data.map((category, i) => {
-                        let opt = document.createElement("option");
-                        opt.value = category;
-                        if (category === "") {
-                            opt.innerHTML = "index";
-                        }
-                        else {
-                            opt.innerHTML = category;
-                        }
-                        categoryBox.append(opt);
-                    });
-                })
-                .catch(error => {
-                    console.error('There was a problem with the fetch operation:', error);
-                });
-            }
+            document.getElementById("rendered").addEventListener("keydown", (event) => {
+                document.getElementById("body").value = event.target.innerText;
+            })
 
             function getSlugBody(slugBox) {
-                fetch(`/getSlugPost?accessToken=${accessToken}&slug=${slugBox.value}`, {
+                fetch(`/getSlugPost?accessToken=@Model.AccessToken&slug=${slugBox.value}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json' // Assuming you're sending JSON
                     },
                 })
-                    .then(async response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
+                .then(async response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
 
-                        response = await response.text();
+                    response = await response.text();
 
-                        return JSON.parse(response);
-                    })
-                    .then(data => {
-                        document.getElementById('title').value = data.title;
-                        document.getElementById('keywords').value = data.keywords;
-                        document.getElementById('description').value = data.description;
-                        document.getElementById('name').value = data.name;
-                        document.getElementById('slug').value = data.slug;
-
-                        if (document.getElementById('showHTML').checked) {
-                            var a = beautify.html(data.body, options);
-
-                            console.log(a);
-
-                            document.getElementById('body').textContent = a;
-                        }
-                        else {
-                            document.getElementById('preview').innerHTML = data.body;
-                        }
-
-                        console.log(data);
-
-                        if (data.parentSlug === undefined) {
-                            document.getElementById('categoryBox').value = 'none';
-                        }
-                        else {
-                            document.getElementById('categoryBox').value = data.parentSlug;
-                        }
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-            }
-
-            function saveDraft() {
-                const data =
-                {
-                    title: document.getElementById('title').value,
-                    keywords: document.getElementById('keywords').value,
-                    description: document.getElementById('description').value,
-                    dateModifiedISO: new Date().toISOString(),
-                    name: document.getElementById('name').value,
-                    slug: document.getElementById('slug').value,
-                    body: document.getElementById('body').textContent,
-                    parentSlug: document.getElementById('categoryBox').value
-                };
-
-                if (allSlugs.indexOf(data.slug) == -1) {
-                    data.dateCreatedISO = new Date(data.dateModifiedISO).toISOString();
-                }
-
-                // Make a POST request to the /test endpoint
-                fetch(`/sendPost?accessToken=${accessToken}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json' // Assuming you're sending JSON
-                    },
-                    body: JSON.stringify(data) // Replace with your actual data
+                    return JSON.parse(response);
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
+                .then(data => {
+                    document.getElementById('title').value = data.title;
+                    document.getElementById('keywords').value = data.keywords;
+                    document.getElementById('description').value = data.description;
+                    document.getElementById('name').value = data.name;
+                    document.getElementById('slug').value = data.slug;
 
-                        return response;
-                    })
-                    .then(data => {
-                        console.log('Data received:', data);
-                    })
-                    .catch(error => {
-                        console.error('There was a problem with the fetch operation:', error);
-                    });
-            }
+                    document.getElementById('html').textContent = beautify.html(data.body, options);
+                    document.getElementById('rendered').innerHTML = data.body;
+                    document.getElementById("body").value = beautify.html(data.body, options);
 
-            function swapView(element) {
-                if (element.checked) {
-                    document.getElementById('body').textContent = beautify.html(document.getElementById('preview').innerHTML, options);
-                    document.getElementById('body').style.display = 'block';
-                    document.getElementById('preview').style.display = 'none';
-                    document.getElementById('disableEditor').disabled = true;
-                } else {
-                    let parsedText = parseMarkdown(document.getElementById('body').textContent);
-                    document.getElementById('preview').innerHTML = parsedText;
-                    document.getElementById('preview').style.display = 'block';
-                    document.getElementById('body').style.display = 'none';
-                    document.getElementById('disableEditor').disabled = false;
-                }
-            }
-
-            function toggleEditor(element) {
-                if (element.checked) {
-                    document.getElementById('preview').contentEditable = true;
-                }
-                else {
-                    document.getElementById('preview').contentEditable = false;
-                }
+                    if (data.parentSlug === undefined) {
+                        document.getElementById('categoryBox').value = 'none';
+                    }
+                    else {
+                        document.getElementById('categoryBox').value = data.parentSlug;
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                });
             }
 
             function parseMarkdown(text) {

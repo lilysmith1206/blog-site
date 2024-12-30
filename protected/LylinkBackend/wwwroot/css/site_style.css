@@ -51,11 +51,18 @@ body header > #website-header {
     font-variant: small-caps;
 }
 
-body main {
+body main, body aside {
     border-width: 3px;
     border-style: outset;
     padding: 0.5% 1%;
+}
+
+body main {
     margin: 3% 0%;
+}
+
+body aside {
+    width: 23%;
 }
 
 body footer {

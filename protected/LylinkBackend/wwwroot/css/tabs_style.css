@@ -8,7 +8,7 @@
     justify-content: space-around;
 }
 
-.tab-button {
+button {
     border-width: 2px;
     border-style: outset;
     padding: 10px 20px;

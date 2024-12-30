@@ -8,7 +8,7 @@ body header {
     border-bottom: 7px #5d547c inset; /* Dark lilac accent */
 }
 
-body main {
+body main, body aside {
     background-color: #474168; /* Another shade of dark lilac */
     border-color: #3f3a52;
 }
@@ -56,18 +56,18 @@ table td, table th {
 }
 
 /* Dark mode tab colors */
-.tab-button {
+button {
     background-color: #4A4460;
     border-color: #3E3951;
     color: white;
     font-weight: bold;
 }
 
-.tab-button:hover {
+button:hover {
     background-color: #4C4663;
 }
 
-.tab-button.active {
+button.active {
     background-color: #585172;
 }
 
