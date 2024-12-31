@@ -5,3 +5,4 @@ private/mysqldump.sql
 **/bin/
 **/obj/
 **/.vs/
+/logs
