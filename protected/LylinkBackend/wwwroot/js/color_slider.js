@@ -14,6 +14,11 @@ if (currentColorStatus !== null) {
         lightSun.style.display = 'inline';
     }
 }
+else {
+    localStorage.setItem('theme', 'light');
+	
+	showLightMode();
+}
 
 document.getElementById("darkMoon").addEventListener("click", handleDarkMoonClick);
 document.getElementById("lightSun").addEventListener("click", handleLightSunClick);
