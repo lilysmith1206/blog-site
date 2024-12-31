@@ -228,7 +228,7 @@
             });
 
             document.getElementById("rendered").addEventListener("keydown", (event) => {
-                document.getElementById("body").value = event.target.innerText;
+                document.getElementById("body").value = event.target.innerHTML;
             })
 
             function getSlugBody(slugBox) {
