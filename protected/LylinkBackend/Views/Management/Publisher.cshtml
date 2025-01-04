@@ -168,7 +168,7 @@
                 let renderedView = document.getElementById('rendered');
 
                 if (htmlView.style.display === 'none') {
-                    htmlView.innerText = beautify.html(renderedView.innerHTML, options);
+                    htmlView.innerText = beautify.html(parseMarkdown(renderedView.innerHTML), options);
 
                     showTabContent(event, 'html');
                 }
@@ -179,7 +179,7 @@
                 let renderedView = document.getElementById('rendered');
 
                 if (renderedView.style.display === 'none') {
-                    renderedView.innerHTML = htmlView.innerText;
+                renderedView.innerHTML = parseMarkdown(htmlView.innerText);
                     
                     showTabContent(event, 'rendered');
                 }
@@ -271,10 +271,8 @@
             }
 
             function parseMarkdown(text) {
-                // Replace *Bold* with <strong>Bold</strong>
                 text = text.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
 
-                // Replace _Italicized_ with <em>Italicized</em>
                 text = text.replace(/_(.*?)_/g, '<em>$1</em>');
 
                 return text;
