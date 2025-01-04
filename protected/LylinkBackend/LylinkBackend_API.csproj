@@ -31,6 +31,7 @@
   <ItemGroup>
     <_ContentIncludedByDefault Remove="BasePage.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Shared\SiteColorToggle.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\management_layout.css" />
   </ItemGroup>
 
   <ItemGroup>
