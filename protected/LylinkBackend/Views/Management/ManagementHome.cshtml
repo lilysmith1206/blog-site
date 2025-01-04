@@ -2,15 +2,14 @@
 @model ManagementHome
 <!DOCTYPE html>
 <html lang="en">
-    @await Html.PartialAsync("HeadContent", new HeadContent()
-    {
-        Description = "Lylink - Management",
-        Keywords = "lylink, management",
-        NeedsTableStyling = false,
-        NeedsEditorTooling = false,
-        Title = "Lylink - Management",
-    })
-
+    <head>
+        @await Html.PartialAsync("HeadContent", new HeadContent()
+        {
+            Description = "Lylink - Management",
+            Keywords = "lylink, management",
+            Title = "Lylink - Management",
+        })
+    </head>
     <body>
         <div id="adblock-background"></div>
         <div id="adblock-popup">

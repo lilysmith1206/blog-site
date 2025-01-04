@@ -4,66 +4,72 @@
 
 <!DOCTYPE html>
 <html lang="en">
-@{
-    Regex tableTagRegex = new(@"<table\b[^>]*>", RegexOptions.IgnoreCase);
-}
-
-@await Html.PartialAsync("HeadContent", new HeadContent
-{
-    Description = Model.Description,
-    Keywords = Model.Keywords,
-    NeedsTableStyling = tableTagRegex.IsMatch(Model.Body),
-    NeedsEditorTooling = Model.EditorName != null,
-    Title = Model.Title,
-})
-
-<body>
-    <div id="adblock-background"></div>
-    <div id="adblock-popup">
-        <p>Hey, it looks like a resource failed to load. If you have an ad-blocker, please turn it off.</p>
-        <p>This site will never have ads. Please turn off your ad-blocker so my stylesheets load properly.</p>
-        <p>Thank you.</p>
-        <button onclick="closePopup()">Close</button>
-    </div>
-    <div id="page-container">
-        @await Html.PartialAsync(nameof(SiteColorToggle), new SiteColorToggle
+    <head>
+        @await Html.PartialAsync("HeadContent", new HeadContent()
         {
+            Description = "Lylink - Management",
+            Keywords = "lylink, management",
+            Title = "Lylink - Management",
         })
-        <div id="content-wrap">
-            <header>
-               @await Html.PartialAsync("PageHeader", new PageHeader
-               {
-                   Name = Model.PageName,
-                   ParentCategories = Model.ParentCategories
-               })
 
-                @{
-                    string updateTime = $"{Model.DateUpdated.Hour}:{Model.DateUpdated.Minute:D2}";
-                    string updateDate = $"{Model.DateUpdated.Month}/{Model.DateUpdated.Day}/{Model.DateUpdated.Year}";
-                }
-                
-                <h5>Updated @updateTime on @updateDate</h5>
-            </header>
-            <div class="container">
-                <main>
-                    @Html.Raw(Model.Body)
-                </main>
-            </div>
-        </div>
-        <footer>
-            <p>Copyright 2024, All Rights Reserved</p>
-        </footer>
+        @{
+            Regex tableTagRegex = new(@"<table\b[^>]*>", RegexOptions.IgnoreCase);
+
+            if (tableTagRegex.IsMatch(Model.Body))
+            {
+
+                <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" />
+            }
+        }
 
         @if (Model.EditorName != null)
         {
-            <script src="js/recogito-polyfills.js" onerror="showAdblockPopup()"></script>
-            <script src="js/recogito.min.js" onerror="showAdblockPopup()"></script>
-            <script src="js/annotation.js" onerror="showAdblockPopup()"></script>
+            <link rel="stylesheet" href="css/recogito.min.css" onerror="showAdblockPopup()" />
+            <script src="js/recogito-polyfills.js" onerror="showAdblockPopup()" defer></script>
+            <script src="js/recogito.min.js" onerror="showAdblockPopup()" defer></script>
+            <script src="js/annotation.js" onerror="showAdblockPopup()" defer></script>
         }
+    </head>
+    <body>
+        <div id="adblock-background"></div>
+        <div id="adblock-popup">
+            <p>Hey, it looks like a resource failed to load. If you have an ad-blocker, please turn it off.</p>
+            <p>This site will never have ads. Please turn off your ad-blocker so my stylesheets load properly.</p>
+            <p>Thank you.</p>
+            <button onclick="closePopup()">Close</button>
+        </div>
+        <div id="page-container">
+            @await Html.PartialAsync(nameof(SiteColorToggle), new SiteColorToggle
+            {
+            })
+            <div id="content-wrap">
+                <header>
+                   @await Html.PartialAsync("PageHeader", new PageHeader
+                   {
+                       Name = Model.PageName,
+                       ParentCategories = Model.ParentCategories
+                   })
 
-        <script defer>
-            let FF_FOUC_FIX;
-        </script>
-    </div>
-</body>
+                    @{
+                        string updateTime = $"{Model.DateUpdated.Hour}:{Model.DateUpdated.Minute:D2}";
+                        string updateDate = $"{Model.DateUpdated.Month}/{Model.DateUpdated.Day}/{Model.DateUpdated.Year}";
+                    }
+                
+                    <h5>Updated @updateTime on @updateDate</h5>
+                </header>
+                <div class="container">
+                    <main>
+                        @Html.Raw(Model.Body)
+                    </main>
+                </div>
+            </div>
+            <footer>
+                <p>Copyright 2024, All Rights Reserved</p>
+            </footer>
+
+            <script defer>
+                let FF_FOUC_FIX;
+            </script>
+        </div>
+    </body>
 </html>

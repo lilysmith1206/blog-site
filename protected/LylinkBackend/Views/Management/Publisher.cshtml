@@ -2,51 +2,51 @@
 @model Publisher
 <!DOCTYPE html>
 <html lang="en">
-    @await Html.PartialAsync("HeadContent", new HeadContent()
-    {
-        Description = "Lylink - Publisher",
-        Keywords = "lylink, post, manager",
-        NeedsTableStyling = false,
-        NeedsEditorTooling = false,
-        Title = "Lylink - Publisher",
-    })
+    <head>
+        @await Html.PartialAsync("HeadContent", new HeadContent()
+        {
+            Description = "Lylink - Management",
+            Keywords = "lylink, management",
+            Title = "Lylink - Management",
+        })
 
-    <style>
-        body .container {
-            width: 97.5%;
-            margin: 0 auto;
-        }
+        <style>
+            body .container {
+                width: 97.5%;
+                margin: 0 auto;
+            }
 
-        body main {
-            width: 70%;
-        }
+            body main {
+                width: 70%;
+            }
 
-        body aside {
-            position: fixed;
-            top: 20%;
-            right: 0;
-        }
+            body aside {
+                position: fixed;
+                top: 20%;
+                right: 0;
+            }
 
-        .tab-content {
-            top: 30%;
-            padding: 0px;
-            border-width: 0px;
-            border-style: none;
-            background-color: transparent;
-            border-color: transparent;
-        }
+            .tab-content {
+                top: 30%;
+                padding: 0px;
+                border-width: 0px;
+                border-style: none;
+                background-color: transparent;
+                border-color: transparent;
+            }
 
-        .tab-container {
-            max-width: 100%;
-            width: 100%;
-        }
+            .tab-container {
+                max-width: 100%;
+                width: 100%;
+            }
 
-        button {
-            margin: 0 auto;
-            margin-top: 5px;
-            display: block;
-        }
-    </style>
+            button {
+                margin: 0 auto;
+                margin-top: 5px;
+                display: block;
+            }
+        </style>
+    </head>
     
     <body>
         <div id="adblock-background"></div>
