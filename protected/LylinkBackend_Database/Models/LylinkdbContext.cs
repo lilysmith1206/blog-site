@@ -8,7 +8,7 @@ namespace LylinkBackend_Database.Models;
 
 public partial class LylinkdbContext : DbContext
 {
-    private readonly string _connectionString;
+    private readonly string? _connectionString;
 
     public LylinkdbContext()
     {
@@ -17,19 +17,27 @@ public partial class LylinkdbContext : DbContext
     public LylinkdbContext(DbContextOptions<LylinkdbContext> options)
         : base(options)
     {
-        var a = (MySqlOptionsExtension)options.Extensions.Single(extension => extension is MySqlOptionsExtension);
-
-        _connectionString = a.ConnectionString ?? string.Empty;
+        _connectionString = options.Extensions
+            .OfType<MySqlOptionsExtension>()
+            .FirstOrDefault()?.ConnectionString;
     }
 
     public virtual DbSet<Annotation> Annotations { get; set; }
 
     public virtual DbSet<Post> Posts { get; set; }
-
+    
     public virtual DbSet<PostHierarchy> PostHierarchies { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql(_connectionString, ServerVersion.Parse("11.5.2-mariadb"));
+    {
+        if (optionsBuilder.IsConfigured == false)
+        {
+            if (string.IsNullOrEmpty(_connectionString) == false)
+            {
+                optionsBuilder.UseMySql(_connectionString, ServerVersion.Parse("11.5.2-mariadb"));
+            }
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
