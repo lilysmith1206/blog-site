@@ -62,13 +62,11 @@ function hideImage(element, newElement) {
 }
 
 function showDarkMode() {
-    document.getElementById('darkStyle').removeAttribute('disabled');
-    document.getElementById('lightStyle').setAttribute('disabled', 'true');
+    document.body.classList.add('dark-mode');
 }
 
 function showLightMode() {
-    document.getElementById('lightStyle').removeAttribute('disabled');
-    document.getElementById('darkStyle').setAttribute('disabled', 'true');
+    document.body.classList.remove('dark-mode');
 }
 
 function handleDarkMoonClick() {
