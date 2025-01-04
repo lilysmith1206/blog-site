@@ -24,7 +24,9 @@ namespace LylinkBackend
             });
 
             builder.Services.AddSingleton<List<ManagementToken>>();
-            builder.Services.AddTransient<IDatabaseService, DatabaseService>();
+            builder.Services.AddTransient<IAnnotationDatabaseService, DatabaseService>();
+            builder.Services.AddTransient<IPostDatabaseService, DatabaseService>();
+            builder.Services.AddTransient<IPostCategoryDatabaseService, DatabaseService>();
             builder.Services.AddSingleton<ISlugCacheService, SlugCacheService>();
 
             builder.Services.AddHostedService<SlugDataService>();

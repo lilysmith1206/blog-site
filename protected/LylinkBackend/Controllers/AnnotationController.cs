@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace LylinkBackend_API.Controllers
 {
     [ApiController]
-    public class AnnotationController(IDatabaseService databaseService) : Controller
+    public class AnnotationController(IAnnotationDatabaseService annotationDatabase) : Controller
     {
         [HttpGet("GetAnnotations")]
         public IActionResult GetAnnotations([FromQuery] string slug, [FromQuery] string editorName)
         {
-            IEnumerable<Annotation> annotations = databaseService.GetAnnotations(slug, editorName);
+            IEnumerable<Annotation> annotations = annotationDatabase.GetAnnotations(slug, editorName);
 
             return Ok(annotations.Select(annotation => annotation.AnnotationContent));
         }
@@ -26,7 +26,7 @@ namespace LylinkBackend_API.Controllers
                 Id = request.AnnotationId
             };
 
-            string? annotationId = databaseService.CreateAnnotation(annotation);
+            string? annotationId = annotationDatabase.CreateAnnotation(annotation);
 
             if (annotationId != null)
             {
@@ -39,13 +39,13 @@ namespace LylinkBackend_API.Controllers
         [HttpPut("UpdateAnnotation")]
         public IActionResult UpdateAnnotation([FromBody] UpdateAnnotationRequest request)
         {
-            var annotation = databaseService.GetAnnotation(request.AnnotationId);
+            var annotation = annotationDatabase.GetAnnotation(request.AnnotationId);
 
             if (annotation == null)
                 return NotFound();
 
             annotation.AnnotationContent = request.AnnotationContent;
-            databaseService.UpdateAnnotation(annotation);
+            annotationDatabase.UpdateAnnotation(annotation);
 
             return Ok();
         }
@@ -53,7 +53,7 @@ namespace LylinkBackend_API.Controllers
         [HttpDelete("DeleteAnnotation")]
         public IActionResult DeleteAnnotation([FromQuery] string annotationId)
         {
-            bool successfulDelete = databaseService.DeleteAnnotation(annotationId);
+            bool successfulDelete = annotationDatabase.DeleteAnnotation(annotationId);
 
             return successfulDelete ? Ok() : NotFound();
         }

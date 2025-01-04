@@ -3,17 +3,14 @@ using LylinkBackend_API.Models;
 using LylinkBackend_Database.Models;
 using LylinkBackend_Database.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace LylinkBackend_API.Controllers
 {
-    public class PageController(IDatabaseService database, ISlugCacheService slugCache) : Controller
+    public class PageController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase, ISlugCacheService slugCache) : Controller
     {
         public IActionResult RenderPage(string? editor, string slug = "")
         {
-            bool addSuggestionTools = string.IsNullOrEmpty(editor) == false;
-
             IReadOnlyList<string?> postSlugs = slugCache.GetPostSlugs();
             IReadOnlyList<string?> categorySlugs = slugCache.GetCategorySlugs();
 
@@ -37,7 +34,7 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreatePostView(string slug, string? editorName)
         {
-            Post? post = database.GetPost(slug);
+            Post? post = postDatabase.GetPost(slug);
             
             return View(nameof(PostPage), new PostPage()
             {
@@ -54,10 +51,10 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreateCategoryView(string slug)
         {
-            PostHierarchy postCategory = database.GetCategoryFromSlug(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
+            PostHierarchy postCategory = postDatabase.GetCategoryFromSlug(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
 
-            IEnumerable<PageLink> posts = GetPostsUnderCategory(database, postCategory.CategoryId);
-            IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(database, postCategory);
+            IEnumerable<PageLink> posts = GetPostsUnderCategory(postCategory.CategoryId);
+            IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
 
             return View(nameof(CategoryPage), new CategoryPage()
             {
@@ -74,12 +71,12 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreateIndexView()
         {
-            PostHierarchy postCategory = database.GetCategoryFromSlug("") ?? throw new NullReferenceException($"Index not found for some reason?");
+            PostHierarchy postCategory = postDatabase.GetCategoryFromSlug("") ?? throw new NullReferenceException($"Index not found for some reason?");
 
-            IEnumerable<PageLink> posts = GetPostsUnderCategory(database, postCategory.CategoryId);
-            IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(database, postCategory);
+            IEnumerable<PageLink> posts = GetPostsUnderCategory(postCategory.CategoryId);
+            IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
 
-            IEnumerable<PageLink> mostRecentPosts = database.GetRecentlyUpdatedPosts(10)
+            IEnumerable<PageLink> mostRecentPosts = postDatabase.GetRecentlyUpdatedPosts(10)
                 .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
                 .Select(post => new PageLink()
                 {
@@ -101,9 +98,9 @@ namespace LylinkBackend_API.Controllers
             });
         }
 
-        private static IEnumerable<PageLink> GetPostsUnderCategory(IDatabaseService database, string categoryId)
+        private IEnumerable<PageLink> GetPostsUnderCategory(string categoryId)
         {
-            return database.GetAllPostsWithParentId(categoryId)
+            return postDatabase.GetAllPostsWithParentId(categoryId)
                 .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
                 .Select(post => new PageLink()
                 {
@@ -112,10 +109,10 @@ namespace LylinkBackend_API.Controllers
                 });
         }
 
-        private static IEnumerable<PageLink> GetChildCategoriesForCategoryPage(IDatabaseService database, PostHierarchy postCategory)
+        private IEnumerable<PageLink> GetChildCategoriesForCategoryPage(PostHierarchy postCategory)
         {
-            return database.GetChildCategoriesOfCategory(postCategory.CategoryId)
-                .Where(childCategory => database.GetAllPostsWithParentId(childCategory.CategoryId).Any() || database.GetChildCategoriesOfCategory(childCategory.CategoryId).Any())
+            return categoryDatabase.GetChildCategoriesOfCategory(postCategory.CategoryId)
+                .Where(childCategory => postDatabase.GetAllPostsWithParentId(childCategory.CategoryId).Any() || categoryDatabase.GetChildCategoriesOfCategory(childCategory.CategoryId).Any())
                 .Select(post => new PageLink()
                 {
                     Name = post?.Name ?? "Unnamed Post Category",
@@ -125,7 +122,7 @@ namespace LylinkBackend_API.Controllers
 
         protected IEnumerable<PageLink> GetParentCategories(string parentId)
         {
-            List<PostHierarchy> parents = database.GetParentCategories(parentId);
+            List<PostHierarchy> parents = categoryDatabase.GetParentCategories(parentId);
 
             parents.Single(parent => string.IsNullOrEmpty(parent.Slug)).Slug = "/"; 
 

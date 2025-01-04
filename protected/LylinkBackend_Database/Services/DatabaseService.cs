@@ -2,7 +2,7 @@
 
 namespace LylinkBackend_Database.Services
 {
-    public class DatabaseService(LylinkdbContext context) : IDatabaseService
+    public class DatabaseService(LylinkdbContext context) : IPostDatabaseService, IPostCategoryDatabaseService, IAnnotationDatabaseService
     {
         public IEnumerable<string?> GetAllCategorySlugs()
         {

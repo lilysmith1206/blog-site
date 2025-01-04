@@ -7,7 +7,7 @@ namespace LylinkBackend_API.Controllers
 {
     [ApiController]
     [Route("Management")]
-    public class ManagementController(IDatabaseService database, List<ManagementToken> managementAccessTokens) : Controller
+    public class ManagementController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase, List<ManagementToken> managementAccessTokens) : Controller
     {
         [HttpGet("/login")]
         public IActionResult Login([FromQuery] string? password)
@@ -57,8 +57,8 @@ namespace LylinkBackend_API.Controllers
                 {
                     AccessToken = accessToken,
                     NavigatedFromFormSubmit = successfulPostSubmit == true,
-                    AvailableCategories = database.GetAllCategorySlugs(),
-                    AvailableSlugs = database.GetAllPostSlugs(),
+                    AvailableCategories = categoryDatabase.GetAllCategorySlugs(),
+                    AvailableSlugs = postDatabase.GetAllPostSlugs(),
                 });
             }
 
@@ -81,14 +81,14 @@ namespace LylinkBackend_API.Controllers
                 return tokenVerificationResult;
             }
 
-            var post = database.GetPost(slug);
+            var post = postDatabase.GetPost(slug);
 
             if (post == null)
             {
                 return StatusCode(404);
             }
 
-            var postCategory = database.GetCategoryFromId(post?.ParentId ?? string.Empty);
+            var postCategory = categoryDatabase.GetCategoryFromId(post?.ParentId ?? string.Empty);
 
             var remotePost = new RemotePost
             {
@@ -126,7 +126,7 @@ namespace LylinkBackend_API.Controllers
                 _ => remotePost.ParentSlug
             };
 
-            Post? existingPost = database.GetPost(remotePost.Slug);
+            Post? existingPost = postDatabase.GetPost(remotePost.Slug);
             TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
             DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
@@ -138,7 +138,7 @@ namespace LylinkBackend_API.Controllers
                 DateCreated = existingPost == null ? currentEasternTime : existingPost.DateCreated,
                 Name = remotePost.Name,
                 Title = remotePost.Title,
-                ParentId = database.GetCategoryFromSlug(parentSlug ?? string.Empty)?.CategoryId,
+                ParentId = postDatabase.GetCategoryFromSlug(parentSlug ?? string.Empty)?.CategoryId,
                 Keywords = remotePost.Keywords,
                 Description = remotePost.Description,
                 Body = remotePost.Body
@@ -148,11 +148,11 @@ namespace LylinkBackend_API.Controllers
             {
                 if (existingPost != null)
                 {
-                    database.UpdatePost(post);
+                    postDatabase.UpdatePost(post);
                 }
                 else
                 {
-                    database.CreatePost(post);
+                    postDatabase.CreatePost(post);
                 }
 
                 return RedirectToAction("Publisher", "Management", new { accessToken, successfulPostSubmit = true });
