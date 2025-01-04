@@ -92,7 +92,7 @@ table td, table th {
 button {
     background-color: var(--button-bg-color);
     border-color: var(--button-border-color);
-    color: black;
+    color: var(--text-color);
     font-weight: bold;
 }
 

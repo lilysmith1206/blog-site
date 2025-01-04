@@ -7,15 +7,21 @@ form {
     padding: 1rem;
 }
 
-label {
+form label {
     display: block;
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
 
-select, input[type="text"] {
+form select, input[type="text"] {
     width: 100%;
     padding: 0.5rem;
     font-size: 1rem;
     background-color: #f9f9f9; /* Input background */
+}
+
+form button {
+    margin: 0 auto;
+    margin-top: 5px;
+    display: block;
 }
