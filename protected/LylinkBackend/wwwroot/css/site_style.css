@@ -1,157 +1,247 @@
-/* fonts */
+/* ==========================================================
+1. Fonts
+========================================================== */
 @font-face {
-    font-family: "MonospaceTypewriter";
-    src: url("fonts-dir/monospacetypewriter.ttf");
+	font-family: "MonospaceTypewriter";
+	src: url("fonts-dir/monospacetypewriter.ttf");
 }
 
-/* general page container style */
-
+/* ==========================================================
+2. General Page Styles
+========================================================== */
 html {
-    background-color: #888;
-}
-
-pre {
-    white-space: pre-wrap;
-    font-family: 'MonospaceTypewriter' !important;
+	background-color: #888;
 }
 
 body {
-    margin: 0;
-    font-family: 'MonospaceTypewriter' !important;
+	margin: 0;
+	font-family: 'MonospaceTypewriter' !important;
 }
 
-body > #page-container {
-    position: relative;
-    min-height: 100vh;
+body>#page-container {
+	position: relative;
+	min-height: 100vh;
 }
-  
-body > #page-container > #content-wrap {
-    padding-bottom: 2.5rem;    /* Footer height */
+
+body>#page-container>#content-wrap {
+	padding-bottom: 2.5rem;
+	/* Footer height */
 }
 
 body .container {
-    width: 90%;
-    margin: 2.5% 0%;
-    margin-top: 1%;
-    margin-left: 1.5%;
-    margin-bottom: 2.5%;
+	width: 90%;
+	margin: 2.5% 0%;
+	margin-top: 1%;
+	margin-left: 1.5%;
+	margin-bottom: 2.5%;
 }
 
+/* ==========================================================
+3. Header Styles
+========================================================== */
 body header {
-    margin: 0;
-    width: 100%;
-    padding: 0.25em 0;
-    padding-left: 10%;
-    border-bottom-style: inset;
-    border-bottom-width: 7px;
-    box-sizing: border-box;
+	margin: 0;
+	width: 100%;
+	padding: 0.25em 0;
+	padding-left: 10%;
+	border-bottom-style: inset;
+	border-bottom-width: 7px;
+	box-sizing: border-box;
 }
 
-body header > #website-header {
-    font-variant: small-caps;
+body header>#website-header {
+	font-variant: small-caps;
 }
 
-body main, body aside {
-    border-width: 3px;
-    border-style: outset;
-    padding: 0.5% 1%;
+header .breadcrumb {
+	box-sizing: border-box;
+	overflow-x: visible;
+	border-width: 0px;
+	border-bottom: 2px solid;
+	border-style: solid;
+	display: inline-block;
+	white-space: nowrap;
+}
+
+header .breadcrumb ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: nowrap;
+}
+
+header .breadcrumb ul > li > a {
+	display: inline-block;
+	font-size: 1.17em;
+	margin-top: 0.5em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+
+header .breadcrumb li::after {
+	margin-left: 10px;
+	margin-right: 5px;
+	content: "→";
+}
+
+/* ==========================================================
+4. Main and Aside Styles
+========================================================== */
+body main,
+body aside {
+	border-width: 3px;
+	border-style: outset;
+	padding: 0.5% 1%;
 }
 
 body main {
-    margin: 3% 0%;
+	margin: 3% 0%;
 }
 
 body aside {
-    width: 23%;
+	width: 23%;
 }
 
+/* ==========================================================
+5. Footer Styles
+========================================================== */
 body footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    margin: 0;
-    text-align: center;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	margin: 0;
+	text-align: center;
 }
 
-/* page element stylings */
-
+/* ==========================================================
+6. Typography and Links
+========================================================== */
 body h5 {
-    font-weight: normal;
+	font-weight: normal;
 }
 
 body a {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 body a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 body hr {
-    border: none;
-    height: 2px;
-    width: 75%;
+	border: none;
+	height: 2px;
+	width: 75%;
 }
 
 body h2 {
-    min-width: 25%;
-    max-width: 50%;
+	min-width: 25%;
+	max-width: 50%;
 }
 
-/* misc/irrelevant css */
-.illegible {
-    color: transparent;
-    text-shadow: 0 0 10px rgba(0,0,0,0.5);
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
-    user-select: none;
+/* ==========================================================
+7. Adblock Popup Styles
+========================================================== */
+#adblock-popup {
+	display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	background-color: white;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+	text-align: center;
+	line-height: 1.5;
 }
 
-.breadcrumb {
-    box-sizing: border-box;
-    overflow-x: visible; /* Allow content to be visible outside the box */
-    border-width: 0px;
-    border-bottom: 2px solid; /* Border for style */
-    border-style: solid;
-    display: inline-block;
-    white-space: nowrap;
+#adblock-popup p {
+	margin: 0;
+	font-size: 16px;
 }
 
-.breadcrumb ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: nowrap; /* Prevents wrapping on larger screens */
+#adblock-popup button {
+	margin-top: 10px;
+	padding: 5px 10px;
+	font-size: 14px;
+	cursor: pointer;
 }
 
-.breadcrumb ul > li > a {
-    display: inline-block;
-    font-size: 1.17em;
-    margin-top: 0.5em;
-    margin-left: 0;
-    margin-right: 0;
-    font-weight: bold;
+#adblock-background {
+	display: none;
+	width: 100%;
+	height: 100vh;
+	top: 0;
+	position: fixed;
+	z-index: 99;
+	background-color: rgba(0, 0, 0, 0.2);
 }
 
-.breadcrumb li::after {
-    margin-left: 10px;
-    margin-right: 5px;
-    content: "→";
-}
-
+/* ==========================================================
+8. Mobile Styles
+========================================================== */
 @media (max-width: 800px) {
-    .breadcrumb ul {
-        flex-direction: column; /* Stack vertically on mobile */
-        align-items: flex-start;
-    }
+	header .breadcrumb ul {
+		flex-direction: column;
+		/* Stack vertically on mobile */
+		align-items: flex-start;
+	}
 
-    .breadcrumb li::after {
-        content: "↓"; /* Add a down arrow instead of a right arrow */
-        margin-left: 15px;
-        margin-right: 5px;
-    }
+	header .breadcrumb li::after {
+		content: "↓";
+		/* Add a down arrow instead of a right arrow */
+		margin-left: 15px;
+		margin-right: 5px;
+	}
+}
+
+@media screen and (max-width: 525px) {
+	body header>#website-header {
+		font-size: 6vw;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	body header {
+		width: 100%;
+	}
+
+	body header>#website-header {
+		width: 85%;
+	}
+
+	body .container {
+		width: 95%;
+		margin: 0 auto;
+	}
+
+	body main {
+		box-sizing: border-box;
+		width: 100%;
+	}
+
+	body main p {
+		margin-left: 2.5%;
+	}
+
+	body h2 {
+		border-bottom: 1px solid #d09dd7;
+		min-width: 50%;
+		max-width: 80%;
+		margin-left: 2.5%;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	body table.desktop {
+		display: none;
+	}
+
+	body table.mobile {
+		display: table;
+		width: 95%;
+	}
 }
