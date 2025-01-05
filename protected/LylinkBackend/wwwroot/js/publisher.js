@@ -60,7 +60,7 @@ document.getElementById("rendered").addEventListener("keydown", (event) => {
 })
 
 function getSlugBody(slugBox) {
-    fetch(`/getPostFromSlug?accessToken=@Model.AccessToken&slug=${slugBox.value}`, {
+    fetch(`/getPostFromSlug&slug=${slugBox.value}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json' // Assuming you're sending JSON

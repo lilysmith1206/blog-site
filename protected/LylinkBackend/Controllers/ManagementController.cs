@@ -8,37 +8,8 @@ namespace LylinkBackend_API.Controllers
 {
     [ApiController]
     [Route("Management")]
-    public class ManagementController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase, IAccessTokenCache accessTokenCache) : Controller
+    public class ManagementController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase) : Controller
     {
-        [HttpGet("/login")]
-        public IActionResult Login([FromQuery] string? password)
-        {
-            bool rightPassword = password == "v1p0v5h7LsqnHhGnC88mPgmE06xfD57bK5xLagPiiRDg3dx3Wh";
-            
-            if (rightPassword)
-            {
-                Guid accessToken = Guid.NewGuid();
-                DateTime? expiryDate = accessTokenCache.AddAccessToken(accessToken);
-
-                if (expiryDate == null)
-                {
-                    return Redirect("/403");
-                }
-
-                Response.Cookies.Append("accessToken", accessToken.ToString(), new CookieOptions()
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = expiryDate
-                });
-
-                return Redirect("/management");
-            }
-
-            return Redirect("/403");
-        }
-
         [HttpGet("/management")]
         public IActionResult Management()
         {
@@ -67,11 +38,6 @@ namespace LylinkBackend_API.Controllers
         {
             Request.Cookies.TryGetValue("accessToken", out string? accessToken);
 
-            if (Guid.TryParse(accessToken, out Guid guidToken) == false || accessTokenCache.VerifyAccessToken(guidToken) == false)
-            {
-                return StatusCode(403);
-            }
-
             var post = postDatabase.GetPost(slug);
 
             if (post == null)
@@ -99,11 +65,6 @@ namespace LylinkBackend_API.Controllers
         public IActionResult SaveDraft([FromForm] RemotePost remotePost)
         {
             Request.Cookies.TryGetValue("accessToken", out string? accessToken);
-
-            if (Guid.TryParse(accessToken, out Guid guidToken) == false || accessTokenCache.VerifyAccessToken(guidToken) == false)
-            {
-                return StatusCode(403);
-            }
 
             if (remotePost.Slug == null)
             {

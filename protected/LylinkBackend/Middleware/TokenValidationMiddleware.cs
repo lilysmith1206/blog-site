@@ -1,16 +1,17 @@
-﻿using LylinkBackend_API.Caches;
+﻿using LylinkBackend_API.Models;
+using Microsoft.Extensions.Options;
 
 namespace LylinkBackend_API.Middleware
 {
-    public class TokenValidationMiddleware(RequestDelegate next, IAccessTokenCache accessTokenCache)
+    public class TokenValidationMiddleware(RequestDelegate next, IOptions<Authentication> authentication)
     {
-        private readonly string[] RestrictedSlugs = ["/management", "/publisher"]; 
+        private readonly string[] RestrictedSlugs = ["/management", "/publisher", "/getPostFromSlug", "/savePost"]; 
 
         public async Task InvokeAsync(HttpContext context)
         {
             if (RestrictedSlugs.Contains(context.Request.Path.ToString()))
             {
-                if (context.Request.Cookies.TryGetValue("accessToken", out string? token) == false || IsValidToken(token) == false)
+                if (context.Request.Cookies.TryGetValue("token", out string? token) == false || authentication.Value.UserIds.Contains(token) == false)
                 {
                     context.Response.Redirect("/403");
 
@@ -20,16 +21,5 @@ namespace LylinkBackend_API.Middleware
 
             await next(context);
         }
-
-        private bool IsValidToken(string? token)
-        {
-            if (Guid.TryParse(token, out Guid guidToken))
-            {
-                return accessTokenCache.VerifyAccessToken(guidToken);
-            }
-
-            return false;
-        }
     }
-
 }
