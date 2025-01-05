@@ -1,75 +1,47 @@
 ﻿@using LylinkBackend_API.Models
 @using System.Text.RegularExpressions
 @model PostPage
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model.Title;
+    ViewData["Description"] = Model.Description;
+    ViewData["Keywords"] = Model.Keywords;
+    ViewData["PageName"] = Model.PageName;
+    ViewData["ParentCategories"] = Model.ParentCategories;
+}
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        @await Html.PartialAsync("HeadContent", new HeadContent()
+@section ExtraMetadata {
+    @{
+        Regex tableTagRegex = new(@"<table\b[^>]*>", RegexOptions.IgnoreCase);
+
+        if (tableTagRegex.IsMatch(Model.Body))
         {
-            Description = "Lylink - Management",
-            Keywords = "lylink, management",
-            Title = "Lylink - Management",
-        })
 
-        @{
-            Regex tableTagRegex = new(@"<table\b[^>]*>", RegexOptions.IgnoreCase);
-
-            if (tableTagRegex.IsMatch(Model.Body))
-            {
-
-                <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" />
-            }
+            <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" />
         }
+    }
 
-        @if (Model.EditorName != null)
-        {
-            <link rel="stylesheet" href="css/annotations/recogito.min.css" onerror="showAdblockPopup()" />
-            <script src="js/annotations/recogito-polyfills.js" onerror="showAdblockPopup()" defer></script>
-            <script src="js/annotations/recogito.min.js" onerror="showAdblockPopup()" defer></script>
-            <script src="js/annotations/annotation.js" onerror="showAdblockPopup()" defer></script>
-        }
-    </head>
-    <body>
-        <div id="adblock-background"></div>
-        <div id="adblock-popup">
-            <p>Hey, it looks like a resource failed to load. If you have an ad-blocker, please turn it off.</p>
-            <p>This site will never have ads. Please turn off your ad-blocker so my stylesheets load properly.</p>
-            <p>Thank you.</p>
-            <button onclick="closePopup()">Close</button>
-        </div>
-        <div id="page-container">
-            @await Html.PartialAsync(nameof(SiteColorToggle), new SiteColorToggle
-            {
-            })
-            <div id="content-wrap">
-                <header>
-                   @await Html.PartialAsync("PageHeader", new PageHeader
-                   {
-                       Name = Model.PageName,
-                       ParentCategories = Model.ParentCategories
-                   })
+    @if (Model.EditorName != null)
+    {
+        <link rel="stylesheet" href="css/annotations/recogito.min.css" onerror="showAdblockPopup()" />
+        <script src="js/annotations/recogito-polyfills.js" onerror="showAdblockPopup()" defer></script>
+        <script src="js/annotations/recogito.min.js" onerror="showAdblockPopup()" defer></script>
+        <script src="js/annotations/annotation.js" onerror="showAdblockPopup()" defer></script>
+    }
+}
 
-                    @{
-                        string updateTime = $"{Model.DateUpdated.Hour}:{Model.DateUpdated.Minute:D2}";
-                        string updateDate = $"{Model.DateUpdated.Month}/{Model.DateUpdated.Day}/{Model.DateUpdated.Year}";
-                    }
-                
-                    <h5>Updated @updateTime on @updateDate</h5>
-                </header>
-                <div class="container">
-                    <main>
-                        @Html.Raw(Model.Body)
-                    </main>
-                </div>
-            </div>
-            <footer>
-                <p>Copyright 2024, All Rights Reserved</p>
-            </footer>
+@section ExtraHeader {
+    @{
+        string updateTime = $"{Model.DateUpdated.Hour}:{Model.DateUpdated.Minute:D2}";
+        string updateDate = $"{Model.DateUpdated.Month}/{Model.DateUpdated.Day}/{Model.DateUpdated.Year}";
+    }
 
-            <script defer>
-                let FF_FOUC_FIX;
-            </script>
-        </div>
-    </body>
-</html>
+    <h5>Updated @updateTime on @updateDate</h5>
+}
+
+@section Body
+{
+    <main>
+        @Html.Raw(Model.Body);
+    </main>
+}

@@ -37,7 +37,7 @@ namespace LylinkBackend_API.Controllers
 
             if (result == null && accessToken is not null)
             {
-                return View(nameof(ManagementHome), new ManagementHome()
+                return base.View(nameof(Models.Management), new Management()
                 {
                     AccessToken = accessToken
                 });

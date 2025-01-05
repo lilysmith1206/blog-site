@@ -30,16 +30,11 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="BasePage.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\Shared\SiteColorToggle.cshtml" />
     <_ContentIncludedByDefault Remove="wwwroot\css\management_layout.css" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Page\PostPage.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Shared\SiteColorToggle.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

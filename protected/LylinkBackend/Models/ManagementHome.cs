@@ -1,6 +1,6 @@
 ﻿namespace LylinkBackend_API.Models
 {
-    public struct ManagementHome
+    public struct Management
     {
         public string AccessToken { get; set; }
     }
