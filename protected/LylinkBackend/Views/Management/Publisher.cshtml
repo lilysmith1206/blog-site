@@ -9,6 +9,8 @@
             Keywords = "lylink, management",
             Title = "Lylink - Management",
         })
+        
+        <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" />
 
         <style>
             body .container {
@@ -45,7 +47,17 @@
                 margin-top: 5px;
                 display: block;
             }
+
+            pre {
+               white-space: pre-wrap;
+            }
         </style>
+
+        <script src="js/medium/medium-editor.min.js"></script>
+        <script src="js/medium/medium-editor-tables.min.js"></script>
+        <link rel="stylesheet" href="css/medium/medium-editor.min.css">
+        <link rel="stylesheet" href="css/medium/medium-editor-tables.min.css">
+        <link rel="stylesheet" href="css/medium/themes/default.min.css">
     </head>
     
     <body>
@@ -156,19 +168,26 @@
                 Html.Raw(@"alert(""Post update successful.""");            
             }
 
-            var options = {
+            const editor = new MediumEditor('#rendered', {
+                extensions: { table: new MediumEditorTable() },
+                toolbar: {
+                    buttons: ['bold', 'italic', 'underline', 'strikethrough', 'anchor', 'h2', 'h3', 'quote', 'table']
+                },
+            });
+
+            const options = {
                 indent_size: 4,
                 max_char: 0
             };
 
-            var beautify = SimplyBeautiful();
+            const beautify = SimplyBeautiful();
 
             function showHtmlView() {
                 let htmlView = document.getElementById('html');
                 let renderedView = document.getElementById('rendered');
 
                 if (htmlView.style.display === 'none') {
-                    htmlView.innerText = beautify.html(parseMarkdown(renderedView.innerHTML), options);
+                    htmlView.innerText = beautify.html(renderedView.innerHTML, options);
 
                     showTabContent(event, 'html');
                 }
@@ -179,7 +198,7 @@
                 let renderedView = document.getElementById('rendered');
 
                 if (renderedView.style.display === 'none') {
-                renderedView.innerHTML = parseMarkdown(htmlView.innerText);
+                    renderedView.innerHTML = htmlView.innerText;
                     
                     showTabContent(event, 'rendered');
                 }
@@ -201,27 +220,6 @@
 
                     selection.removeAllRanges();
                     selection.addRange(range);
-                }
-
-                if (event.ctrlKey && event.key === 'i') {
-                    event.preventDefault();
-
-                    const selection = window.getSelection();
-                    const range = selection.getRangeAt(0);
-                    const selectedText = selection.toString();
-
-                    if (selectedText.length > 0) {
-                        const textWithEm = `<em>${selectedText}</em>`;
-
-                        if (selectedText.startsWith('<em>') && selectedText.endsWith('</em>')) {
-                            const newText = selectedText.slice(4, -5); // Remove the <em> and </em> part
-                            range.deleteContents(); // Clear the selected text
-                            range.insertNode(document.createTextNode(newText)); // Insert plain text
-                        } else {
-                            range.deleteContents(); // Clear the selected text
-                            range.insertNode(document.createTextNode(textWithEm)); // Insert <em>wrapped</em> text
-                        }
-                    }
                 }
 
                 setTimeout(() => document.getElementById("body").value = event.target.innerText, 50);
@@ -268,14 +266,6 @@
                 .catch(error => {
                     console.error('There was a problem with the fetch operation:', error);
                 });
-            }
-
-            function parseMarkdown(text) {
-                text = text.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
-
-                text = text.replace(/_(.*?)_/g, '<em>$1</em>');
-
-                return text;
             }
         </script>
     </body>

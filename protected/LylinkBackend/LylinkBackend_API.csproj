@@ -42,4 +42,9 @@
     <UpToDateCheckInput Remove="Views\Shared\SiteColorToggle.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\medium\" />
+    <Folder Include="wwwroot\js\medium\" />
+  </ItemGroup>
+
 </Project>
