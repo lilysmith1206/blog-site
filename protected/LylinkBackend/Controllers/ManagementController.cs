@@ -1,4 +1,5 @@
-﻿using LylinkBackend_API.Models;
+﻿using LylinkBackend_API.Caches;
+using LylinkBackend_API.Models;
 using LylinkBackend_Database.Models;
 using LylinkBackend_Database.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace LylinkBackend_API.Controllers
 {
     [ApiController]
     [Route("Management")]
-    public class ManagementController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase, List<ManagementToken> managementAccessTokens) : Controller
+    public class ManagementController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase, IAccessTokenCache accessTokenCache) : Controller
     {
         [HttpGet("/login")]
         public IActionResult Login([FromQuery] string? password)
@@ -17,52 +18,42 @@ namespace LylinkBackend_API.Controllers
             if (rightPassword)
             {
                 Guid accessToken = Guid.NewGuid();
+                DateTime? expiryDate = accessTokenCache.AddAccessToken(accessToken);
 
-                managementAccessTokens.Add(new ManagementToken
+                if (expiryDate == null)
                 {
-                    Id = accessToken,
-                    TokenExpiration = DateTime.Now.AddDays(1)
+                    return Redirect("/403");
+                }
+
+                Response.Cookies.Append("accessToken", accessToken.ToString(), new CookieOptions()
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = expiryDate
                 });
 
-                return Redirect($"/management?accessToken={accessToken}");
+                return Redirect("/management");
             }
 
-            return Redirect($"/403");
+            return Redirect("/403");
         }
 
         [HttpGet("/management")]
-        public IActionResult Management([FromQuery] string? accessToken)
+        public IActionResult Management()
         {
-            StatusCodeResult? result = VerifyAccessToken(accessToken);
-
-            if (result == null && accessToken is not null)
-            {
-                return base.View(nameof(Models.Management), new Management()
-                {
-                    AccessToken = accessToken
-                });
-            }
-
-            return Redirect("/403");
+            return base.View(nameof(Models.Management), new Management() { });
         }
 
         [HttpGet("/publisher")]
-        public IActionResult Publisher([FromQuery] string? accessToken, [FromQuery] bool? successfulPostSubmit)
+        public IActionResult Publisher([FromQuery] bool? successfulPostSubmit)
         {
-            StatusCodeResult? result = VerifyAccessToken(accessToken);
-
-            if (result == null && accessToken is not null)
+            return base.View(nameof(Models.Publisher), new Publisher()
             {
-                return base.View(nameof(Models.Publisher), new Publisher()
-                {
-                    AccessToken = accessToken,
-                    NavigatedFromFormSubmit = successfulPostSubmit == true,
-                    AvailableCategories = categoryDatabase.GetAllCategorySlugs(),
-                    AvailableSlugs = postDatabase.GetAllPostSlugs(),
-                });
-            }
-
-            return Redirect("/403");
+                NavigatedFromFormSubmit = successfulPostSubmit == true,
+                AvailableCategories = categoryDatabase.GetAllCategorySlugs(),
+                AvailableSlugs = postDatabase.GetAllPostSlugs(),
+            });
         }
 
         [HttpPost("/ping")]
@@ -72,13 +63,13 @@ namespace LylinkBackend_API.Controllers
         }
 
         [HttpGet("/getPostFromSlug")]
-        public IActionResult GetSlugPost([FromQuery] string accessToken, [FromQuery] string slug)
+        public IActionResult GetSlugPost([FromQuery] string slug)
         {
-            StatusCodeResult? tokenVerificationResult = VerifyAccessToken(accessToken);
+            Request.Cookies.TryGetValue("accessToken", out string? accessToken);
 
-            if (tokenVerificationResult != null)
+            if (Guid.TryParse(accessToken, out Guid guidToken) == false || accessTokenCache.VerifyAccessToken(guidToken) == false)
             {
-                return tokenVerificationResult;
+                return StatusCode(403);
             }
 
             var post = postDatabase.GetPost(slug);
@@ -105,13 +96,13 @@ namespace LylinkBackend_API.Controllers
         }
 
         [HttpPost("/savePost")]
-        public IActionResult SaveDraft([FromForm] string accessToken, [FromForm] RemotePost remotePost)
+        public IActionResult SaveDraft([FromForm] RemotePost remotePost)
         {
-            StatusCodeResult? tokenVerificationResult = VerifyAccessToken(accessToken);
+            Request.Cookies.TryGetValue("accessToken", out string? accessToken);
 
-            if (tokenVerificationResult != null)
+            if (Guid.TryParse(accessToken, out Guid guidToken) == false || accessTokenCache.VerifyAccessToken(guidToken) == false)
             {
-                return tokenVerificationResult;
+                return StatusCode(403);
             }
 
             if (remotePost.Slug == null)
@@ -161,18 +152,6 @@ namespace LylinkBackend_API.Controllers
             {
                 return StatusCode(500, $"Issue adding/updating post {post.Name}");
             }
-        }
-
-        private StatusCodeResult? VerifyAccessToken(string? accessToken)
-        {
-            ManagementToken? managementToken = managementAccessTokens.SingleOrDefault(token => token.Id.ToString() == accessToken);
-
-            if (managementToken?.Id == null || managementToken?.TokenExpiration < DateTime.Now)
-            {
-                return StatusCode(403);
-            }
-
-            return null;
         }
     }
 }

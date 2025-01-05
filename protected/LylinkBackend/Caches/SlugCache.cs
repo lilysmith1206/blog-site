@@ -1,6 +1,6 @@
 ﻿namespace LylinkBackend_API.Caches
 {
-    public class SlugCacheService : ISlugCacheService
+    public class SlugCache : ISlugCache
     {
         private List<string?> _postSlugs = [];
         private List<string?> _categorySlugs = [];

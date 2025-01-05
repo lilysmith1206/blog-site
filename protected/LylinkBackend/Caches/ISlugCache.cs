@@ -1,6 +1,6 @@
 ﻿namespace LylinkBackend_API.Caches
 {
-    public interface ISlugCacheService
+    public interface ISlugCache
     {
         IReadOnlyList<string?> GetPostSlugs();
 

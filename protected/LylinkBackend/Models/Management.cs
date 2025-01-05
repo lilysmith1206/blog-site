@@ -2,6 +2,5 @@
 {
     public struct Management
     {
-        public string AccessToken { get; set; }
     }
 }

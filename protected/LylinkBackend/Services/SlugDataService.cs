@@ -3,7 +3,7 @@ using LylinkBackend_Database.Services;
 
 namespace LylinkBackend_API.Services
 {
-    public class SlugDataService(IServiceScopeFactory scopeFactory, ISlugCacheService slugCache) : BackgroundService
+    public class SlugDataService(IServiceScopeFactory scopeFactory, ISlugCache slugCache) : BackgroundService
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {

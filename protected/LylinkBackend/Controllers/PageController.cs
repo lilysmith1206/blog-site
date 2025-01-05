@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace LylinkBackend_API.Controllers
 {
-    public class PageController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase, ISlugCacheService slugCache) : Controller
+    public class PageController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase, ISlugCache slugCache) : Controller
     {
         public IActionResult RenderPage(string? editor, string slug = "")
         {

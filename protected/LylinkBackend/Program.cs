@@ -4,6 +4,7 @@ using LylinkBackend_Database.Services;
 using Microsoft.EntityFrameworkCore;
 using LylinkBackend_API.Services;
 using LylinkBackend_API.Caches;
+using LylinkBackend_API.Middleware;
 
 namespace LylinkBackend
 {
@@ -23,11 +24,12 @@ namespace LylinkBackend
                 options.UseMySql(builder.Configuration.GetConnectionString("MariaDbConnection"), ServerVersion.Parse("11.5.2-mariadb"));
             });
 
-            builder.Services.AddSingleton<List<ManagementToken>>();
             builder.Services.AddTransient<IAnnotationDatabaseService, DatabaseService>();
             builder.Services.AddTransient<IPostDatabaseService, DatabaseService>();
             builder.Services.AddTransient<IPostCategoryDatabaseService, DatabaseService>();
-            builder.Services.AddSingleton<ISlugCacheService, SlugCacheService>();
+
+            builder.Services.AddSingleton<ISlugCache, SlugCache>();
+            builder.Services.AddSingleton<IAccessTokenCache, AccessTokenCache>();
 
             builder.Services.AddHostedService<SlugDataService>();
 
@@ -45,6 +47,7 @@ namespace LylinkBackend
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseAuthorization();
+            app.UseMiddleware<TokenValidationMiddleware>();
 
             app.MapControllers();
 
