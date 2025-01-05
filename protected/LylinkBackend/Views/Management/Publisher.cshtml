@@ -9,49 +9,9 @@
             Keywords = "lylink, management",
             Title = "Lylink - Management",
         })
-        
+
         <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" />
-
-        <style>
-            body .container {
-                width: 97.5%;
-                margin: 0 auto;
-            }
-
-            body main {
-                width: 70%;
-            }
-
-            body aside {
-                position: fixed;
-                top: 20%;
-                right: 0;
-            }
-
-            .tab-content {
-                top: 30%;
-                padding: 0px;
-                border-width: 0px;
-                border-style: none;
-                background-color: transparent;
-                border-color: transparent;
-            }
-
-            .tab-container {
-                max-width: 100%;
-                width: 100%;
-            }
-
-            button {
-                margin: 0 auto;
-                margin-top: 5px;
-                display: block;
-            }
-
-            pre {
-               white-space: pre-wrap;
-            }
-        </style>
+        <link id="maintenanceStyle" rel="stylesheet" href="css/maintenance_style.css" onerror="showAdblockPopup()" />
 
         <script src="js/medium/medium-editor.min.js"></script>
         <script src="js/medium/medium-editor-tables.min.js"></script>
@@ -107,7 +67,7 @@
                                     </select>
                                 </label>
                             </form>
-                            <form action="/saveDraft" method="post" style="display: inline-block">
+                            <form action="/savePost" method="post" style="display: inline-block">
                                 <label>
                                     Title
                                     <input type="text" id="title" name="Title" placeholder="Title" required />
@@ -230,7 +190,7 @@
             })
 
             function getSlugBody(slugBox) {
-                fetch(`/getSlugPost?accessToken=@Model.AccessToken&slug=${slugBox.value}`, {
+                fetch(`/getPostFromSlug?accessToken=@Model.AccessToken&slug=${slugBox.value}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json' // Assuming you're sending JSON

@@ -71,7 +71,7 @@ namespace LylinkBackend_API.Controllers
             return Ok("yeah?");
         }
 
-        [HttpGet("/getSlugPost")]
+        [HttpGet("/getPostFromSlug")]
         public IActionResult GetSlugPost([FromQuery] string accessToken, [FromQuery] string slug)
         {
             StatusCodeResult? tokenVerificationResult = VerifyAccessToken(accessToken);
@@ -104,7 +104,7 @@ namespace LylinkBackend_API.Controllers
             return Ok(remotePost);
         }
 
-        [HttpPost("/saveDraft")]
+        [HttpPost("/savePost")]
         public IActionResult SaveDraft([FromForm] string accessToken, [FromForm] RemotePost remotePost)
         {
             StatusCodeResult? tokenVerificationResult = VerifyAccessToken(accessToken);

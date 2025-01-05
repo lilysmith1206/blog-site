@@ -1,0 +1,38 @@
+﻿body .container {
+    width: 97.5%;
+    margin: 0 auto;
+}
+
+body main {
+    width: 70%;
+}
+
+body aside {
+    position: fixed;
+    top: 20%;
+    right: 0;
+}
+
+.tab-content {
+    top: 30%;
+    padding: 0px;
+    border-width: 0px;
+    border-style: none;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.tab-container {
+    max-width: 100%;
+    width: 100%;
+}
+
+button {
+    margin: 0 auto;
+    margin-top: 5px;
+    display: block;
+}
+
+pre {
+    white-space: pre-wrap;
+}
