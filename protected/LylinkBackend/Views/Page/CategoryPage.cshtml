@@ -19,7 +19,7 @@
             @foreach (var postCategory in Model.SubCategories)
             {
                 <li>
-                    <a href="@postCategory.Slug">@postCategory.Name</a>
+                    <a href="@postCategory.Id">@postCategory.Name</a>
                 </li>
             }
         </ul>
@@ -29,7 +29,7 @@
             @foreach (var posts in Model.Posts)
             {
                 <li>
-                    <a href="@posts.Slug">@posts.Name</a>
+                    <a href="@posts.Id">@posts.Name</a>
                 </li>
             }
         </ul>

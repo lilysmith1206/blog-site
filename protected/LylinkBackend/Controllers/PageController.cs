@@ -81,7 +81,7 @@ namespace LylinkBackend_API.Controllers
                 .Select(post => new PageLink()
                 {
                     Name = post?.Name ?? "Unnamed Post",
-                    Slug = post?.Slug ?? "404",
+                    Id = post?.Slug ?? "404",
                 });
 
             return View(nameof(IndexPage), new IndexPage()
@@ -105,7 +105,7 @@ namespace LylinkBackend_API.Controllers
                 .Select(post => new PageLink()
                 {
                     Name = post?.Name ?? "Unnamed Post",
-                    Slug = post?.Slug ?? "404",
+                    Id = post?.Slug ?? "404",
                 });
         }
 
@@ -116,7 +116,7 @@ namespace LylinkBackend_API.Controllers
                 .Select(post => new PageLink()
                 {
                     Name = post?.Name ?? "Unnamed Post Category",
-                    Slug = post?.Slug ?? "404"
+                    Id = post?.Slug ?? "404"
                 });
         }
 
@@ -132,7 +132,7 @@ namespace LylinkBackend_API.Controllers
             {
                 return new PageLink()
                 {
-                    Slug = parent.Slug ?? "404",
+                    Id = parent.Slug ?? "404",
                     Name = parent.Name ?? "Parent category not found!",
                 };
             });
