@@ -1,10 +1,10 @@
-using LylinkBackend_Database.Models;
-using LylinkBackend_Database.Services;
 using Microsoft.EntityFrameworkCore;
 using LylinkBackend_API.Services;
 using LylinkBackend_API.Caches;
 using LylinkBackend_API.Middleware;
 using LylinkBackend_API.Models;
+using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkBackend_DatabaseAccessLayer.Services;
 
 namespace LylinkBackend
 {

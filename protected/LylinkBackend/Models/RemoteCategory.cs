@@ -10,13 +10,13 @@
 
         public string? CategoryName { get; set; }
 
-        public string? CategoryId { get; set; }
+        public int? CategoryId { get; set; }
 
         public string? Slug { get; set; }
 
         public string? Body { get; set; }
 
-        public string? ParentId { get; set; }
+        public int? ParentId { get; set; }
 
         public bool? UseDateCreatedForSorting { get; set; }
     }

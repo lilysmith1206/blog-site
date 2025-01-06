@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LylinkBackend_Database\LylinkBackend_DatabaseAccessLayer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <UpToDateCheckInput Remove="BasePage.cshtml" />
   </ItemGroup>
 
@@ -40,6 +36,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\css\medium\" />
     <Folder Include="wwwroot\js\medium\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\private\LylinkBackend_DatabaseAccessLayer\LylinkBackend_DatabaseAccessLayer.csproj" />
   </ItemGroup>
 
 </Project>

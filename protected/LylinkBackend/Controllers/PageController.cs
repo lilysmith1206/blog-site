@@ -1,7 +1,7 @@
 ﻿using LylinkBackend_API.Caches;
 using LylinkBackend_API.Models;
-using LylinkBackend_Database.Models;
-using LylinkBackend_Database.Services;
+using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 
@@ -43,7 +43,7 @@ namespace LylinkBackend_API.Controllers
                 Description = post?.Description ?? string.Empty,
                 Keywords = post?.Keywords ?? string.Empty,
                 PageName = post?.Name ?? string.Empty,
-                ParentCategories = GetParentCategories(post?.ParentId ?? string.Empty),
+                ParentCategories = GetParentCategories(post?.ParentId ?? -1),
                 Title = post?.Title ?? string.Empty,
                 DateUpdated = post?.DateModified ?? DateTime.Now
             });
@@ -61,8 +61,8 @@ namespace LylinkBackend_API.Controllers
                 Body = postCategory?.Body ?? "Post category body null",
                 Description = postCategory?.Description ?? string.Empty,
                 Keywords = postCategory?.Keywords ?? string.Empty,
-                PageName = postCategory?.Name ?? string.Empty,
-                ParentCategories = GetParentCategories(postCategory?.ParentId ?? string.Empty),
+                PageName = postCategory?.CategoryName ?? string.Empty,
+                ParentCategories = GetParentCategories(postCategory?.ParentId),
                 Posts = posts,
                 SubCategories = childCategories,
                 Title = postCategory?.Title ?? string.Empty
@@ -90,15 +90,15 @@ namespace LylinkBackend_API.Controllers
                 Description = postCategory?.Description ?? string.Empty,
                 Keywords = postCategory?.Keywords ?? string.Empty,
                 MostRecentPosts = mostRecentPosts,
-                PageName = postCategory?.Name ?? string.Empty,
-                ParentCategories = GetParentCategories(postCategory?.ParentId ?? string.Empty),
+                PageName = postCategory?.CategoryName ?? string.Empty,
+                ParentCategories = GetParentCategories(postCategory?.ParentId),
                 Posts = posts,
                 SubCategories = childCategories,
                 Title = postCategory?.Title ?? string.Empty
             });
         }
 
-        private IEnumerable<PageLink> GetPostsUnderCategory(string categoryId)
+        private IEnumerable<PageLink> GetPostsUnderCategory(int categoryId)
         {
             return postDatabase.GetAllPostsWithParentId(categoryId)
                 .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
@@ -115,12 +115,12 @@ namespace LylinkBackend_API.Controllers
                 .Where(childCategory => postDatabase.GetAllPostsWithParentId(childCategory.CategoryId).Any() || categoryDatabase.GetChildCategoriesOfCategory(childCategory.CategoryId).Any())
                 .Select(post => new PageLink()
                 {
-                    Name = post?.Name ?? "Unnamed Post Category",
+                    Name = post?.CategoryName ?? "Unnamed Post Category",
                     Id = post?.Slug ?? "404"
                 });
         }
 
-        protected IEnumerable<PageLink> GetParentCategories(string parentId)
+        protected IEnumerable<PageLink> GetParentCategories(int? parentId)
         {
             List<PostHierarchy> parents = categoryDatabase.GetParentCategories(parentId);
 
@@ -133,7 +133,7 @@ namespace LylinkBackend_API.Controllers
                 return new PageLink()
                 {
                     Id = parent.Slug ?? "404",
-                    Name = parent.Name ?? "Parent category not found!",
+                    Name = parent.CategoryName ?? "Parent category not found!",
                 };
             });
         }

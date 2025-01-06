@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
+﻿using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
 
-namespace LylinkBackend_Database.Models;
+namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class LylinkdbContext : DbContext
 {
@@ -25,7 +22,7 @@ public partial class LylinkdbContext : DbContext
     public virtual DbSet<Annotation> Annotations { get; set; }
 
     public virtual DbSet<Post> Posts { get; set; }
-    
+
     public virtual DbSet<PostHierarchy> PostHierarchies { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -49,7 +46,10 @@ public partial class LylinkdbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("annotations");
+            entity
+                .ToTable("annotations")
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_general_ci");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(40)
@@ -71,7 +71,7 @@ public partial class LylinkdbContext : DbContext
 
             entity.ToTable("posts");
 
-            entity.HasIndex(e => e.ParentId, "fk_parentId");
+            entity.HasIndex(e => e.ParentId, "fk_posts_parent");
 
             entity.Property(e => e.Slug)
                 .HasMaxLength(40)
@@ -101,8 +101,7 @@ public partial class LylinkdbContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("name");
             entity.Property(e => e.ParentId)
-                .HasMaxLength(40)
-                .IsFixedLength()
+                .HasColumnType("int(11)")
                 .HasColumnName("parentId");
             entity.Property(e => e.Title)
                 .HasMaxLength(80)
@@ -111,7 +110,8 @@ public partial class LylinkdbContext : DbContext
 
             entity.HasOne(d => d.Parent).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.ParentId)
-                .HasConstraintName("fk_parentId");
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("fk_posts_parent");
         });
 
         modelBuilder.Entity<PostHierarchy>(entity =>
@@ -120,13 +120,18 @@ public partial class LylinkdbContext : DbContext
 
             entity.ToTable("post_hierarchy");
 
+            entity.HasIndex(e => e.ParentId, "fk_post_hierarchy_parent");
+
             entity.Property(e => e.CategoryId)
-                .HasMaxLength(40)
-                .IsFixedLength()
+                .HasColumnType("int(11)")
                 .HasColumnName("categoryId");
             entity.Property(e => e.Body)
                 .HasColumnType("varchar(60000)")
                 .HasColumnName("body");
+            entity.Property(e => e.CategoryName)
+                .HasMaxLength(80)
+                .IsFixedLength()
+                .HasColumnName("categoryName");
             entity.Property(e => e.Description)
                 .HasMaxLength(80)
                 .IsFixedLength()
@@ -135,13 +140,8 @@ public partial class LylinkdbContext : DbContext
                 .HasMaxLength(80)
                 .IsFixedLength()
                 .HasColumnName("keywords");
-            entity.Property(e => e.Name)
-                .HasMaxLength(80)
-                .IsFixedLength()
-                .HasColumnName("name");
             entity.Property(e => e.ParentId)
-                .HasMaxLength(40)
-                .IsFixedLength()
+                .HasColumnType("int(11)")
                 .HasColumnName("parentId");
             entity.Property(e => e.Slug)
                 .HasMaxLength(40)
@@ -152,6 +152,11 @@ public partial class LylinkdbContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("title");
             entity.Property(e => e.UseDateCreatedForSorting).HasColumnName("use_date_created_for_sorting");
+
+            entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
+                .HasForeignKey(d => d.ParentId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("fk_post_hierarchy_parent");
         });
 
         OnModelCreatingPartial(modelBuilder);

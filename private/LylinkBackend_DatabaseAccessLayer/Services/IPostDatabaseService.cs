@@ -1,6 +1,6 @@
-﻿using LylinkBackend_Database.Models;
+﻿using LylinkBackend_DatabaseAccessLayer.Models;
 
-namespace LylinkBackend_Database.Services
+namespace LylinkBackend_DatabaseAccessLayer.Services
 {
     public interface IPostDatabaseService
     {
@@ -8,7 +8,7 @@ namespace LylinkBackend_Database.Services
 
         public IEnumerable<string?> GetAllPostSlugs();
 
-        public IEnumerable<Post> GetAllPostsWithParentId(string parentId);
+        public IEnumerable<Post> GetAllPostsWithParentId(int parentId);
 
         public IEnumerable<Post> GetRecentlyUpdatedPosts(int amount);
 

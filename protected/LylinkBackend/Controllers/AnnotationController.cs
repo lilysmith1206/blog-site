@@ -1,5 +1,5 @@
-﻿using LylinkBackend_Database.Models;
-using LylinkBackend_Database.Services;
+﻿using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LylinkBackend_API.Controllers

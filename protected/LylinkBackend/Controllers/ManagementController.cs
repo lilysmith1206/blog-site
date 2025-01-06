@@ -1,6 +1,6 @@
 ﻿using LylinkBackend_API.Models;
-using LylinkBackend_Database.Models;
-using LylinkBackend_Database.Services;
+using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LylinkBackend_API.Controllers
@@ -21,8 +21,8 @@ namespace LylinkBackend_API.Controllers
             return base.View(nameof(Models.Categorizer), new Categorizer()
             {
                 CategoryLinks = categoryDatabase.GetAllCategories()
-                    .Where(category => category.CategoryId != "db7e85b7-bd5a-476e-8bb7-7dedcd024cd4")
-                    .Select(category => new PageLink { Id = category.CategoryId, Name = category.Name ?? string.Empty })
+                    .Where(category => category.CategoryId != 6)
+                    .Select(category => new PageLink { Id = category.CategoryId.ToString(), Name = category.CategoryName ?? string.Empty })
             });
         }
 
@@ -53,7 +53,7 @@ namespace LylinkBackend_API.Controllers
                 return StatusCode(404);
             }
 
-            var postCategory = categoryDatabase.GetCategoryFromId(post?.ParentId ?? string.Empty);
+            var postCategory = categoryDatabase.GetCategoryFromId(post.ParentId ?? - 1);
 
             var remotePost = new RemotePost
             {
@@ -70,7 +70,7 @@ namespace LylinkBackend_API.Controllers
         }
 
         [HttpGet("/getPostCategoryFromId")]
-        public IActionResult GetPostCategoryFromSlug([FromQuery] string categoryId)
+        public IActionResult GetPostCategoryFromSlug([FromQuery] int categoryId)
         {
             var category = categoryDatabase.GetCategoryFromId(categoryId);
 
@@ -79,14 +79,14 @@ namespace LylinkBackend_API.Controllers
                 return StatusCode(404);
             }
 
-            var postCategory = categoryDatabase.GetCategoryFromId(category?.CategoryId ?? string.Empty);
+            var postCategory = categoryDatabase.GetCategoryFromId(category.CategoryId);
 
             var remotePost = new RemoteCategory
             {
                 Slug = category?.Slug,
                 Title = category?.Title,
                 ParentId = postCategory?.ParentId,
-                CategoryName = category?.Name,
+                CategoryName = category?.CategoryName,
                 CategoryId = category?.CategoryId,
                 Keywords = category?.Keywords,
                 Description = category?.Description,
@@ -152,17 +152,17 @@ namespace LylinkBackend_API.Controllers
         [HttpPost("/saveCategory")]
         public IActionResult SaveCategory([FromForm] RemoteCategory remoteCategory)
         {
-            if (remoteCategory.Slug == null)
+            if (remoteCategory.Slug == null || remoteCategory.CategoryId == null)
             {
                 return StatusCode(406);
             }
 
-            PostHierarchy? existingCategory = categoryDatabase.GetCategoryFromId(remoteCategory.CategoryId ?? string.Empty);
+            PostHierarchy? existingCategory = categoryDatabase.GetCategoryFromId(remoteCategory.CategoryId.Value);
 
             var category = new PostHierarchy
             {
                 Slug = remoteCategory.Slug,
-                Name = remoteCategory.CategoryName,
+                CategoryName = remoteCategory.CategoryName,
                 Title = remoteCategory.Title,
                 ParentId = remoteCategory.ParentId,
                 Keywords = remoteCategory.Keywords,
@@ -188,7 +188,7 @@ namespace LylinkBackend_API.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(500, $"Issue adding/updating post {category.Name}");
+                return StatusCode(500, $"Issue adding/updating post {category.CategoryName}");
             }
         }
     }

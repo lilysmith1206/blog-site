@@ -1,6 +1,6 @@
-﻿using LylinkBackend_Database.Models;
+﻿using LylinkBackend_DatabaseAccessLayer.Models;
 
-namespace LylinkBackend_Database.Services
+namespace LylinkBackend_DatabaseAccessLayer.Services
 {
     public interface IPostCategoryDatabaseService
     {
@@ -10,11 +10,11 @@ namespace LylinkBackend_Database.Services
 
         public IEnumerable<PostHierarchy> GetAllCategories();
 
-        public PostHierarchy? GetCategoryFromId(string id);
+        public PostHierarchy? GetCategoryFromId(int categoryId);
 
-        public List<PostHierarchy> GetParentCategories(string categoryId);
+        public List<PostHierarchy> GetParentCategories(int? categoryId);
 
-        public List<PostHierarchy> GetChildCategoriesOfCategory(string categoryId);
+        public List<PostHierarchy> GetChildCategoriesOfCategory(int categoryId);
 
         public bool UpdateCategory(PostHierarchy category);
 

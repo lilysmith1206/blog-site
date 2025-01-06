@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LylinkBackend_Database.Models;
+namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class PostHierarchy
 {
-    public string CategoryId { get; set; } = null!;
+    public int CategoryId { get; set; }
 
-    public string? ParentId { get; set; }
-
-    public string? Name { get; set; }
+    public int? ParentId { get; set; }
 
     public string? Slug { get; set; }
 
@@ -22,6 +20,12 @@ public partial class PostHierarchy
     public string? Body { get; set; }
 
     public bool? UseDateCreatedForSorting { get; set; }
+
+    public string? CategoryName { get; set; }
+
+    public virtual ICollection<PostHierarchy> InverseParent { get; set; } = new List<PostHierarchy>();
+
+    public virtual PostHierarchy? Parent { get; set; }
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

@@ -1,6 +1,6 @@
-﻿using LylinkBackend_Database.Models;
+﻿using LylinkBackend_DatabaseAccessLayer.Models;
 
-namespace LylinkBackend_Database.Services
+namespace LylinkBackend_DatabaseAccessLayer.Services
 {
     public class DatabaseService(LylinkdbContext context) : IPostDatabaseService, IPostCategoryDatabaseService, IAnnotationDatabaseService
     {
@@ -18,7 +18,7 @@ namespace LylinkBackend_Database.Services
             return postCategories;
         }
 
-        public IEnumerable<Post> GetAllPostsWithParentId(string parentId)
+        public IEnumerable<Post> GetAllPostsWithParentId(int parentId)
         {
             var postCategory = context.PostHierarchies
                 .FirstOrDefault(dbPostCategory => dbPostCategory.CategoryId == parentId);
@@ -30,7 +30,7 @@ namespace LylinkBackend_Database.Services
 
             bool sortByDateCreated = postCategory.UseDateCreatedForSorting ?? true;
 
-            var postsQuery = context.Posts.Where(post => post.ParentId == parentId.ToString());
+            var postsQuery = context.Posts.Where(post => post.ParentId == parentId);
 
             return [.. sortByDateCreated
                 ? postsQuery.OrderBy(post => post.DateCreated)
@@ -54,12 +54,12 @@ namespace LylinkBackend_Database.Services
             return context.PostHierarchies.SingleOrDefault(post => post.Slug == slug);
         }
 
-        public PostHierarchy? GetCategoryFromId(string id)
+        public PostHierarchy? GetCategoryFromId(int categoryId)
         {
-            return context.PostHierarchies.SingleOrDefault(postCategory => postCategory.CategoryId == id);
+            return context.PostHierarchies.SingleOrDefault(postCategory => postCategory.CategoryId == categoryId);
         }
 
-        public List<PostHierarchy> GetParentCategories(string categoryId)
+        public List<PostHierarchy> GetParentCategories(int? categoryId)
         {
             var parents = new List<PostHierarchy>();
 
@@ -90,7 +90,7 @@ namespace LylinkBackend_Database.Services
             return parents;
         }
 
-        public List<PostHierarchy> GetChildCategoriesOfCategory(string categoryId)
+        public List<PostHierarchy> GetChildCategoriesOfCategory(int categoryId)
         {
             return [.. context.PostHierarchies
                 .Where(postCategory => postCategory.ParentId == categoryId)];
@@ -216,7 +216,7 @@ namespace LylinkBackend_Database.Services
 
                 existingCategory.Title = category.Title;
                 existingCategory.ParentId = category.ParentId;
-                existingCategory.Name = category.Name;
+                // existingCategory = category.Name;
                 existingCategory.Keywords = category.Keywords;
                 existingCategory.Description = category.Description;
                 existingCategory.Body = category.Body;
@@ -234,8 +234,6 @@ namespace LylinkBackend_Database.Services
 
         public bool CreateCategory(PostHierarchy category)
         {
-            category.CategoryId = Guid.NewGuid().ToString();
-
             context.PostHierarchies.Add(category);
 
             return context.SaveChanges() == 1;

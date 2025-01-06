@@ -132,6 +132,7 @@ body a:hover {
 
 body hr {
 	border: none;
+	border-top: 1px solid;
 	height: 2px;
 	width: 75%;
 }

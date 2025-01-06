@@ -1,6 +1,6 @@
-﻿using LylinkBackend_Database.Models;
+﻿using LylinkBackend_DatabaseAccessLayer.Models;
 
-namespace LylinkBackend_Database.Services
+namespace LylinkBackend_DatabaseAccessLayer.Services
 {
     public interface IAnnotationDatabaseService
     {

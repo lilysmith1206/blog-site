@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LylinkBackend_Database.Models;
+namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class Annotation
 {

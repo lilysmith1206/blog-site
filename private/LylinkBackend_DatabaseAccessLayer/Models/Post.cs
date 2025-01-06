@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LylinkBackend_Database.Models;
+namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class Post
 {
@@ -9,7 +9,7 @@ public partial class Post
 
     public string? Title { get; set; }
 
-    public string? ParentId { get; set; }
+    public int? ParentId { get; set; }
 
     public DateTime? DateModified { get; set; }
 
