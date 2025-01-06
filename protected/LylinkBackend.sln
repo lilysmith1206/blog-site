@@ -5,9 +5,9 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_API", "LylinkBackend\LylinkBackend_API.csproj", "{4C77FD00-AD00-463C-A5A9-0B8CCB9ED8AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkDb_UnitTests", "LylinkDb_UnitTests\LylinkDb_UnitTests.csproj", "{05EC2F30-9F61-4EFE-B7B4-DD3A3AE1E1FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_DatabaseAccessLayer_UnitTests", "LylinkDb_UnitTests\LylinkBackend_DatabaseAccessLayer_UnitTests.csproj", "{05EC2F30-9F61-4EFE-B7B4-DD3A3AE1E1FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_Database", "LylinkBackend_Database\LylinkBackend_Database.csproj", "{6BD2BD75-5EC3-4C4E-928A-E6628FE26C76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_DatabaseAccessLayer", "LylinkBackend_Database\LylinkBackend_DatabaseAccessLayer.csproj", "{6BD2BD75-5EC3-4C4E-928A-E6628FE26C76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
