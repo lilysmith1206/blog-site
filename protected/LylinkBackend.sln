@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_API", "LylinkBackend\LylinkBackend_API.csproj", "{4C77FD00-AD00-463C-A5A9-0B8CCB9ED8AC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Protected", "Protected", "{AF765C10-8364-408B-AEAE-3243DC5C5DB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_DatabaseAccessLayer_UnitTests", "LylinkDb_UnitTests\LylinkBackend_DatabaseAccessLayer_UnitTests.csproj", "{05EC2F30-9F61-4EFE-B7B4-DD3A3AE1E1FA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Private", "Private", "{C46B13BE-E54A-4409-8623-F6AD5190792E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_DatabaseAccessLayer", "LylinkBackend_Database\LylinkBackend_DatabaseAccessLayer.csproj", "{6BD2BD75-5EC3-4C4E-928A-E6628FE26C76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_DatabaseAccessLayer", "..\private\LylinkBackend_Database\LylinkBackend_DatabaseAccessLayer.csproj", "{2A8B32E7-D779-4637-853A-A311D4A6D572}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_DatabaseAccessLayer_UnitTests", "..\private\LylinkDb_UnitTests\LylinkBackend_DatabaseAccessLayer_UnitTests.csproj", "{AA7946BA-31EF-471F-8429-F3E92D1E6110}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_API", "LylinkBackend\LylinkBackend_API.csproj", "{EEE9B865-9EF9-4594-9511-350517D8F001}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,21 +19,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4C77FD00-AD00-463C-A5A9-0B8CCB9ED8AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C77FD00-AD00-463C-A5A9-0B8CCB9ED8AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C77FD00-AD00-463C-A5A9-0B8CCB9ED8AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C77FD00-AD00-463C-A5A9-0B8CCB9ED8AC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05EC2F30-9F61-4EFE-B7B4-DD3A3AE1E1FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05EC2F30-9F61-4EFE-B7B4-DD3A3AE1E1FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05EC2F30-9F61-4EFE-B7B4-DD3A3AE1E1FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05EC2F30-9F61-4EFE-B7B4-DD3A3AE1E1FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BD2BD75-5EC3-4C4E-928A-E6628FE26C76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BD2BD75-5EC3-4C4E-928A-E6628FE26C76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BD2BD75-5EC3-4C4E-928A-E6628FE26C76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BD2BD75-5EC3-4C4E-928A-E6628FE26C76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A8B32E7-D779-4637-853A-A311D4A6D572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A8B32E7-D779-4637-853A-A311D4A6D572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A8B32E7-D779-4637-853A-A311D4A6D572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A8B32E7-D779-4637-853A-A311D4A6D572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA7946BA-31EF-471F-8429-F3E92D1E6110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA7946BA-31EF-471F-8429-F3E92D1E6110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA7946BA-31EF-471F-8429-F3E92D1E6110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA7946BA-31EF-471F-8429-F3E92D1E6110}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEE9B865-9EF9-4594-9511-350517D8F001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE9B865-9EF9-4594-9511-350517D8F001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE9B865-9EF9-4594-9511-350517D8F001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE9B865-9EF9-4594-9511-350517D8F001}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2A8B32E7-D779-4637-853A-A311D4A6D572} = {C46B13BE-E54A-4409-8623-F6AD5190792E}
+		{AA7946BA-31EF-471F-8429-F3E92D1E6110} = {C46B13BE-E54A-4409-8623-F6AD5190792E}
+		{EEE9B865-9EF9-4594-9511-350517D8F001} = {AF765C10-8364-408B-AEAE-3243DC5C5DB6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FC83A25-ED6F-4F75-BF38-62694D52CD98}
