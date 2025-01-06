@@ -1,4 +1,4 @@
-﻿using LylinkBackend_Database.Models;
+﻿using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LylinkDb_UnitTests
@@ -31,9 +31,9 @@ namespace LylinkDb_UnitTests
             {
                 _inMemoryDbContext.Posts.RemoveRange(_inMemoryDbContext.Posts);
             }
-            if (_inMemoryDbContext.PostHierarchies.Any())
+            if (_inMemoryDbContext.PostCategories.Any())
             {
-                _inMemoryDbContext.PostHierarchies.RemoveRange(_inMemoryDbContext.PostHierarchies);
+                _inMemoryDbContext.PostCategories.RemoveRange(_inMemoryDbContext.PostCategories);
             }
             if (_inMemoryDbContext.Annotations.Any())
             {
@@ -43,9 +43,9 @@ namespace LylinkDb_UnitTests
 
         private static void FillInMemoryDatabaseWithUnitTestData()
         {
-            foreach (PostHierarchy category in UnitTestData.Categories)
+            foreach (PostCategory category in UnitTestData.Categories)
             {
-                _inMemoryDbContext.PostHierarchies.Add(category);
+                _inMemoryDbContext.PostCategories.Add(category);
             }
 
             foreach (Post post in UnitTestData.Posts)

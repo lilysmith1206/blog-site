@@ -9,18 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Private", "Private", "{AA03
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_DatabaseAccessLayer_UnitTests", "private\LylinkDb_UnitTests\LylinkBackend_DatabaseAccessLayer_UnitTests.csproj", "{81EDD877-F7D7-4693-B1EC-F04FFE1DC58B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LylinkDatabase_MigrationScripts", "LylinkDatabase_MigrationScripts", "{01DAF894-420D-4F0B-8EDB-87C5EC1AB798}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001_GuidsToNumericIds", "001_GuidsToNumericIds", "{E064D6E6-A4A4-48DE-9EF9-42AFB504CC1A}"
-	ProjectSection(SolutionItems) = preProject
-		private\LylinkDatabase_MigrationScripts\001_GuidsToNumericIds\base_schema.sql = private\LylinkDatabase_MigrationScripts\001_GuidsToNumericIds\base_schema.sql
-		private\LylinkDatabase_MigrationScripts\001_GuidsToNumericIds\GuidsToNumericIds.sql = private\LylinkDatabase_MigrationScripts\001_GuidsToNumericIds\GuidsToNumericIds.sql
-		private\LylinkDatabase_MigrationScripts\001_GuidsToNumericIds\new_schema.sql = private\LylinkDatabase_MigrationScripts\001_GuidsToNumericIds\new_schema.sql
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_API", "protected\LylinkBackend\LylinkBackend_API.csproj", "{542DAB3E-DA39-4424-B633-4C277D33F686}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_DatabaseAccessLayer", "private\LylinkBackend_DatabaseAccessLayer\LylinkBackend_DatabaseAccessLayer.csproj", "{151BECB8-A478-4154-A631-A7C9498C178A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkDatabase_MigrationScript", "private\LylinkDatabase_MigrationScript\LylinkDatabase_MigrationScript.csproj", "{F9A4C04F-D69B-4C73-9B8E-03F845AFB5DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,16 +33,18 @@ Global
 		{151BECB8-A478-4154-A631-A7C9498C178A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{151BECB8-A478-4154-A631-A7C9498C178A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{151BECB8-A478-4154-A631-A7C9498C178A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9A4C04F-D69B-4C73-9B8E-03F845AFB5DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9A4C04F-D69B-4C73-9B8E-03F845AFB5DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9A4C04F-D69B-4C73-9B8E-03F845AFB5DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{81EDD877-F7D7-4693-B1EC-F04FFE1DC58B} = {AA03FEFF-7BD9-4E95-AD45-5B7835F1F465}
-		{01DAF894-420D-4F0B-8EDB-87C5EC1AB798} = {AA03FEFF-7BD9-4E95-AD45-5B7835F1F465}
-		{E064D6E6-A4A4-48DE-9EF9-42AFB504CC1A} = {01DAF894-420D-4F0B-8EDB-87C5EC1AB798}
 		{542DAB3E-DA39-4424-B633-4C277D33F686} = {86A815C9-0276-4BA4-9394-3F66A35D1735}
 		{151BECB8-A478-4154-A631-A7C9498C178A} = {AA03FEFF-7BD9-4E95-AD45-5B7835F1F465}
+		{F9A4C04F-D69B-4C73-9B8E-03F845AFB5DC} = {AA03FEFF-7BD9-4E95-AD45-5B7835F1F465}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FC83A25-ED6F-4F75-BF38-62694D52CD98}

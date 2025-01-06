@@ -23,7 +23,7 @@ public partial class LylinkdbContext : DbContext
 
     public virtual DbSet<Post> Posts { get; set; }
 
-    public virtual DbSet<PostHierarchy> PostHierarchies { get; set; }
+    public virtual DbSet<PostCategory> PostCategories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -114,11 +114,11 @@ public partial class LylinkdbContext : DbContext
                 .HasConstraintName("fk_posts_parent");
         });
 
-        modelBuilder.Entity<PostHierarchy>(entity =>
+        modelBuilder.Entity<PostCategory>(entity =>
         {
             entity.HasKey(e => e.CategoryId).HasName("PRIMARY");
 
-            entity.ToTable("post_hierarchy");
+            entity.ToTable("post_categories");
 
             entity.HasIndex(e => e.ParentId, "fk_post_hierarchy_parent");
 

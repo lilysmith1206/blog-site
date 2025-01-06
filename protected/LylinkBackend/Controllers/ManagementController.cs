@@ -157,9 +157,9 @@ namespace LylinkBackend_API.Controllers
                 return StatusCode(406);
             }
 
-            PostHierarchy? existingCategory = categoryDatabase.GetCategoryFromId(remoteCategory.CategoryId.Value);
+            PostCategory? existingCategory = categoryDatabase.GetCategoryFromId(remoteCategory.CategoryId.Value);
 
-            var category = new PostHierarchy
+            var category = new PostCategory
             {
                 Slug = remoteCategory.Slug,
                 CategoryName = remoteCategory.CategoryName,

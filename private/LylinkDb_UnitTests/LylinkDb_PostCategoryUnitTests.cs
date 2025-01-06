@@ -1,4 +1,4 @@
-using LylinkBackend_Database.Services;
+using LylinkBackend_DatabaseAccessLayer.Services;
 
 namespace LylinkDb_UnitTests
 {
@@ -43,7 +43,7 @@ namespace LylinkDb_UnitTests
             Assert.Equal(UnitTestData.BrushCategory.Description, brushCategory.Description);
             Assert.Equal(UnitTestData.BrushCategory.Keywords, brushCategory.Keywords);
             Assert.Equal(UnitTestData.BrushCategory.Body, brushCategory.Body);
-            Assert.Equal(UnitTestData.BrushCategory.Name, brushCategory.Name);
+            Assert.Equal(UnitTestData.BrushCategory.CategoryName, brushCategory.CategoryName);
             Assert.Equal(UnitTestData.BrushCategory.Title, brushCategory.Title);
         }
     }

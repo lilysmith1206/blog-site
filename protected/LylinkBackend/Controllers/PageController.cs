@@ -51,7 +51,7 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreateCategoryView(string slug)
         {
-            PostHierarchy postCategory = categoryDatabase.GetCategoryFromSlug(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
+            PostCategory postCategory = categoryDatabase.GetCategoryFromSlug(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
 
             IEnumerable<PageLink> posts = GetPostsUnderCategory(postCategory.CategoryId);
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
@@ -71,7 +71,7 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreateIndexView()
         {
-            PostHierarchy postCategory = categoryDatabase.GetCategoryFromSlug("") ?? throw new NullReferenceException($"Index not found for some reason?");
+            PostCategory postCategory = categoryDatabase.GetCategoryFromSlug("") ?? throw new NullReferenceException($"Index not found for some reason?");
 
             IEnumerable<PageLink> posts = GetPostsUnderCategory(postCategory.CategoryId);
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
@@ -109,7 +109,7 @@ namespace LylinkBackend_API.Controllers
                 });
         }
 
-        private IEnumerable<PageLink> GetChildCategoriesForCategoryPage(PostHierarchy postCategory)
+        private IEnumerable<PageLink> GetChildCategoriesForCategoryPage(PostCategory postCategory)
         {
             return categoryDatabase.GetChildCategoriesOfCategory(postCategory.CategoryId)
                 .Where(childCategory => postDatabase.GetAllPostsWithParentId(childCategory.CategoryId).Any() || categoryDatabase.GetChildCategoriesOfCategory(childCategory.CategoryId).Any())
@@ -122,7 +122,7 @@ namespace LylinkBackend_API.Controllers
 
         protected IEnumerable<PageLink> GetParentCategories(int? parentId)
         {
-            List<PostHierarchy> parents = categoryDatabase.GetParentCategories(parentId);
+            List<PostCategory> parents = categoryDatabase.GetParentCategories(parentId);
 
             parents.Single(parent => string.IsNullOrEmpty(parent.Slug)).Slug = "/"; 
 

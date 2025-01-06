@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace LylinkBackend_DatabaseAccessLayer.Models;
 
-namespace LylinkBackend_DatabaseAccessLayer.Models;
-
-public partial class PostHierarchy
+public partial class PostCategory
 {
     public int CategoryId { get; set; }
 
@@ -23,9 +20,9 @@ public partial class PostHierarchy
 
     public string? CategoryName { get; set; }
 
-    public virtual ICollection<PostHierarchy> InverseParent { get; set; } = new List<PostHierarchy>();
+    public virtual ICollection<PostCategory> InverseParent { get; set; } = new List<PostCategory>();
 
-    public virtual PostHierarchy? Parent { get; set; }
+    public virtual PostCategory? Parent { get; set; }
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 }

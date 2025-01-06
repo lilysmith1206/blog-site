@@ -23,5 +23,5 @@ public partial class Post
 
     public DateTime? DateCreated { get; set; }
 
-    public virtual PostHierarchy? Parent { get; set; }
+    public virtual PostCategory? Parent { get; set; }
 }

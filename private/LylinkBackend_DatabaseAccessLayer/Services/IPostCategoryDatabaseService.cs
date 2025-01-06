@@ -6,18 +6,18 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
     {
         public IEnumerable<string?> GetAllCategorySlugs();
 
-        public PostHierarchy? GetCategoryFromSlug(string slug);
+        public PostCategory? GetCategoryFromSlug(string slug);
 
-        public IEnumerable<PostHierarchy> GetAllCategories();
+        public IEnumerable<PostCategory> GetAllCategories();
 
-        public PostHierarchy? GetCategoryFromId(int categoryId);
+        public PostCategory? GetCategoryFromId(int categoryId);
 
-        public List<PostHierarchy> GetParentCategories(int? categoryId);
+        public List<PostCategory> GetParentCategories(int? categoryId);
 
-        public List<PostHierarchy> GetChildCategoriesOfCategory(int categoryId);
+        public List<PostCategory> GetChildCategoriesOfCategory(int categoryId);
 
-        public bool UpdateCategory(PostHierarchy category);
+        public bool UpdateCategory(PostCategory category);
 
-        public bool CreateCategory(PostHierarchy category);
+        public bool CreateCategory(PostCategory category);
     }
 }
