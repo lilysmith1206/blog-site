@@ -15,5 +15,7 @@
         public string? Description { get; set; }
 
         public string? Body { get; set; }
+
+        public bool? IsDraft { get; set; }
     }
 }

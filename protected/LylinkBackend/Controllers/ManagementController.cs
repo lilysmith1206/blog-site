@@ -63,7 +63,8 @@ namespace LylinkBackend_API.Controllers
                 Name = post?.Name,
                 Keywords = post?.Keywords,
                 Description = post?.Description,
-                Body = post?.Body
+                Body = post?.Body,
+                IsDraft = post?.IsDraft
             };
 
             return Ok(remotePost);
@@ -127,7 +128,8 @@ namespace LylinkBackend_API.Controllers
                 ParentId = categoryDatabase.GetCategoryFromSlug(parentSlug ?? string.Empty)?.CategoryId,
                 Keywords = remotePost.Keywords,
                 Description = remotePost.Description,
-                Body = remotePost.Body
+                Body = remotePost.Body,
+                IsDraft = remotePost.IsDraft,
             };
 
             try

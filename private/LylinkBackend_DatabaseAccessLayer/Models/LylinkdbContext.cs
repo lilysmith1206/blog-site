@@ -92,6 +92,9 @@ public partial class LylinkdbContext : DbContext
                 .HasMaxLength(160)
                 .IsFixedLength()
                 .HasColumnName("description");
+            entity.Property(e => e.IsDraft)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("is_draft");
             entity.Property(e => e.Keywords)
                 .HasMaxLength(160)
                 .IsFixedLength()

@@ -1,4 +1,5 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
+using System.Text.RegularExpressions;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
@@ -37,10 +38,14 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 : postsQuery.OrderByDescending(post => post.DateModified)];
         }
 
-        public IEnumerable<Post> GetRecentlyUpdatedPosts(int amount)
+        public IEnumerable<Post> GetRecentlyPublishedPosts(int amount)
         {
             return [.. context.Posts
                 .OrderByDescending(post => post.DateModified)
+                // Filter draft posts
+                .Where(post => post.IsDraft == false)
+                // Filter out HTTP error pages
+                .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
                 .Take(amount)];
         }
 
@@ -132,6 +137,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 existingPost.Keywords = post.Keywords;
                 existingPost.Description = post.Description;
                 existingPost.Body = post.Body;
+                existingPost.IsDraft = post.IsDraft;
 
                 context.SaveChanges();
 

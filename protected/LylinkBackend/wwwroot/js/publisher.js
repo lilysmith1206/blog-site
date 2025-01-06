@@ -62,6 +62,16 @@ document.getElementById("rendered").addEventListener("keydown", (event) => {
     document.getElementById("body").value = event.target.innerHTML;
 })
 
+const checkbox = document.getElementById('isDraft');
+
+checkbox.addEventListener('change', function () {
+    if (checkbox.checked) {
+        checkbox.value = "true";
+    } else {
+        checkbox.value = "false";
+    }
+});
+
 function getSlugBody(slugBox) {
     fetch(`/getPostFromSlug?slug=${slugBox.value}`, {
         method: 'GET',
@@ -84,6 +94,8 @@ function getSlugBody(slugBox) {
         document.getElementById('description').value = data.description;
         document.getElementById('name').value = data.name;
         document.getElementById('slug').value = data.slug;
+        document.getElementById('isDraft').checked = data.isDraft == true;
+        document.getElementById('isDraft').value = data.isDraft == true;
 
         document.getElementById('html').textContent = beautify.html(data.body, options);
         document.getElementById('rendered').innerHTML = data.body;

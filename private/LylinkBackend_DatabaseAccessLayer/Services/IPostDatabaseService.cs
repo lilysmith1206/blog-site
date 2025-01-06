@@ -10,7 +10,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public IEnumerable<Post> GetAllPostsWithParentId(int parentId);
 
-        public IEnumerable<Post> GetRecentlyUpdatedPosts(int amount);
+        public IEnumerable<Post> GetRecentlyPublishedPosts(int amount);
 
         public bool CreatePost(Post post);
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace LylinkBackend_DatabaseAccessLayer.Models;
+﻿namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class Post
 {
@@ -22,6 +19,8 @@ public partial class Post
     public string? Body { get; set; }
 
     public DateTime? DateCreated { get; set; }
+
+    public bool? IsDraft { get; set; }
 
     public virtual PostCategory? Parent { get; set; }
 }

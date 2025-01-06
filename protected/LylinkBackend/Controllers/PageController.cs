@@ -53,7 +53,7 @@ namespace LylinkBackend_API.Controllers
         {
             PostCategory postCategory = categoryDatabase.GetCategoryFromSlug(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
 
-            IEnumerable<PageLink> posts = GetPostsUnderCategory(postCategory.CategoryId);
+            IEnumerable<PageLink> posts = FilterPostsForCategory(postDatabase.GetAllPostsWithParentId(postCategory.CategoryId));
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
 
             return View(nameof(CategoryPage), new CategoryPage()
@@ -73,16 +73,10 @@ namespace LylinkBackend_API.Controllers
         {
             PostCategory postCategory = categoryDatabase.GetCategoryFromSlug("") ?? throw new NullReferenceException($"Index not found for some reason?");
 
-            IEnumerable<PageLink> posts = GetPostsUnderCategory(postCategory.CategoryId);
+            IEnumerable<PageLink> posts = FilterPostsForCategory(postDatabase.GetAllPostsWithParentId(postCategory.CategoryId));
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
 
-            IEnumerable<PageLink> mostRecentPosts = postDatabase.GetRecentlyUpdatedPosts(10)
-                .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
-                .Select(post => new PageLink()
-                {
-                    Name = post?.Name ?? "Unnamed Post",
-                    Id = post?.Slug ?? "404",
-                });
+            IEnumerable<PageLink> mostRecentPosts = FilterPostsForCategory(postDatabase.GetRecentlyPublishedPosts(10));
 
             return View(nameof(IndexPage), new IndexPage()
             {
@@ -98,10 +92,13 @@ namespace LylinkBackend_API.Controllers
             });
         }
 
-        private IEnumerable<PageLink> GetPostsUnderCategory(int categoryId)
+        private static IEnumerable<PageLink> FilterPostsForCategory(IEnumerable<Post> posts)
         {
-            return postDatabase.GetAllPostsWithParentId(categoryId)
+            var postSlugs = posts.Select(post => post.Slug);
+
+            return posts
                 .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
+                .Where(post => post.IsDraft == false)
                 .Select(post => new PageLink()
                 {
                     Name = post?.Name ?? "Unnamed Post",
