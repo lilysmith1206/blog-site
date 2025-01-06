@@ -6,8 +6,6 @@ namespace LylinkBackend_Database.Services
     {
         public Post? GetPost(string slug);
 
-        public PostHierarchy? GetCategoryFromSlug(string slug);
-
         public IEnumerable<string?> GetAllPostSlugs();
 
         public IEnumerable<Post> GetAllPostsWithParentId(string parentId);

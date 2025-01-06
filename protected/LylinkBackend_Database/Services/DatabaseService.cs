@@ -196,5 +196,49 @@ namespace LylinkBackend_Database.Services
         {
             return context.Annotations.SingleOrDefault(annotation => annotation.Id == id);
         }
+
+        public IEnumerable<PostHierarchy> GetAllCategories()
+        {
+            return context.PostHierarchies;
+        }
+
+        public bool UpdateCategory(PostHierarchy category)
+        {
+            try
+            {
+                var existingCategory = context.PostHierarchies.SingleOrDefault(dbCategory => dbCategory.CategoryId == category.CategoryId);
+
+                if (existingCategory == null)
+                {
+                    Console.WriteLine("Post not found.");
+                    return false;
+                }
+
+                existingCategory.Title = category.Title;
+                existingCategory.ParentId = category.ParentId;
+                existingCategory.Name = category.Name;
+                existingCategory.Keywords = category.Keywords;
+                existingCategory.Description = category.Description;
+                existingCategory.Body = category.Body;
+                existingCategory.UseDateCreatedForSorting = category.UseDateCreatedForSorting;
+                existingCategory.Slug = category.Slug;
+
+                return context.SaveChanges() == 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating catgory: {ex.Message}");
+                return false;
+            }
+        }
+
+        public bool CreateCategory(PostHierarchy category)
+        {
+            category.CategoryId = Guid.NewGuid().ToString();
+
+            context.PostHierarchies.Add(category);
+
+            return context.SaveChanges() == 1;
+        }
     }
 }

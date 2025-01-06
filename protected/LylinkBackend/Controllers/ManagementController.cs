@@ -1,5 +1,4 @@
-﻿using LylinkBackend_API.Caches;
-using LylinkBackend_API.Models;
+﻿using LylinkBackend_API.Models;
 using LylinkBackend_Database.Models;
 using LylinkBackend_Database.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +13,17 @@ namespace LylinkBackend_API.Controllers
         public IActionResult Management()
         {
             return base.View(nameof(Models.Management), new Management() { });
+        }
+
+        [HttpGet("/categorizer")]
+        public IActionResult Categorizer()
+        {
+            return base.View(nameof(Models.Categorizer), new Categorizer()
+            {
+                CategoryLinks = categoryDatabase.GetAllCategories()
+                    .Where(category => category.CategoryId != "db7e85b7-bd5a-476e-8bb7-7dedcd024cd4")
+                    .Select(category => new PageLink { Id = category.CategoryId, Name = category.Name ?? string.Empty })
+            });
         }
 
         [HttpGet("/publisher")]
@@ -36,8 +46,6 @@ namespace LylinkBackend_API.Controllers
         [HttpGet("/getPostFromSlug")]
         public IActionResult GetSlugPost([FromQuery] string slug)
         {
-            Request.Cookies.TryGetValue("accessToken", out string? accessToken);
-
             var post = postDatabase.GetPost(slug);
 
             if (post == null)
@@ -61,11 +69,37 @@ namespace LylinkBackend_API.Controllers
             return Ok(remotePost);
         }
 
+        [HttpGet("/getPostCategoryFromId")]
+        public IActionResult GetPostCategoryFromSlug([FromQuery] string categoryId)
+        {
+            var category = categoryDatabase.GetCategoryFromId(categoryId);
+
+            if (category == null)
+            {
+                return StatusCode(404);
+            }
+
+            var postCategory = categoryDatabase.GetCategoryFromId(category?.CategoryId ?? string.Empty);
+
+            var remotePost = new RemoteCategory
+            {
+                Slug = category?.Slug,
+                Title = category?.Title,
+                ParentId = postCategory?.ParentId,
+                CategoryName = category?.Name,
+                CategoryId = category?.CategoryId,
+                Keywords = category?.Keywords,
+                Description = category?.Description,
+                Body = category?.Body,
+                UseDateCreatedForSorting = category?.UseDateCreatedForSorting
+            };
+
+            return Ok(remotePost);
+        }
+
         [HttpPost("/savePost")]
         public IActionResult SaveDraft([FromForm] RemotePost remotePost)
         {
-            Request.Cookies.TryGetValue("accessToken", out string? accessToken);
-
             if (remotePost.Slug == null)
             {
                 return StatusCode(406);
@@ -90,7 +124,7 @@ namespace LylinkBackend_API.Controllers
                 DateCreated = existingPost == null ? currentEasternTime : existingPost.DateCreated,
                 Name = remotePost.Name,
                 Title = remotePost.Title,
-                ParentId = postDatabase.GetCategoryFromSlug(parentSlug ?? string.Empty)?.CategoryId,
+                ParentId = categoryDatabase.GetCategoryFromSlug(parentSlug ?? string.Empty)?.CategoryId,
                 Keywords = remotePost.Keywords,
                 Description = remotePost.Description,
                 Body = remotePost.Body
@@ -107,11 +141,54 @@ namespace LylinkBackend_API.Controllers
                     postDatabase.CreatePost(post);
                 }
 
-                return RedirectToAction("Publisher", "Management", new { accessToken, successfulPostSubmit = true });
+                return RedirectToAction("Publisher", "Management", new { successfulPostSubmit = true });
             }
             catch (Exception)
             {
                 return StatusCode(500, $"Issue adding/updating post {post.Name}");
+            }
+        }
+
+        [HttpPost("/saveCategory")]
+        public IActionResult SaveCategory([FromForm] RemoteCategory remoteCategory)
+        {
+            if (remoteCategory.Slug == null)
+            {
+                return StatusCode(406);
+            }
+
+            PostHierarchy? existingCategory = categoryDatabase.GetCategoryFromId(remoteCategory.CategoryId ?? string.Empty);
+
+            var category = new PostHierarchy
+            {
+                Slug = remoteCategory.Slug,
+                Name = remoteCategory.CategoryName,
+                Title = remoteCategory.Title,
+                ParentId = remoteCategory.ParentId,
+                Keywords = remoteCategory.Keywords,
+                Description = remoteCategory.Description,
+                Body = remoteCategory.Body,
+                UseDateCreatedForSorting = remoteCategory.UseDateCreatedForSorting,
+            };
+
+            try
+            {
+                if (existingCategory != null)
+                {
+                    category.CategoryId = existingCategory.CategoryId;
+
+                    categoryDatabase.UpdateCategory(category);
+                }
+                else
+                {
+                    categoryDatabase.CreateCategory(category);
+                }
+
+                return RedirectToAction("Categorizer", "Management", new { successfulPostSubmit = true });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, $"Issue adding/updating post {category.Name}");
             }
         }
     }

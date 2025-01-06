@@ -1,12 +1,12 @@
 ﻿@using LylinkBackend_API.Models
-@model Publisher
+@model Categorizer
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewData["Title"] = "Publisher";
-    ViewData["Description"] = "Lylink - Publisher";
-    ViewData["Keywords"] = "lylink, management, publisher";
-    ViewData["PageName"] = "Publisher";
+    ViewData["Title"] = "Categorizer";
+    ViewData["Description"] = "Lylink - Categorizer";
+    ViewData["Keywords"] = "lylink, management, categorizer";
+    ViewData["PageName"] = "Categorizer";
     ViewData["ParentCategories"] = new PageLink[] { new PageLink() { Name = "Index", Id = "/" }, new PageLink { Name = "Management", Id = "management" } };
 }
 
@@ -21,8 +21,8 @@
     <link rel="stylesheet" href="css/medium/medium-editor.min.css">
     <link rel="stylesheet" href="css/medium/medium-editor-tables.min.css">
     <link rel="stylesheet" href="css/medium/themes/default.min.css">
-    
-    <script src="js/publisher.js" defer></script>
+
+    <script src="js/categorizer.js" defer></script>
 }
 
 @section Body
@@ -41,15 +41,14 @@
                 <label>
                     Posts
                     <select onchange="getSlugBody(this)">
-                        <option value="">Select a slug</option>
-                        @foreach (string? slug in Model.AvailableSlugs)
-                        {
-                            <option value="@slug">@slug</option>
+                        <option value="none">Select a slug</option>
+                        @foreach (PageLink categoryLink in Model.CategoryLinks) {
+                            <option value="@categoryLink.Id">@categoryLink.Name</option>
                         }
                     </select>
                 </label>
             </form>
-            <form action="/savePost" method="post" style="display: inline-block">
+            <form action="/saveCategory" method="post" style="display: inline-block">
                 <label>
                     Title
                     <input type="text" id="title" name="Title" placeholder="Title" required />
@@ -71,22 +70,31 @@
                 </label>
 
                 <label>
-                    Categories
-                    <select id="categoryBox" name="ParentSlug" required>
+                    Parent Category
+                    <select id="parentCategoryBox" name="ParentId" required>
                         <option value="">Select a category</option>
-                        @foreach (string? slug in Model.AvailableCategories)
-                        {
-                            <option value="@slug">@slug</option>
+                        <option value="db7e85b7-bd5a-476e-8bb7-7dedcd024cd4">Index</option>
+                        @{
+                            foreach (PageLink parentCategoryLink in Model.CategoryLinks)
+                            {
+                                <option value="@parentCategoryLink.Id">@parentCategoryLink.Name</option>
+                            }
                         }
                     </select>
                 </label>
 
                 <label>
                     Name
-                    <input type="text" id="name" name="Name" placeholder="Name" required />
+                    <input type="text" id="name" name="CategoryName" placeholder="Name" required />
+                </label>
+
+                <label>
+                    Sort child posts by date created
+                    <input type="checkbox" id="useDateCreatedSorting" name="UseDateCreatedForSorting" checked value="true" />
                 </label>
 
                 <input type="hidden" id="body" name="Body" />
+                <input type="hidden" id="categoryId" name="CategoryId" />
 
                 <button type="submit">Save Draft</button>
             </form>

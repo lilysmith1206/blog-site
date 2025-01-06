@@ -51,7 +51,7 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreateCategoryView(string slug)
         {
-            PostHierarchy postCategory = postDatabase.GetCategoryFromSlug(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
+            PostHierarchy postCategory = categoryDatabase.GetCategoryFromSlug(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
 
             IEnumerable<PageLink> posts = GetPostsUnderCategory(postCategory.CategoryId);
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
@@ -71,7 +71,7 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreateIndexView()
         {
-            PostHierarchy postCategory = postDatabase.GetCategoryFromSlug("") ?? throw new NullReferenceException($"Index not found for some reason?");
+            PostHierarchy postCategory = categoryDatabase.GetCategoryFromSlug("") ?? throw new NullReferenceException($"Index not found for some reason?");
 
             IEnumerable<PageLink> posts = GetPostsUnderCategory(postCategory.CategoryId);
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);

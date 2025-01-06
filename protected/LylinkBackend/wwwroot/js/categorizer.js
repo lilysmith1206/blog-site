@@ -6,8 +6,6 @@
     placeholder: false,
 });
 
-document.getElementById("rendered")["data-placeholder"] = "";
-
 const options = {
     indent_size: 4,
     max_char: 0
@@ -62,8 +60,22 @@ document.getElementById("rendered").addEventListener("keydown", (event) => {
     document.getElementById("body").value = event.target.innerHTML;
 })
 
+const checkbox = document.getElementById('useDateCreatedSorting');
+
+checkbox.addEventListener('change', function () {
+    if (checkbox.checked) {
+        checkbox.value = "true";
+    } else {
+        checkbox.value = "false";
+    }
+});
+
 function getSlugBody(slugBox) {
-    fetch(`/getPostFromSlug?slug=${slugBox.value}`, {
+    if (slugBox.value == "none") {
+        return;
+    }
+
+    fetch(`/getPostCategoryFromId?categoryId=${slugBox.value}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json' // Assuming you're sending JSON
@@ -79,22 +91,23 @@ function getSlugBody(slugBox) {
         return JSON.parse(response);
     })
     .then(data => {
+        console.log(data);
+
         document.getElementById('title').value = data.title;
         document.getElementById('keywords').value = data.keywords;
         document.getElementById('description').value = data.description;
-        document.getElementById('name').value = data.name;
+        document.getElementById('name').value = data.categoryName;
         document.getElementById('slug').value = data.slug;
+        document.getElementById('parentCategoryBox').value = data.parentId;
+        document.getElementById('useDateCreatedSorting').checked = data.useDateCreatedForSorting == true;
+        document.getElementById('useDateCreatedSorting').value = data.useDateCreatedForSorting == true;
+        document.getElementById('categoryId').value = data.categoryId;
 
         document.getElementById('html').textContent = beautify.html(data.body, options);
         document.getElementById('rendered').innerHTML = data.body;
         document.getElementById("body").value = beautify.html(data.body, options);
 
-        if (data.parentSlug === undefined) {
-            document.getElementById('categoryBox').value = 'none';
-        }
-        else {
-            document.getElementById('categoryBox').value = data.parentSlug;
-        }
+        document.getElementById("rendered").placeholder = "";
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);

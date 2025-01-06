@@ -6,3 +6,5 @@ private/mysqldump.sql
 **/obj/
 **/.vs/
 /logs
+/private/sqlbackup.sql
+/private/db_dump.sql
