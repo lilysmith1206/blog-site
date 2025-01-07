@@ -15,8 +15,10 @@ if (currentColorStatus !== null) {
     }
 }
 else {
-    localStorage.setItem('theme', 'light');
-	
+    localStorage.setItem('currentColor', 'light');
+
+    lightSun.style.display = 'inline';
+
 	showLightMode();
 }
 
