@@ -1,5 +1,7 @@
 ﻿@using LylinkBackend_API.Models
 @using System.Text.RegularExpressions
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+
 @model PostPage
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -17,7 +19,7 @@
         if (tableTagRegex.IsMatch(Model.Body))
         {
 
-            <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" />
+            <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
         }
     }
 

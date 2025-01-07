@@ -1,4 +1,6 @@
 ﻿@using LylinkBackend_API.Models
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -6,18 +8,18 @@
 
         <title>@(ViewData["Title"]?.ToString() ?? string.Empty)</title>
 
-        <link id="siteStyle" rel="stylesheet" href="css/site_style.css" onerror="showAdblockPopup()" />
-        <link id="inputStyle" rel="stylesheet" href="css/input_style.css" onerror="showAdblockPopup()" />
+        <link id="siteStyle" rel="stylesheet" href="css/site_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+        <link id="inputStyle" rel="stylesheet" href="css/input_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
 
-        <link id="colorStyle" rel="stylesheet" href="css/color.css" onerror="showAdblockPopup()" />
-        <link id="colorTransitionStyle" rel="stylesheet" href="css/color_transition_style.css" onerror="showAdblockPopup()" defer disabled />
+        <link id="colorStyle" rel="stylesheet" href="css/color.css" onerror="showAdblockPopup()" asp-append-version="true" />
+        <link id="colorTransitionStyle" rel="stylesheet" href="css/color_transition_style.css" onerror="showAdblockPopup()" defer disabled asp-append-version="true" />
 
-        <link id="tabsStyle" rel="stylesheet" href="css/tabs_style.css" onerror="showAdblockPopup()" />
+        <link id="tabsStyle" rel="stylesheet" href="css/tabs_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
 
-        <link id="icon" rel="icon" type="image/x-icon" href="css/lylink_icon.ico" onerror="showAdblockPopup()" />
+        <link id="icon" rel="icon" type="image/x-icon" href="css/lylink_icon.ico" onerror="showAdblockPopup()" asp-append-version="true" />
 
-        <script src="js/color_slider.js" defer></script>
-        <script src="js/tabs.js" defer></script>
+        <script src="js/color_slider.js" deferasp-append-version="true" ></script>
+        <script src="js/tabs.js" deferasp-append-version="true" ></script>
 
         <meta charset="UTF-8" />
         <meta name="keywords" content="@(ViewData["Keywords"]?.ToString() ?? string.Empty)" />

@@ -63,8 +63,15 @@ namespace LylinkBackend
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=31536000");
+                }
+            });
 
-            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.UseMiddleware<TokenValidationMiddleware>();
