@@ -14,7 +14,16 @@ CREATE TABLE `annotations` (
   `editor_name` varchar(80) DEFAULT NULL,
   `annotation_content` varchar(10000) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Table structure for table database_version
+--
+DROP TABLE IF EXISTS database_version;
+CREATE TABLE database_version (
+  version char(3) DEFAULT NULL,
+  updated_on datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Table structure for table `post_categories`

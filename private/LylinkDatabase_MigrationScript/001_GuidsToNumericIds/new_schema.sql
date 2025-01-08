@@ -18,6 +18,15 @@ CREATE TABLE annotations (
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
+-- Table structure for table database_version
+--
+DROP TABLE IF EXISTS database_version;
+CREATE TABLE database_version (
+  version char(3) DEFAULT NULL,
+  updated_on datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
 -- Table structure for table post_hierarchy
 --
 DROP TABLE IF EXISTS post_hierarchy;

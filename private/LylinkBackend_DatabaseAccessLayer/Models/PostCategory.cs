@@ -1,10 +1,15 @@
-﻿namespace LylinkBackend_DatabaseAccessLayer.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class PostCategory
 {
     public int CategoryId { get; set; }
 
     public int? ParentId { get; set; }
+
+    public string? CategoryName { get; set; }
 
     public string? Slug { get; set; }
 
@@ -17,8 +22,6 @@ public partial class PostCategory
     public string? Body { get; set; }
 
     public bool? UseDateCreatedForSorting { get; set; }
-
-    public string? CategoryName { get; set; }
 
     public virtual ICollection<PostCategory> InverseParent { get; set; } = new List<PostCategory>();
 

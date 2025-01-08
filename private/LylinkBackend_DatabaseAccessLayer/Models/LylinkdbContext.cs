@@ -11,6 +11,11 @@ public partial class LylinkdbContext : DbContext
     {
     }
 
+    public LylinkdbContext(string connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
     public LylinkdbContext(DbContextOptions<LylinkdbContext> options)
         : base(options)
     {
@@ -20,6 +25,8 @@ public partial class LylinkdbContext : DbContext
     }
 
     public virtual DbSet<Annotation> Annotations { get; set; }
+
+    public virtual DbSet<DatabaseVersion> DatabaseVersions { get; set; }
 
     public virtual DbSet<Post> Posts { get; set; }
 
@@ -46,10 +53,7 @@ public partial class LylinkdbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity
-                .ToTable("annotations")
-                .HasCharSet("utf8mb4")
-                .UseCollation("utf8mb4_general_ci");
+            entity.ToTable("annotations");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(40)
@@ -63,6 +67,21 @@ public partial class LylinkdbContext : DbContext
             entity.Property(e => e.Slug)
                 .HasMaxLength(40)
                 .HasColumnName("slug");
+        });
+
+        modelBuilder.Entity<DatabaseVersion>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("database_version");
+
+            entity.Property(e => e.Version)
+                .HasMaxLength(3)
+                .IsFixedLength()
+                .HasColumnName("version");
+            entity.Property(e => e.UpdatedOn)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_on");
         });
 
         modelBuilder.Entity<Post>(entity =>

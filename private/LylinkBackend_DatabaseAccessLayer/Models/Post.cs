@@ -1,4 +1,7 @@
-﻿namespace LylinkBackend_DatabaseAccessLayer.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class Post
 {

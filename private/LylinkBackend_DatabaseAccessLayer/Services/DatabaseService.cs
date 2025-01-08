@@ -1,9 +1,10 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
+using MySqlConnector;
 using System.Text.RegularExpressions;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
-    public class DatabaseService(LylinkdbContext context) : IPostDatabaseService, IPostCategoryDatabaseService, IAnnotationDatabaseService
+    public class DatabaseService(LylinkdbContext context) : IPostDatabaseService, IPostCategoryDatabaseService, IAnnotationDatabaseService, IDatabaseVersionService
     {
         public IEnumerable<string?> GetAllCategorySlugs()
         {
@@ -244,5 +245,20 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
             return context.SaveChanges() == 1;
         }
+
+        public string? GetDatabaseVersion()
+        {
+            try
+            {
+                return context.DatabaseVersions
+                .OrderByDescending(databaseVersion => databaseVersion.UpdatedOn)
+                .First().Version;
+            }
+            catch (MySqlException)
+            {
+                return null;
+            }
+        }
+            
     }
 }
