@@ -40,9 +40,9 @@
         <aside>
             <form style="display: inline-block">
                 <label>
-                    Posts
+                    Categories
                     <select onchange="getSlugBody(this)">
-                        <option value="none">Select a slug</option>
+                        <option value="none">Select a category</option>
                         @foreach (PageLink categoryLink in Model.CategoryLinks) {
                             <option value="@categoryLink.Id">@categoryLink.Name</option>
                         }

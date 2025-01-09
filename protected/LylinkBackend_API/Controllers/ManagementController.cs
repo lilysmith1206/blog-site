@@ -149,12 +149,12 @@ namespace LylinkBackend_API.Controllers
         [HttpPost("/saveCategory")]
         public IActionResult SaveCategory([FromForm] RemoteCategory remoteCategory)
         {
-            if (remoteCategory.Slug == null || remoteCategory.CategoryId == null)
+            if (remoteCategory.Slug == null)
             {
                 return StatusCode(406);
             }
 
-            PostCategory? existingCategory = categoryDatabase.GetCategoryFromId(remoteCategory.CategoryId.Value);
+            PostCategory? existingCategory = categoryDatabase.GetCategoryFromId(remoteCategory.CategoryId ?? -1);
 
             var category = new PostCategory
             {
