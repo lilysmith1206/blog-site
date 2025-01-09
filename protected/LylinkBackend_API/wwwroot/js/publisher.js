@@ -102,11 +102,11 @@ function getSlugBody(slugBox) {
         document.getElementById('rendered').innerHTML = data.body;
         document.getElementById("body").value = beautify.html(data.body, options);
 
-        if (data.parentSlug === undefined) {
+        if (data.parentId === undefined) {
             document.getElementById('categoryBox').value = 'none';
         }
         else {
-            document.getElementById('categoryBox').value = data.parentSlug;
+            document.getElementById('categoryBox').value = data.parentId;
         }
     })
     .catch(error => {

@@ -42,10 +42,15 @@
                 <label>
                     Posts
                     <select onchange="getSlugBody(this)">
-                        <option value="">Select a slug</option>
-                        @foreach (string? slug in Model.AvailableSlugs)
+                        <option selected value="">Select a post</option>
+                        @foreach (KeyValuePair<string, IEnumerable<PageLink>> category in Model.CategoryPosts)
                         {
-                            <option value="@slug">@slug</option>
+                            <optgroup label="@category.Key">
+                                @foreach (PageLink post in category.Value)
+                                {
+                                    <option value="@post.Id">@post.Name</option>
+                                }
+                            </optgroup>
                         }
                     </select>
                 </label>
@@ -73,11 +78,11 @@
 
                 <label>
                     Categories
-                    <select id="categoryBox" name="ParentSlug" required>
-                        <option value="">Select a category</option>
-                        @foreach (string? slug in Model.AvailableCategories)
+                    <select id="categoryBox" name="ParentId" required>
+                        <option value="" selected>Select a category</option>
+                        @foreach (PageLink category in Model.Categories)
                         {
-                            <option value="@slug">@slug</option>
+                            <option value="@category.Id">@category.Name</option>
                         }
                     </select>
                 </label>

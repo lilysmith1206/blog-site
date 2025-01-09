@@ -29,11 +29,15 @@ namespace LylinkBackend_API.Controllers
         [HttpGet("/publisher")]
         public IActionResult Publisher([FromQuery] bool? successfulPostSubmit)
         {
+            Dictionary<string, IEnumerable<PageLink>> categoryPostLinks = GetPostsForEachCategory();
+            IEnumerable<PageLink> categories = categoryDatabase.GetAllCategories()
+                .Select(category => new PageLink { Id = category.CategoryId.ToString(), Name = category.CategoryName ?? "No category name" });
+
             return base.View(nameof(Models.Publisher), new Publisher()
             {
                 NavigatedFromFormSubmit = successfulPostSubmit == true,
-                AvailableCategories = categoryDatabase.GetAllCategorySlugs(),
-                AvailableSlugs = postDatabase.GetAllPostSlugs(),
+                Categories = categories,
+                CategoryPosts = categoryPostLinks,
             });
         }
 
@@ -53,13 +57,11 @@ namespace LylinkBackend_API.Controllers
                 return StatusCode(404);
             }
 
-            var postCategory = categoryDatabase.GetCategoryFromId(post.ParentId ?? - 1);
-
             var remotePost = new RemotePost
             {
                 Slug = post?.Slug,
                 Title = post?.Title,
-                ParentSlug = postCategory?.Slug,
+                ParentId = post?.ParentId,
                 Name = post?.Name,
                 Keywords = post?.Keywords,
                 Description = post?.Description,
@@ -106,13 +108,6 @@ namespace LylinkBackend_API.Controllers
                 return StatusCode(406);
             }
 
-            var parentSlug = remotePost.ParentSlug switch
-            {
-                "none" => null,
-                "" => "",
-                _ => remotePost.ParentSlug
-            };
-
             Post? existingPost = postDatabase.GetPost(remotePost.Slug);
             TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
@@ -125,7 +120,7 @@ namespace LylinkBackend_API.Controllers
                 DateCreated = existingPost == null ? currentEasternTime : existingPost.DateCreated,
                 Name = remotePost.Name,
                 Title = remotePost.Title,
-                ParentId = categoryDatabase.GetCategoryFromSlug(parentSlug ?? string.Empty)?.CategoryId,
+                ParentId = remotePost.ParentId,
                 Keywords = remotePost.Keywords,
                 Description = remotePost.Description,
                 Body = remotePost.Body,
@@ -192,6 +187,23 @@ namespace LylinkBackend_API.Controllers
             {
                 return StatusCode(500, $"Issue adding/updating post {category.CategoryName}");
             }
+        }
+
+        private Dictionary<string, IEnumerable<PageLink>> GetPostsForEachCategory()
+        {
+            Dictionary<string, IEnumerable<PageLink>> categoryPostLinks = [];
+
+            IEnumerable<PostCategory> categories = categoryDatabase.GetAllCategories();
+
+            foreach (PostCategory category in categories)
+            {
+                IEnumerable<PageLink> postsUnderCategory = postDatabase.GetAllPostsWithParentId(category.CategoryId)
+                    .Select(post => new PageLink { Id = post.Slug, Name = post.Name ?? post.Slug });
+
+                categoryPostLinks.Add(category.CategoryName ?? "No category name", postsUnderCategory);
+            }
+
+            return categoryPostLinks;
         }
     }
 }

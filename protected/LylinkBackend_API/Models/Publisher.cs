@@ -4,8 +4,8 @@
     {
         public bool NavigatedFromFormSubmit { get; set; }
 
-        public IEnumerable<string?> AvailableCategories { get; set; }
+        public IEnumerable<PageLink> Categories { get; set; }
 
-        public IEnumerable<string?> AvailableSlugs { get; set; }
+        public Dictionary<string, IEnumerable<PageLink>> CategoryPosts { get; set; }
     }
 }
