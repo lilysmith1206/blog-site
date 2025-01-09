@@ -67,7 +67,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             return context.PostCategories.SingleOrDefault(postCategory => postCategory.CategoryId == categoryId);
         }
 
-        public List<PostCategory> GetParentCategories(int? categoryId)
+        public IEnumerable<PostCategory> GetParentCategories(int? categoryId)
         {
             var parents = new List<PostCategory>();
 
