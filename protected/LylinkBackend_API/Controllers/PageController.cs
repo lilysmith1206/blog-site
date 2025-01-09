@@ -119,13 +119,13 @@ namespace LylinkBackend_API.Controllers
 
         protected IEnumerable<PageLink> GetParentCategories(int? parentId)
         {
-            List<PostCategory> parents = categoryDatabase.GetParentCategories(parentId);
+            IEnumerable<PostCategory> parents = categoryDatabase.GetParentCategories(parentId);
 
             parents.Single(parent => string.IsNullOrEmpty(parent.Slug)).Slug = "/"; 
 
-            parents.Reverse();
-
-            return parents.Select(parent =>
+            return parents
+                .Reverse()
+                .Select(parent =>
             {
                 return new PageLink()
                 {

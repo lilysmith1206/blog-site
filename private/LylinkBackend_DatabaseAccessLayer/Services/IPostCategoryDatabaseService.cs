@@ -12,9 +12,9 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public PostCategory? GetCategoryFromId(int categoryId);
 
-        public List<PostCategory> GetParentCategories(int? categoryId);
+        public IEnumerable<PostCategory> GetParentCategories(int? categoryId);
 
-        public List<PostCategory> GetChildCategoriesOfCategory(int categoryId);
+        public IEnumerable<PostCategory> GetChildCategoriesOfCategory(int categoryId);
 
         public bool UpdateCategory(PostCategory category);
 
