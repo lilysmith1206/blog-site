@@ -34,20 +34,22 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
             var postsQuery = context.Posts.Where(post => post.ParentId == parentId);
 
-            return [.. sortByDateCreated
+            return (sortByDateCreated
                 ? postsQuery.OrderBy(post => post.DateCreated)
-                : postsQuery.OrderByDescending(post => post.DateModified)];
+                : postsQuery.OrderByDescending(post => post.DateModified))
+                .ToList();
         }
 
         public IEnumerable<Post> GetRecentlyPublishedPosts(int amount)
         {
-            return [.. context.Posts
+            return context.Posts
                 .OrderByDescending(post => post.DateModified)
                 // Filter draft posts
                 .Where(post => post.IsDraft == false)
                 // Filter out HTTP error pages
                 .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
-                .Take(amount)];
+                .Take(amount)
+                .ToList();
         }
 
         public Post? GetPost(string slug)
@@ -96,10 +98,11 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             return parents;
         }
 
-        public List<PostCategory> GetChildCategoriesOfCategory(int categoryId)
+        public IEnumerable<PostCategory> GetChildCategoriesOfCategory(int categoryId)
         {
-            return [.. context.PostCategories
-                .Where(postCategory => postCategory.ParentId == categoryId)];
+            return context.PostCategories
+                .Where(postCategory => postCategory.ParentId == categoryId)
+                .ToList();
         }
 
         public bool CreatePost(Post post)
@@ -155,7 +158,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
         public IEnumerable<Annotation> GetAnnotations(string slug, string editorName)
         {
             return context.Annotations
-                .Where(annotation => slug == annotation.Slug && annotation.EditorName == editorName);
+                .Where(annotation => slug == annotation.Slug && annotation.EditorName == editorName)
+                .ToList();
         }
 
         public string? CreateAnnotation(Annotation annotation)
@@ -206,7 +210,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public IEnumerable<PostCategory> GetAllCategories()
         {
-            return context.PostCategories;
+            return context.PostCategories.ToList();
         }
 
         public bool UpdateCategory(PostCategory category)
