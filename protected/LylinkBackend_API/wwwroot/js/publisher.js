@@ -62,13 +62,14 @@ document.getElementById("rendered").addEventListener("keydown", (event) => {
     document.getElementById("body").value = event.target.innerHTML;
 })
 
-const checkbox = document.getElementById('isDraft');
+const isDraftInput = document.getElementById('isDraftInput');
+const isDraft = document.getElementById('isDraft');
 
-checkbox.addEventListener('change', function () {
-    if (checkbox.checked) {
-        checkbox.value = "true";
+isDraftInput.addEventListener('change', function () {
+    if (isDraftInput.checked) {
+        isDraft.value = "true";
     } else {
-        checkbox.value = "false";
+        isDraft.value = "false";
     }
 });
 
@@ -94,8 +95,8 @@ function getSlugBody(slugBox) {
         document.getElementById('description').value = data.description;
         document.getElementById('name').value = data.name;
         document.getElementById('slug').value = data.slug;
-        document.getElementById('isDraft').checked = data.isDraft == true;
         document.getElementById('isDraft').value = data.isDraft == true;
+        document.getElementById('isDraftInput').checked = data.isDraft == true;
 
         document.getElementById('html').textContent = beautify.html(data.body, options);
         document.getElementById('rendered').innerHTML = data.body;
