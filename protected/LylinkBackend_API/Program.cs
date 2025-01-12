@@ -58,6 +58,7 @@ namespace LylinkBackend
             builder.Services.AddTransient<IVisitAnalyticsDatabaseService, DatabaseService>();
             builder.Services.AddTransient<IEmailService, EmailService>();
 
+            builder.Services.AddSingleton<IUserCookieService, UserCookieService>();
             builder.Services.AddSingleton<ISlugCache, SlugCache>();
             builder.Services.AddSingleton<IVisitAnalyticsCache, VisitAnalyticsCache>();
 
@@ -87,6 +88,8 @@ namespace LylinkBackend
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
+
+            app.UseMiddleware<CreateVisitIdMiddleware>();
             app.UseMiddleware<TokenValidationMiddleware>();
 
             app.MapControllers();
@@ -94,7 +97,7 @@ namespace LylinkBackend
             app.MapControllerRoute(
                 name: "root",
                 pattern: "",
-                defaults: new { controller = "Page", action = "RenderPage", slug = "" }
+                defaults: new { controller = "Page", action = "RenderPage", slug = "/" }
             );
 
             app.MapControllerRoute(

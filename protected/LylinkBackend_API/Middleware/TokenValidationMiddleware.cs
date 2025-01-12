@@ -1,10 +1,15 @@
 ﻿using LylinkBackend_API.Caches;
 using LylinkBackend_API.Models;
+using LylinkBackend_API.Services;
 using Microsoft.Extensions.Options;
 
 namespace LylinkBackend_API.Middleware
 {
-    public class TokenValidationMiddleware(RequestDelegate next, IVisitAnalyticsCache visitAnalyticsCache, IOptions<Authentication> authentication)
+    public class TokenValidationMiddleware(
+        RequestDelegate next,
+        IVisitAnalyticsCache visitAnalyticsCache,
+        IUserCookieService userCookieService,
+        IOptions<Authentication> authentication)
     {
         private readonly string[] RestrictedSlugs = [
             "/management",
@@ -21,9 +26,16 @@ namespace LylinkBackend_API.Middleware
 
             if (RestrictedSlugs.Contains(requestedSlug))
             {
-                if (context.Request.Cookies.TryGetValue("token", out string? token) == false || authentication.Value.UserIds.Contains(token) == false)
+                string? token = userCookieService.GetUserAuthenticationToken(context.Request.Cookies);
+
+                if (token == null || authentication.Value.UserIds.Contains(token) == false)
                 {
-                    context.Request.Cookies.TryGetValue("visitor_id", out string? visitorId);
+                    string visitorId = userCookieService.GetVisitorId(context.Request.Cookies)
+                        ?? $"{GenerateDashlessGuid()}{GenerateDashlessGuid()}{GenerateDashlessGuid()}{GenerateDashlessGuid()}";
+
+                    context.Response.Cookies.Append("visitor_id", visitorId);
+
+                    context.Items["new_visitor_id"] = visitorId;
 
                     visitAnalyticsCache.QueueVisitAnalyticsForProcessing(requestedSlug, "403", visitorId);
 
@@ -35,5 +47,7 @@ namespace LylinkBackend_API.Middleware
 
             await next(context);
         }
+
+        private static string GenerateDashlessGuid() => Guid.NewGuid().ToString().Replace("-", string.Empty);
     }
 }

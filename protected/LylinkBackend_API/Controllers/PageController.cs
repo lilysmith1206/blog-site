@@ -1,5 +1,6 @@
 ﻿using LylinkBackend_API.Caches;
 using LylinkBackend_API.Models;
+using LylinkBackend_API.Services;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace LylinkBackend_API.Controllers
     public class PageController(
         IPostDatabaseService postDatabase,
         IPostCategoryDatabaseService categoryDatabase,
+        IUserCookieService userCookieService,
         IVisitAnalyticsCache visitAnalyticsCache,
         ISlugCache slugCache) : Controller
     {
@@ -18,7 +20,9 @@ namespace LylinkBackend_API.Controllers
             IReadOnlyList<string?> postSlugs = slugCache.GetPostSlugs();
             IReadOnlyList<string?> categorySlugs = slugCache.GetCategorySlugs();
 
-            Request.Cookies.TryGetValue("visitor_id", out string? visitorId);
+            string visitorId = userCookieService.GetVisitorId(Request.Cookies)
+                ?? HttpContext.Items["new_visitor_id"] as string
+                ?? throw new InvalidOperationException("Visitor Id creation middleware failed.");
 
             IActionResult view;
 
@@ -28,6 +32,7 @@ namespace LylinkBackend_API.Controllers
                 case "403":
                     return CreatePostView(slug, null);
                 case "/":
+                case "":
                     visitAnalyticsCache.QueueVisitAnalyticsForProcessing(slug, "/", visitorId);
 
                     return CreateIndexView();
