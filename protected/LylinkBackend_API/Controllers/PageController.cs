@@ -7,29 +7,50 @@ using System.Text.RegularExpressions;
 
 namespace LylinkBackend_API.Controllers
 {
-    public class PageController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase, ISlugCache slugCache) : Controller
+    public class PageController(
+        IPostDatabaseService postDatabase,
+        IPostCategoryDatabaseService categoryDatabase,
+        IVisitAnalyticsCache visitAnalyticsCache,
+        ISlugCache slugCache) : Controller
     {
-        public IActionResult RenderPage(string? editor, string slug = "")
+        public IActionResult RenderPage(string? editor, string slug = "/")
         {
             IReadOnlyList<string?> postSlugs = slugCache.GetPostSlugs();
             IReadOnlyList<string?> categorySlugs = slugCache.GetCategorySlugs();
 
+            Request.Cookies.TryGetValue("visitor_id", out string? visitorId);
+
+            IActionResult view;
+
+            switch (slug)
+            {
+                case "404":
+                case "403":
+                    return CreatePostView(slug, null);
+                case "/":
+                    visitAnalyticsCache.QueueVisitAnalyticsForProcessing(slug, "/", visitorId);
+
+                    return CreateIndexView();
+            }
+
             if (postSlugs.Contains(slug))
             {
-                return CreatePostView(slug, editor);
-            }
-            else if (slug == "")
-            {
-                return CreateIndexView();
+                view = CreatePostView(slug, editor);
             }
             else if (categorySlugs.Contains(slug))
             {
-                return CreateCategoryView(slug);
+                view = CreateCategoryView(slug);
             }
             else
             {
+                visitAnalyticsCache.QueueVisitAnalyticsForProcessing(slug, "404", visitorId);
+
                 return Redirect("404");
             }
+
+            visitAnalyticsCache.QueueVisitAnalyticsForProcessing(slug, slug, visitorId);
+
+            return view;
         }
 
         private ViewResult CreatePostView(string slug, string? editorName)
@@ -71,7 +92,7 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreateIndexView()
         {
-            PostCategory postCategory = categoryDatabase.GetCategoryFromSlug("") ?? throw new NullReferenceException($"Index not found for some reason?");
+            PostCategory postCategory = categoryDatabase.GetCategoryFromSlug("/") ?? throw new NullReferenceException($"Index not found for some reason?");
 
             IEnumerable<PageLink> posts = FilterPostsForCategory(postDatabase.GetAllPostsWithParentId(postCategory.CategoryId));
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
@@ -121,7 +142,13 @@ namespace LylinkBackend_API.Controllers
         {
             IEnumerable<PostCategory> parents = categoryDatabase.GetParentCategories(parentId);
 
-            parents.Single(parent => string.IsNullOrEmpty(parent.Slug)).Slug = "/"; 
+            if (parents.Any() == false)
+            {
+                return [new PageLink {
+                    Id = "/",
+                    Name = "index"
+                }];
+            }
 
             return parents
                 .Reverse()

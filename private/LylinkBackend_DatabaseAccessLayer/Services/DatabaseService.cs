@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
-    public class DatabaseService(LylinkdbContext context) : IPostDatabaseService, IPostCategoryDatabaseService, IAnnotationDatabaseService, IDatabaseVersionService
+    public class DatabaseService(LylinkdbContext context) : IPostDatabaseService, IPostCategoryDatabaseService, IAnnotationDatabaseService, IDatabaseVersionService, IVisitAnalyticsDatabaseService
     {
         public IEnumerable<string?> GetAllCategorySlugs()
         {
@@ -263,6 +263,26 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 return null;
             }
         }
-            
+
+        public bool CreateVisitorAnalytic(VisitAnalytic analytic)
+        {
+            context.Add(analytic);
+
+            return context.SaveChanges() == 1;
+        }
+
+        public IEnumerable<VisitAnalytic> GetAllVisitorAnalytics()
+        {
+            return context.VisitAnalytics.ToList();
+        }
+
+        public bool DropAllVisitorAnalytics()
+        {
+            int visitAnalyticsCount = context.VisitAnalytics.Count();
+
+            context.VisitAnalytics.RemoveRange(context.VisitAnalytics);
+
+            return context.SaveChanges() == visitAnalyticsCount;
+        }
     }
 }

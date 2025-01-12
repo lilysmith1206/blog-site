@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace LylinkBackend_DatabaseAccessLayer.Models;
+﻿namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class DatabaseVersion
 {

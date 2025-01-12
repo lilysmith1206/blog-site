@@ -5,7 +5,10 @@ using LylinkBackend_API.Middleware;
 using LylinkBackend_API.Models;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
+
+#if RELEASE
 using System.Security.Cryptography.X509Certificates;
+#endif
 
 namespace LylinkBackend
 {
@@ -33,6 +36,7 @@ namespace LylinkBackend
                 });
             });
 #endif
+
             builder.Services.AddAuthorization();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -45,16 +49,25 @@ namespace LylinkBackend
             builder.Services.Configure<Authentication>(
                 builder.Configuration.GetSection("Authentication"));
 
+            builder.Services.Configure<EmailOptions>(
+                builder.Configuration.GetSection("Email"));
+
             builder.Services.AddTransient<IAnnotationDatabaseService, DatabaseService>();
             builder.Services.AddTransient<IPostDatabaseService, DatabaseService>();
             builder.Services.AddTransient<IPostCategoryDatabaseService, DatabaseService>();
+            builder.Services.AddTransient<IVisitAnalyticsDatabaseService, DatabaseService>();
+            builder.Services.AddTransient<IEmailService, EmailService>();
 
             builder.Services.AddSingleton<ISlugCache, SlugCache>();
+            builder.Services.AddSingleton<IVisitAnalyticsCache, VisitAnalyticsCache>();
 
             builder.Services.AddHostedService<SlugDataService>();
+            builder.Services.AddHostedService<VisitAnalyticsProcessingService>();
+            builder.Services.AddHostedService<VisitAnalyticsEmailService>();
 
             builder.Services.AddControllers();
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
+            builder.Services.AddRazorComponents();
 
             var app = builder.Build();
 

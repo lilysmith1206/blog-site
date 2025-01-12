@@ -32,6 +32,8 @@ public partial class LylinkdbContext : DbContext
 
     public virtual DbSet<PostCategory> PostCategories { get; set; }
 
+    public virtual DbSet<VisitAnalytic> VisitAnalytics { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (optionsBuilder.IsConfigured == false)
@@ -75,13 +77,13 @@ public partial class LylinkdbContext : DbContext
                 .HasNoKey()
                 .ToTable("database_version");
 
+            entity.Property(e => e.UpdatedOn)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_on");
             entity.Property(e => e.Version)
                 .HasMaxLength(3)
                 .IsFixedLength()
                 .HasColumnName("version");
-            entity.Property(e => e.UpdatedOn)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_on");
         });
 
         modelBuilder.Entity<Post>(entity =>
@@ -179,6 +181,32 @@ public partial class LylinkdbContext : DbContext
                 .HasForeignKey(d => d.ParentId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("fk_post_hierarchy_parent");
+        });
+
+        modelBuilder.Entity<VisitAnalytic>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("visit_analytics");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.SlugVisited)
+                .HasMaxLength(40)
+                .IsFixedLength()
+                .HasColumnName("slug_visited");
+            entity.Property(e => e.SlugGiven)
+                .HasMaxLength(40)
+                .IsFixedLength()
+                .HasColumnName("slug_given");
+            entity.Property(e => e.VisitedOn)
+                .HasColumnType("datetime")
+                .HasColumnName("visited_on");
+            entity.Property(e => e.VisitorId)
+                .HasMaxLength(128)
+                .IsFixedLength()
+                .HasColumnName("visitor_id");
         });
 
         OnModelCreatingPartial(modelBuilder);

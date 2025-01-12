@@ -8,3 +8,4 @@ private/mysqldump.sql
 /logs
 /private/sqlbackup.sql
 /private/db_dump.sql
+/protected/LylinkBackend_API/appsettings.Development.json

@@ -13,11 +13,9 @@ namespace LylinkBackend_API.Services
                 IPostDatabaseService postDatabase = scope.ServiceProvider.GetRequiredService<IPostDatabaseService>();
                 IPostCategoryDatabaseService categoryDatabase = scope.ServiceProvider.GetRequiredService<IPostCategoryDatabaseService>();
 
-                // Update slugs from the database
                 slugCache.UpdatePostSlugs(postDatabase.GetAllPostSlugs());
                 slugCache.UpdateCategorySlugs(categoryDatabase.GetAllCategorySlugs());
 
-                // Wait 10 seconds before updating slugs again
                 await Task.Delay(10000, stoppingToken);
             }
         }

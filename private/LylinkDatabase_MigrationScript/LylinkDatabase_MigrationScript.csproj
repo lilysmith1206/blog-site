@@ -73,6 +73,12 @@
     <None Update="000_AddDatabaseVersionTable\new_schema.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="004_AddVisitAnalyticsTable\AddVisitAnalyticsTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="004_AddVisitAnalyticsTable\base_schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
