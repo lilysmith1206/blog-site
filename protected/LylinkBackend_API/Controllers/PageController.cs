@@ -48,8 +48,6 @@ namespace LylinkBackend_API.Controllers
             }
             else
             {
-                visitAnalyticsCache.QueueVisitAnalyticsForProcessing(slug, "404", visitorId);
-
                 return Redirect("404");
             }
 
