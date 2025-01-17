@@ -22,7 +22,7 @@
     --background-color: #fdefff;
     --text-color: black;
     --header-bg-color: #ffe6ff;
-    --header-border-color: #fddfff;
+    --header-border-color: #f2d5f4;
     --main-aside-bg-color: #f6d1fb;
     --main-aside-border-color: #fde3ff;
     --link-color: #d621ee;
@@ -40,6 +40,11 @@
     --button-active-bg-color: #CDA4D6;
     --tab-content-bg-color: #E7C7ED;
     --tab-content-border-color: #D7AED8;
+    --scrollbar-color: #b384c8;
+}
+
+html {
+    scrollbar-color: var(--scrollbar-color) var(--header-border-color);
 }
 
 body {
@@ -109,7 +114,7 @@ button.active {
     border-color: var(--tab-content-border-color);
 }
 
-body.dark-mode {
+html.dark-mode {
     --background-color: #312d3f;
     --text-color: rgb(240, 235, 242);
     --header-bg-color: #3f3a52;
@@ -131,6 +136,7 @@ body.dark-mode {
     --button-active-bg-color: #585172;
     --tab-content-bg-color: #4A4460;
     --tab-content-border-color: #3E3951;
+    --scrollbar-color: #867097;
 }
 
 div#siteColorToggle {

@@ -10,6 +10,7 @@
 2. General Page Styles
 ========================================================== */
 html {
+	scrollbar-width: thin;
 	background-color: #888;
 }
 

@@ -64,11 +64,11 @@ function hideImage(element, newElement) {
 }
 
 function showDarkMode() {
-    document.body.classList.add('dark-mode');
+    document.documentElement.classList.add('dark-mode');
 }
 
 function showLightMode() {
-    document.body.classList.remove('dark-mode');
+    document.documentElement.classList.remove('dark-mode');
 }
 
 function handleDarkMoonClick() {
