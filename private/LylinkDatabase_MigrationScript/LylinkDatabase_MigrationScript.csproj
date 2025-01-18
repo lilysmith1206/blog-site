@@ -85,7 +85,16 @@
     <None Update="005_RemoveNullableOptionFromMostDatabaseTables\base_schema.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="005_RemoveNullableOptionFromMostDatabaseTables\new_schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="005_RemoveNullableOptionFromMostDatabaseTables\RemoveNullableOptionFromMostDatabaseTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="006_ConvertPostsTableToUseIntegerId\base_schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="006_ConvertPostsTableToUseIntegerId\ConvertPostsTableToUseIntegerId.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -4,6 +4,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 {
     public interface IPostDatabaseService
     {
+        public Post? GetPost(int id);
+
         public Post? GetPost(string slug);
 
         public IEnumerable<string?> GetAllPostSlugs();

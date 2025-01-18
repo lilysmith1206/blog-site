@@ -52,6 +52,11 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 .ToList();
         }
 
+        public Post? GetPost(int id)
+        {
+            return context.Posts.SingleOrDefault(post => post.Id == id);
+        }
+
         public Post? GetPost(string slug)
         {
             return context.Posts.SingleOrDefault(post => post.Slug == slug);
@@ -138,7 +143,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
         {
             try
             {
-                var existingPost = context.Posts.SingleOrDefault(dbPost => post.Slug == dbPost.Slug);
+                Post? existingPost = GetPost(post.Id);
 
                 if (existingPost == null)
                 {

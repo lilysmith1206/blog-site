@@ -47,10 +47,10 @@ namespace LylinkBackend_API.Controllers
             return Ok("yeah?");
         }
 
-        [HttpGet("/getPostFromSlug")]
-        public IActionResult GetSlugPost([FromQuery] string slug)
+        [HttpGet("/getPostFromId")]
+        public IActionResult GetSlugPost([FromQuery] int id)
         {
-            var post = postDatabase.GetPost(slug);
+            Post? post = postDatabase.GetPost(id);
 
             if (post == null)
             {
@@ -59,6 +59,7 @@ namespace LylinkBackend_API.Controllers
 
             var remotePost = new RemotePost
             {
+                Id = post.Id,
                 Slug = post.Slug,
                 Title = post.Title,
                 ParentId = post.ParentId,
@@ -103,19 +104,19 @@ namespace LylinkBackend_API.Controllers
         [HttpPost("/savePost")]
         public IActionResult SaveDraft([FromForm] RemotePost remotePost)
         {
-            if (remotePost.Slug == null)
+            if (remotePost.Id == null)
             {
                 return StatusCode(406);
             }
 
-            Post? existingPost = postDatabase.GetPost(remotePost.Slug);
+            Post? existingPost = postDatabase.GetPost(remotePost.Id.Value);
             TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
             DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 
             var post = new Post
             {
-                Slug = remotePost.Slug,
+                Slug = remotePost.Slug ?? throw new ArgumentNullException("Slug is null!"),
                 DateModified = currentEasternTime,
                 DateCreated = existingPost == null ? currentEasternTime : existingPost.DateCreated,
                 Name = remotePost.Name ?? "Post not given a name.",
@@ -131,6 +132,8 @@ namespace LylinkBackend_API.Controllers
             {
                 if (existingPost != null)
                 {
+                    post.Id = remotePost.Id.Value;
+
                     postDatabase.UpdatePost(post);
                 }
                 else
@@ -198,7 +201,7 @@ namespace LylinkBackend_API.Controllers
             foreach (PostCategory category in categories)
             {
                 IEnumerable<PageLink> postsUnderCategory = postDatabase.GetAllPostsWithParentId(category.CategoryId)
-                    .Select(post => new PageLink { Id = post.Slug, Name = post.Name });
+                    .Select(post => new PageLink { Id = post.Id.ToString(), Name = post.Name });
 
                 categoryPostLinks.Add(category.CategoryName, postsUnderCategory);
             }

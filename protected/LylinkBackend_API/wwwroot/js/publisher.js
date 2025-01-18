@@ -74,7 +74,7 @@ isDraftInput.addEventListener('change', function () {
 });
 
 function getSlugBody(slugBox) {
-    fetch(`/getPostFromSlug?slug=${slugBox.value}`, {
+    fetch(`/getPostFromId?id=${slugBox.value}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json' // Assuming you're sending JSON
@@ -97,6 +97,7 @@ function getSlugBody(slugBox) {
         document.getElementById('slug').value = data.slug;
         document.getElementById('isDraft').value = data.isDraft == true;
         document.getElementById('isDraftInput').checked = data.isDraft == true;
+        document.getElementById('id').value = data.id;
 
         document.getElementById('html').textContent = beautify.html(data.body, options);
         document.getElementById('rendered').innerHTML = data.body;

@@ -59,23 +59,26 @@ public partial class LylinkdbContext : DbContext
 
         modelBuilder.Entity<Post>(entity =>
         {
-            entity.HasKey(e => e.Slug).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("posts");
 
-            entity.HasIndex(e => e.ParentId, "fk_posts_parent");
+            entity.HasIndex(e => e.ParentId, "key_post_parent_category");
 
-            entity.Property(e => e.Slug)
-                .HasMaxLength(40)
-                .IsFixedLength()
-                .HasColumnName("slug");
+            entity.HasIndex(e => e.Slug, "slug").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
             entity.Property(e => e.Body)
                 .HasColumnType("varchar(60000)")
                 .HasColumnName("body");
             entity.Property(e => e.DateCreated)
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("datetime")
                 .HasColumnName("date_created");
             entity.Property(e => e.DateModified)
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("datetime")
                 .HasColumnName("date_modified");
             entity.Property(e => e.Description)
@@ -93,7 +96,11 @@ public partial class LylinkdbContext : DbContext
                 .HasColumnName("name");
             entity.Property(e => e.ParentId)
                 .HasColumnType("int(11)")
-                .HasColumnName("parentId");
+                .HasColumnName("parent_id");
+            entity.Property(e => e.Slug)
+                .HasMaxLength(40)
+                .IsFixedLength()
+                .HasColumnName("slug");
             entity.Property(e => e.Title)
                 .HasMaxLength(80)
                 .IsFixedLength()
@@ -102,7 +109,7 @@ public partial class LylinkdbContext : DbContext
             entity.HasOne(d => d.Parent).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.ParentId)
                 .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("fk_posts_parent");
+                .HasConstraintName("foreign_key_post_parent_category");
         });
 
         modelBuilder.Entity<PostCategory>(entity =>
