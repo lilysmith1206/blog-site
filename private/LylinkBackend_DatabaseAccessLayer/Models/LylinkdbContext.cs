@@ -1,29 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
 
 namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class LylinkdbContext : DbContext
 {
-    private readonly string? _connectionString;
-
-    public LylinkdbContext()
-    {
-    }
-
-    public LylinkdbContext(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-
-    public LylinkdbContext(DbContextOptions<LylinkdbContext> options)
-        : base(options)
-    {
-        _connectionString = options.Extensions
-            .OfType<MySqlOptionsExtension>()
-            .FirstOrDefault()?.ConnectionString;
-    }
-
     public virtual DbSet<Annotation> Annotations { get; set; }
 
     public virtual DbSet<DatabaseVersion> DatabaseVersions { get; set; }
@@ -33,17 +13,6 @@ public partial class LylinkdbContext : DbContext
     public virtual DbSet<PostCategory> PostCategories { get; set; }
 
     public virtual DbSet<VisitAnalytic> VisitAnalytics { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (optionsBuilder.IsConfigured == false)
-        {
-            if (string.IsNullOrEmpty(_connectionString) == false)
-            {
-                optionsBuilder.UseMySql(_connectionString, ServerVersion.Parse("11.5.2-mariadb"));
-            }
-        }
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,16 +28,24 @@ public partial class LylinkdbContext : DbContext
 
             entity.Property(e => e.Id)
                 .HasMaxLength(40)
-                .HasColumnName("id");
+                .HasColumnName("id")
+                .UseCollation("utf8mb4_general_ci")
+                .HasCharSet("utf8mb4");
             entity.Property(e => e.AnnotationContent)
                 .HasMaxLength(10000)
-                .HasColumnName("annotation_content");
+                .HasColumnName("annotation_content")
+                .UseCollation("utf8mb4_general_ci")
+                .HasCharSet("utf8mb4");
             entity.Property(e => e.EditorName)
                 .HasMaxLength(80)
-                .HasColumnName("editor_name");
+                .HasColumnName("editor_name")
+                .UseCollation("utf8mb4_general_ci")
+                .HasCharSet("utf8mb4");
             entity.Property(e => e.Slug)
                 .HasMaxLength(40)
-                .HasColumnName("slug");
+                .HasColumnName("slug")
+                .UseCollation("utf8mb4_general_ci")
+                .HasCharSet("utf8mb4");
         });
 
         modelBuilder.Entity<DatabaseVersion>(entity =>
@@ -192,14 +169,14 @@ public partial class LylinkdbContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
-            entity.Property(e => e.SlugVisited)
-                .HasMaxLength(40)
-                .IsFixedLength()
-                .HasColumnName("slug_visited");
             entity.Property(e => e.SlugGiven)
                 .HasMaxLength(40)
                 .IsFixedLength()
                 .HasColumnName("slug_given");
+            entity.Property(e => e.SlugVisited)
+                .HasMaxLength(40)
+                .IsFixedLength()
+                .HasColumnName("slug_visited");
             entity.Property(e => e.VisitedOn)
                 .HasColumnType("datetime")
                 .HasColumnName("visited_on");
