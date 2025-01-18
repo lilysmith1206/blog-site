@@ -1,7 +1,7 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 
 namespace LylinkDatabase_MigrationScript

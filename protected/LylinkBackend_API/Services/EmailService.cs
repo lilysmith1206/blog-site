@@ -1,8 +1,7 @@
-﻿using SendGrid.Helpers.Mail;
-using SendGrid;
+﻿using LylinkBackend_API.Models;
 using Microsoft.Extensions.Options;
-using LylinkBackend_API.Models;
-using System.Text;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace LylinkBackend_API.Services
 {

@@ -76,7 +76,7 @@ namespace LylinkBackend_API.Controllers
                 PageName = post.Name ?? string.Empty,
                 ParentCategories = ModifyCategoriesToPageLinks(parents),
                 Title = post.Title,
-                DateUpdated = post.DateModified 
+                DateUpdated = post.DateModified
             });
         }
 
@@ -92,7 +92,7 @@ namespace LylinkBackend_API.Controllers
             IEnumerable<PageLink> posts = FilterPostsForCategory(postDatabase.GetAllPostsWithParentId(postCategory.CategoryId));
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
             IEnumerable<PostCategory> parentCategories = categoryDatabase.GetParentCategoriesFromCategoryId(postCategory?.CategoryId);
-            
+
             return base.View(nameof(CategoryPage), new CategoryPage()
             {
                 Body = postCategory!.Body,

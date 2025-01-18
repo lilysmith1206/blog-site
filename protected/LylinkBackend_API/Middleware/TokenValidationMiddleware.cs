@@ -18,7 +18,7 @@ namespace LylinkBackend_API.Middleware
             "/getPostFromSlug",
             "/savePost",
             "/getPostCategoryFromId",
-            "/saveCategory"]; 
+            "/saveCategory"];
 
         public async Task InvokeAsync(HttpContext context)
         {

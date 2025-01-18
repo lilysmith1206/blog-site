@@ -3,7 +3,7 @@
 namespace LylinkBackend_API.Caches
 {
     public class VisitAnalyticsCache : IVisitAnalyticsCache
-    {   
+    {
         private readonly List<VisitAnalytic> _queuedVisitAnalytics = [];
 
         private static readonly object _lock = new();
@@ -30,7 +30,7 @@ namespace LylinkBackend_API.Caches
         {
             VisitAnalytic[] visitAnalytics = [];
 
-            lock ( _lock)
+            lock (_lock)
             {
                 visitAnalytics = _queuedVisitAnalytics.ToArray();
 

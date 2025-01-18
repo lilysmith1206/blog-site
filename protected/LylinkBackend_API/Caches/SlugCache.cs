@@ -4,7 +4,7 @@
     {
         private List<string?> _postSlugs = [];
         private List<string?> _categorySlugs = [];
-        
+
         private readonly object _lock = new();
 
         public IReadOnlyList<string?> GetPostSlugs()

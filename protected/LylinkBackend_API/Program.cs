@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using LylinkBackend_API.Services;
 using LylinkBackend_API.Caches;
 using LylinkBackend_API.Middleware;
 using LylinkBackend_API.Models;
+using LylinkBackend_API.Services;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
+using Microsoft.EntityFrameworkCore;
 
 #if RELEASE
 using System.Security.Cryptography.X509Certificates;
@@ -77,7 +77,7 @@ namespace LylinkBackend
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
