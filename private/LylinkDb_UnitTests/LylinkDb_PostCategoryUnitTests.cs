@@ -1,4 +1,6 @@
+using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
+using System.Collections;
 
 namespace LylinkDb_UnitTests
 {
@@ -45,6 +47,39 @@ namespace LylinkDb_UnitTests
             Assert.Equal(UnitTestData.BrushCategory.Body, brushCategory.Body);
             Assert.Equal(UnitTestData.BrushCategory.CategoryName, brushCategory.CategoryName);
             Assert.Equal(UnitTestData.BrushCategory.Title, brushCategory.Title);
+        }
+
+        [Theory]
+        [ClassData(typeof(PostCategoryParentCategoriesTestDataProvider))]
+        public void GetParentCategoriesFromCategoryId_ReturnsOnlyIndexWhenThatIsOnlyParent(int categoryId, params PostCategory[] expectedResults)
+        {
+            var context = LylinkDb_InMemoryDatabase.GetFullDataInMemoryDatabase();
+
+            IPostCategoryDatabaseService service = new DatabaseService(context);
+
+            var result = service.GetParentCategoriesFromCategoryId(categoryId);
+
+            foreach ((var expectedCategory, var actualCategory) in expectedResults.Zip(result))
+            {
+                Assert.Equal(expectedCategory, actualCategory);
+            }
+        }
+    }
+
+    public class PostCategoryParentCategoriesTestDataProvider : IEnumerable<object[]>
+    {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            yield return new object[] { UnitTestData.IndexCategory.CategoryId, UnitTestData.IndexCategory };
+            yield return new object[] { UnitTestData.BlogCategory.CategoryId, UnitTestData.IndexCategory };
+            yield return new object[] { UnitTestData.WritingCategory.CategoryId, UnitTestData.IndexCategory };
+            yield return new object[] { UnitTestData.TechCategory.CategoryId, UnitTestData.IndexCategory };
+            yield return new object[] { UnitTestData.BrushCategory.CategoryId, UnitTestData.BlogCategory, UnitTestData.IndexCategory };
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

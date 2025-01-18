@@ -1,10 +1,12 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace LylinkDb_UnitTests
 {
     public static class LylinkDb_InMemoryDatabase
     {
+        private static object _lock = new();
         private static readonly LylinkdbContext _inMemoryDbContext;
 
         static LylinkDb_InMemoryDatabase()
@@ -14,13 +16,16 @@ namespace LylinkDb_UnitTests
 
         public static LylinkdbContext GetFullDataInMemoryDatabase()
         {
-            ClearInMemoryDatabase();
+            lock (_lock)
+            {
+                ClearInMemoryDatabase();
 
-            _inMemoryDbContext.SaveChanges();
+                _inMemoryDbContext.SaveChanges();
 
-            FillInMemoryDatabaseWithUnitTestData();
+                FillInMemoryDatabaseWithUnitTestData();
 
-            _inMemoryDbContext.SaveChanges();
+                _inMemoryDbContext.SaveChanges();
+            }
 
             return _inMemoryDbContext;
         }

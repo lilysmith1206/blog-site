@@ -59,15 +59,16 @@ namespace LylinkBackend_API.Controllers
         private ViewResult CreatePostView(string slug, string? editorName)
         {
             Post? post = postDatabase.GetPost(slug);
-            
-            return View(nameof(PostPage), new PostPage()
+            IEnumerable<PostCategory> parents = postDatabase.GetParentCategoriesFromParentId(post?.ParentId);
+
+            return base.View(nameof(PostPage), new PostPage()
             {
                 Body = post?.Body ?? string.Empty,
                 EditorName = editorName,
                 Description = post?.Description ?? string.Empty,
                 Keywords = post?.Keywords ?? string.Empty,
                 PageName = post?.Name ?? string.Empty,
-                ParentCategories = GetParentCategories(post?.ParentId ?? -1),
+                ParentCategories = ModifyCategoriesToPageLinks(parents),
                 Title = post?.Title ?? string.Empty,
                 DateUpdated = post?.DateModified ?? DateTime.Now
             });
@@ -79,14 +80,15 @@ namespace LylinkBackend_API.Controllers
 
             IEnumerable<PageLink> posts = FilterPostsForCategory(postDatabase.GetAllPostsWithParentId(postCategory.CategoryId));
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
-
-            return View(nameof(CategoryPage), new CategoryPage()
+            IEnumerable<PostCategory> parentCategories = categoryDatabase.GetParentCategoriesFromCategoryId(postCategory?.CategoryId);
+            
+            return base.View(nameof(CategoryPage), new CategoryPage()
             {
                 Body = postCategory?.Body ?? "Post category body null",
                 Description = postCategory?.Description ?? string.Empty,
                 Keywords = postCategory?.Keywords ?? string.Empty,
                 PageName = postCategory?.CategoryName ?? string.Empty,
-                ParentCategories = GetParentCategories(postCategory?.ParentId),
+                ParentCategories = ModifyCategoriesToPageLinks(parentCategories),
                 Posts = posts,
                 SubCategories = childCategories,
                 Title = postCategory?.Title ?? string.Empty
@@ -109,7 +111,10 @@ namespace LylinkBackend_API.Controllers
                 Keywords = postCategory?.Keywords ?? string.Empty,
                 MostRecentPosts = mostRecentPosts,
                 PageName = postCategory?.CategoryName ?? string.Empty,
-                ParentCategories = GetParentCategories(postCategory?.ParentId),
+                ParentCategories = [new PageLink {
+                    Id = "/",
+                    Name = "index"
+                }],
                 Posts = posts,
                 SubCategories = childCategories,
                 Title = postCategory?.Title ?? string.Empty
@@ -141,19 +146,9 @@ namespace LylinkBackend_API.Controllers
                 });
         }
 
-        protected IEnumerable<PageLink> GetParentCategories(int? parentId)
+        protected IEnumerable<PageLink> ModifyCategoriesToPageLinks(IEnumerable<PostCategory> categories)
         {
-            IEnumerable<PostCategory> parents = categoryDatabase.GetParentCategories(parentId);
-
-            if (parents.Any() == false)
-            {
-                return [new PageLink {
-                    Id = "/",
-                    Name = "index"
-                }];
-            }
-
-            return parents
+            return categories
                 .Reverse()
                 .Select(parent =>
             {
