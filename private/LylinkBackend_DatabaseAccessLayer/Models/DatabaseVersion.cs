@@ -2,7 +2,7 @@
 
 public partial class DatabaseVersion
 {
-    public string? Version { get; set; }
+    public string Version { get; set; } = null!;
 
-    public DateTime? UpdatedOn { get; set; }
+    public DateTime UpdatedOn { get; set; }
 }

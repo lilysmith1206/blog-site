@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace LylinkBackend_DatabaseAccessLayer.Models;
+﻿namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class PostCategory
 {
@@ -9,19 +6,19 @@ public partial class PostCategory
 
     public int? ParentId { get; set; }
 
-    public string? CategoryName { get; set; }
+    public string CategoryName { get; set; } = null!;
 
-    public string? Slug { get; set; }
+    public string Slug { get; set; } = null!;
 
-    public string? Title { get; set; }
+    public string Title { get; set; } = null!;
 
-    public string? Keywords { get; set; }
+    public string Keywords { get; set; } = null!;
 
-    public string? Description { get; set; }
+    public string Description { get; set; } = null!;
 
-    public string? Body { get; set; }
+    public string Body { get; set; } = null!;
 
-    public bool? UseDateCreatedForSorting { get; set; }
+    public bool UseDateCreatedForSorting { get; set; }
 
     public virtual ICollection<PostCategory> InverseParent { get; set; } = new List<PostCategory>();
 

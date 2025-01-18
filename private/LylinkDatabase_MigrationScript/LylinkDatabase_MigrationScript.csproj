@@ -82,6 +82,12 @@
     <None Update="004_AddVisitAnalyticsTable\new_schema.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="005_RemoveNullableOptionFromMostDatabaseTables\base_schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="005_RemoveNullableOptionFromMostDatabaseTables\RemoveNullableOptionFromMostDatabaseTables.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

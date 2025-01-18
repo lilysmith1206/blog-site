@@ -2,13 +2,13 @@
 
 public partial class VisitAnalytic
 {
-    public string? VisitorId { get; set; }
-
-    public string? SlugVisited { get; set; }
-
-    public string? SlugGiven { get; set; }
-
-    public DateTime? VisitedOn { get; set; }
-
     public int Id { get; set; }
+
+    public string VisitorId { get; set; } = null!;
+
+    public string SlugVisited { get; set; } = null!;
+
+    public string SlugGiven { get; set; } = null!;
+
+    public DateTime VisitedOn { get; set; }
 }

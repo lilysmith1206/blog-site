@@ -59,24 +59,35 @@ namespace LylinkBackend_API.Controllers
         private ViewResult CreatePostView(string slug, string? editorName)
         {
             Post? post = postDatabase.GetPost(slug);
-            IEnumerable<PostCategory> parents = postDatabase.GetParentCategoriesFromParentId(post?.ParentId);
+
+            if (post == null)
+            {
+                throw new ArgumentOutOfRangeException($"Slug {slug} is not found despite guardrails in caller method.");
+            }
+
+            IEnumerable<PostCategory> parents = postDatabase.GetParentCategoriesFromParentId(post.ParentId);
 
             return base.View(nameof(PostPage), new PostPage()
             {
-                Body = post?.Body ?? string.Empty,
+                Body = post.Body,
                 EditorName = editorName,
-                Description = post?.Description ?? string.Empty,
-                Keywords = post?.Keywords ?? string.Empty,
-                PageName = post?.Name ?? string.Empty,
+                Description = post.Description,
+                Keywords = post.Keywords,
+                PageName = post.Name ?? string.Empty,
                 ParentCategories = ModifyCategoriesToPageLinks(parents),
-                Title = post?.Title ?? string.Empty,
-                DateUpdated = post?.DateModified ?? DateTime.Now
+                Title = post.Title,
+                DateUpdated = post.DateModified 
             });
         }
 
         private ViewResult CreateCategoryView(string slug)
         {
-            PostCategory postCategory = categoryDatabase.GetCategoryFromSlug(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
+            PostCategory? postCategory = categoryDatabase.GetCategoryFromSlug(slug);
+
+            if (postCategory == null)
+            {
+                throw new NullReferenceException($"Invalid post category for slug {slug}");
+            }
 
             IEnumerable<PageLink> posts = FilterPostsForCategory(postDatabase.GetAllPostsWithParentId(postCategory.CategoryId));
             IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
@@ -84,14 +95,14 @@ namespace LylinkBackend_API.Controllers
             
             return base.View(nameof(CategoryPage), new CategoryPage()
             {
-                Body = postCategory?.Body ?? "Post category body null",
-                Description = postCategory?.Description ?? string.Empty,
-                Keywords = postCategory?.Keywords ?? string.Empty,
-                PageName = postCategory?.CategoryName ?? string.Empty,
+                Body = postCategory!.Body,
+                Description = postCategory!.Description,
+                Keywords = postCategory!.Keywords,
+                PageName = postCategory!.CategoryName,
                 ParentCategories = ModifyCategoriesToPageLinks(parentCategories),
                 Posts = posts,
                 SubCategories = childCategories,
-                Title = postCategory?.Title ?? string.Empty
+                Title = postCategory!.Title
             });
         }
 
@@ -106,18 +117,18 @@ namespace LylinkBackend_API.Controllers
 
             return View(nameof(IndexPage), new IndexPage()
             {
-                Body = postCategory?.Body ?? "Post category body null",
-                Description = postCategory?.Description ?? string.Empty,
-                Keywords = postCategory?.Keywords ?? string.Empty,
+                Body = postCategory.Body,
+                Description = postCategory.Description,
+                Keywords = postCategory.Keywords,
                 MostRecentPosts = mostRecentPosts,
-                PageName = postCategory?.CategoryName ?? string.Empty,
+                PageName = postCategory.CategoryName,
                 ParentCategories = [new PageLink {
                     Id = "/",
                     Name = "index"
                 }],
                 Posts = posts,
                 SubCategories = childCategories,
-                Title = postCategory?.Title ?? string.Empty
+                Title = postCategory.Title
             });
         }
 

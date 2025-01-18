@@ -30,7 +30,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 throw new ArgumentException($"ParentId {parentId} does not match any post category.");
             }
 
-            bool sortByDateCreated = postCategory.UseDateCreatedForSorting ?? true;
+            bool sortByDateCreated = postCategory.UseDateCreatedForSorting;
 
             var postsQuery = context.Posts.Where(post => post.ParentId == parentId);
 

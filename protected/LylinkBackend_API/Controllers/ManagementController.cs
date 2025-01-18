@@ -22,7 +22,7 @@ namespace LylinkBackend_API.Controllers
             {
                 CategoryLinks = categoryDatabase.GetAllCategories()
                     .Where(category => category.CategoryId != 6)
-                    .Select(category => new PageLink { Id = category.CategoryId.ToString(), Name = category.CategoryName ?? string.Empty })
+                    .Select(category => new PageLink { Id = category.CategoryId.ToString(), Name = category.CategoryName })
             });
         }
 
@@ -31,7 +31,7 @@ namespace LylinkBackend_API.Controllers
         {
             Dictionary<string, IEnumerable<PageLink>> categoryPostLinks = GetPostsForEachCategory();
             IEnumerable<PageLink> categories = categoryDatabase.GetAllCategories()
-                .Select(category => new PageLink { Id = category.CategoryId.ToString(), Name = category.CategoryName ?? "No category name" });
+                .Select(category => new PageLink { Id = category.CategoryId.ToString(), Name = category.CategoryName });
 
             return base.View(nameof(Models.Publisher), new Publisher()
             {
@@ -59,14 +59,14 @@ namespace LylinkBackend_API.Controllers
 
             var remotePost = new RemotePost
             {
-                Slug = post?.Slug,
-                Title = post?.Title,
-                ParentId = post?.ParentId,
-                Name = post?.Name,
-                Keywords = post?.Keywords,
-                Description = post?.Description,
-                Body = post?.Body,
-                IsDraft = post?.IsDraft
+                Slug = post.Slug,
+                Title = post.Title,
+                ParentId = post.ParentId,
+                Name = post.Name,
+                Keywords = post.Keywords,
+                Description = post.Description,
+                Body = post.Body,
+                IsDraft = post.IsDraft
             };
 
             return Ok(remotePost);
@@ -86,15 +86,15 @@ namespace LylinkBackend_API.Controllers
 
             var remotePost = new RemoteCategory
             {
-                Slug = category?.Slug,
-                Title = category?.Title,
+                Slug = category.Slug,
+                Title = category.Title,
                 ParentId = postCategory?.ParentId,
-                CategoryName = category?.CategoryName,
-                CategoryId = category?.CategoryId,
-                Keywords = category?.Keywords,
-                Description = category?.Description,
-                Body = category?.Body,
-                UseDateCreatedForSorting = category?.UseDateCreatedForSorting
+                CategoryName = category.CategoryName,
+                CategoryId = category.CategoryId,
+                Keywords = category.Keywords,
+                Description = category.Description,
+                Body = category.Body,
+                UseDateCreatedForSorting = category.UseDateCreatedForSorting
             };
 
             return Ok(remotePost);
@@ -118,13 +118,13 @@ namespace LylinkBackend_API.Controllers
                 Slug = remotePost.Slug,
                 DateModified = currentEasternTime,
                 DateCreated = existingPost == null ? currentEasternTime : existingPost.DateCreated,
-                Name = remotePost.Name,
-                Title = remotePost.Title,
+                Name = remotePost.Name ?? "Post not given a name.",
+                Title = remotePost.Title ?? "Post not given a title.",
                 ParentId = remotePost.ParentId,
-                Keywords = remotePost.Keywords,
-                Description = remotePost.Description,
-                Body = remotePost.Body,
-                IsDraft = remotePost.IsDraft,
+                Keywords = remotePost.Keywords ?? "Post not given keywords.",
+                Description = remotePost.Description ?? "Post not given a description.",
+                Body = remotePost.Body ?? "Post not given a body.",
+                IsDraft = remotePost.IsDraft ?? true,
             };
 
             try
@@ -159,13 +159,13 @@ namespace LylinkBackend_API.Controllers
             var category = new PostCategory
             {
                 Slug = remoteCategory.Slug,
-                CategoryName = remoteCategory.CategoryName,
-                Title = remoteCategory.Title,
+                CategoryName = remoteCategory.CategoryName ?? "Category not given a name.",
+                Title = remoteCategory.Title ?? "Category not given a title.",
                 ParentId = remoteCategory.ParentId,
-                Keywords = remoteCategory.Keywords,
-                Description = remoteCategory.Description,
-                Body = remoteCategory.Body,
-                UseDateCreatedForSorting = remoteCategory.UseDateCreatedForSorting,
+                Keywords = remoteCategory.Keywords ?? "Category not given keywords.",
+                Description = remoteCategory.Description ?? "Category not given a description.",
+                Body = remoteCategory.Body ?? "Category not given a body.",
+                UseDateCreatedForSorting = remoteCategory.UseDateCreatedForSorting ?? false,
             };
 
             try
@@ -198,9 +198,9 @@ namespace LylinkBackend_API.Controllers
             foreach (PostCategory category in categories)
             {
                 IEnumerable<PageLink> postsUnderCategory = postDatabase.GetAllPostsWithParentId(category.CategoryId)
-                    .Select(post => new PageLink { Id = post.Slug, Name = post.Name ?? post.Slug });
+                    .Select(post => new PageLink { Id = post.Slug, Name = post.Name });
 
-                categoryPostLinks.Add(category.CategoryName ?? "No category name", postsUnderCategory);
+                categoryPostLinks.Add(category.CategoryName, postsUnderCategory);
             }
 
             return categoryPostLinks;

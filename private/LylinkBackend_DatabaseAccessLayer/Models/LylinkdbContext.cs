@@ -28,31 +28,25 @@ public partial class LylinkdbContext : DbContext
 
             entity.Property(e => e.Id)
                 .HasMaxLength(40)
-                .HasColumnName("id")
-                .UseCollation("utf8mb4_general_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("id");
             entity.Property(e => e.AnnotationContent)
                 .HasMaxLength(10000)
-                .HasColumnName("annotation_content")
-                .UseCollation("utf8mb4_general_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("annotation_content");
             entity.Property(e => e.EditorName)
                 .HasMaxLength(80)
-                .HasColumnName("editor_name")
-                .UseCollation("utf8mb4_general_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("editor_name");
             entity.Property(e => e.Slug)
                 .HasMaxLength(40)
-                .HasColumnName("slug")
-                .UseCollation("utf8mb4_general_ci")
-                .HasCharSet("utf8mb4");
+                .HasColumnName("slug");
         });
 
         modelBuilder.Entity<DatabaseVersion>(entity =>
         {
             entity
                 .HasNoKey()
-                .ToTable("database_version");
+                .ToTable("database_version")
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_general_ci");
 
             entity.Property(e => e.UpdatedOn)
                 .HasColumnType("datetime")
@@ -79,20 +73,16 @@ public partial class LylinkdbContext : DbContext
                 .HasColumnType("varchar(60000)")
                 .HasColumnName("body");
             entity.Property(e => e.DateCreated)
-                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("datetime")
                 .HasColumnName("date_created");
             entity.Property(e => e.DateModified)
-                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("datetime")
                 .HasColumnName("date_modified");
             entity.Property(e => e.Description)
                 .HasMaxLength(160)
                 .IsFixedLength()
                 .HasColumnName("description");
-            entity.Property(e => e.IsDraft)
-                .HasDefaultValueSql("'0'")
-                .HasColumnName("is_draft");
+            entity.Property(e => e.IsDraft).HasColumnName("is_draft");
             entity.Property(e => e.Keywords)
                 .HasMaxLength(160)
                 .IsFixedLength()
@@ -164,7 +154,10 @@ public partial class LylinkdbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("visit_analytics");
+            entity
+                .ToTable("visit_analytics")
+                .HasCharSet("utf8mb4")
+                .UseCollation("utf8mb4_general_ci");
 
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
@@ -174,8 +167,7 @@ public partial class LylinkdbContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("slug_given");
             entity.Property(e => e.SlugVisited)
-                .HasMaxLength(40)
-                .IsFixedLength()
+                .HasColumnType("text")
                 .HasColumnName("slug_visited");
             entity.Property(e => e.VisitedOn)
                 .HasColumnType("datetime")
