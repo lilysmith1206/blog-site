@@ -157,8 +157,8 @@ namespace LylinkDb_UnitTests
 
             Assert.NotNull(category);
 
-            Assert.Equal(DatabaseUnitTestData.TechCategory.Slug, category.Value.ParentCategories.First().Key);
-            Assert.Equal(DatabaseUnitTestData.TechCategory.SlugNavigation.Name, category.Value.ParentCategories.First().Value);
+            Assert.Equal(DatabaseUnitTestData.TechCategory.Slug, category.Value.ParentCategories.Last().Key);
+            Assert.Equal(DatabaseUnitTestData.TechCategory.SlugNavigation.Name, category.Value.ParentCategories.Last().Value);
         }
 
         [Fact]

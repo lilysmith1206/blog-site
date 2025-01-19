@@ -70,11 +70,12 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             IPageRepository repository = new PageRepository(context);
 
-            IEnumerable<PostPage> recentlyUpdatedPages = repository.GetRecentlyUpdatedPosts(count);
+            IEnumerable<KeyValuePair<string, string>> recentlyUpdatedPages = repository.GetRecentlyUpdatedPostInfos(count);
 
-            foreach ((PostPage expected, PostPage actual) in expectedPostPages.Zip(recentlyUpdatedPages))
+            foreach ((PostPage expected, KeyValuePair<string, string> actual) in expectedPostPages.Zip(recentlyUpdatedPages))
             {
-                Assert.Equivalent(expected, actual);
+                Assert.Equal(expected.Slug, actual.Key);
+                Assert.Equal(expected.Name, actual.Value);
             }
         }
 
@@ -193,8 +194,8 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.NotNull(post);
 
-            Assert.NotEqual(UnitTestData.IndexPost1.Parents.First().Key, post.Value.Parents.First().Key);
-            Assert.NotEqual(UnitTestData.IndexPost1.Parents.First().Value, post.Value.Parents.First().Value);
+            Assert.NotEqual(UnitTestData.IndexPost1.Parents.First().Key, post.Value.Parents.Last().Key);
+            Assert.NotEqual(UnitTestData.IndexPost1.Parents.First().Value, post.Value.Parents.Last().Value);
         }
 
         [Fact]
