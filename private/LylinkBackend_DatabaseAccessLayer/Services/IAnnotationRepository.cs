@@ -2,7 +2,7 @@
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
-    public interface IAnnotationDatabaseService
+    public interface IAnnotationRepository
     {
         public Annotation? GetAnnotation(string id);
 

@@ -6,17 +6,7 @@ public partial class PostCategory
 
     public int? ParentId { get; set; }
 
-    public string CategoryName { get; set; } = null!;
-
     public string Slug { get; set; } = null!;
-
-    public string Title { get; set; } = null!;
-
-    public string Keywords { get; set; } = null!;
-
-    public string Description { get; set; } = null!;
-
-    public string Body { get; set; } = null!;
 
     public bool UseDateCreatedForSorting { get; set; }
 
@@ -25,4 +15,6 @@ public partial class PostCategory
     public virtual PostCategory? Parent { get; set; }
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+
+    public virtual Page SlugNavigation { get; set; } = null!;
 }

@@ -8,6 +8,8 @@ public partial class LylinkdbContext : DbContext
 
     public virtual DbSet<DatabaseVersion> DatabaseVersions { get; set; }
 
+    public virtual DbSet<Page> Pages { get; set; }
+
     public virtual DbSet<Post> Posts { get; set; }
 
     public virtual DbSet<PostCategory> PostCategories { get; set; }
@@ -57,6 +59,37 @@ public partial class LylinkdbContext : DbContext
                 .HasColumnName("version");
         });
 
+        modelBuilder.Entity<Page>(entity =>
+        {
+            entity.HasKey(e => e.Slug).HasName("PRIMARY");
+
+            entity.ToTable("pages");
+
+            entity.Property(e => e.Slug)
+                .HasMaxLength(40)
+                .IsFixedLength()
+                .HasColumnName("slug");
+            entity.Property(e => e.Body)
+                .HasColumnType("text")
+                .HasColumnName("body");
+            entity.Property(e => e.Description)
+                .HasMaxLength(160)
+                .IsFixedLength()
+                .HasColumnName("description");
+            entity.Property(e => e.Keywords)
+                .HasMaxLength(160)
+                .IsFixedLength()
+                .HasColumnName("keywords");
+            entity.Property(e => e.Name)
+                .HasMaxLength(80)
+                .IsFixedLength()
+                .HasColumnName("name");
+            entity.Property(e => e.Title)
+                .HasMaxLength(80)
+                .IsFixedLength()
+                .HasColumnName("title");
+        });
+
         modelBuilder.Entity<Post>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -70,9 +103,6 @@ public partial class LylinkdbContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
-            entity.Property(e => e.Body)
-                .HasColumnType("varchar(60000)")
-                .HasColumnName("body");
             entity.Property(e => e.DateCreated)
                 .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("datetime")
@@ -81,19 +111,7 @@ public partial class LylinkdbContext : DbContext
                 .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("datetime")
                 .HasColumnName("date_modified");
-            entity.Property(e => e.Description)
-                .HasMaxLength(160)
-                .IsFixedLength()
-                .HasColumnName("description");
             entity.Property(e => e.IsDraft).HasColumnName("is_draft");
-            entity.Property(e => e.Keywords)
-                .HasMaxLength(160)
-                .IsFixedLength()
-                .HasColumnName("keywords");
-            entity.Property(e => e.Name)
-                .HasMaxLength(80)
-                .IsFixedLength()
-                .HasColumnName("name");
             entity.Property(e => e.ParentId)
                 .HasColumnType("int(11)")
                 .HasColumnName("parent_id");
@@ -101,15 +119,15 @@ public partial class LylinkdbContext : DbContext
                 .HasMaxLength(40)
                 .IsFixedLength()
                 .HasColumnName("slug");
-            entity.Property(e => e.Title)
-                .HasMaxLength(80)
-                .IsFixedLength()
-                .HasColumnName("title");
 
             entity.HasOne(d => d.Parent).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.ParentId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("foreign_key_post_parent_category");
+
+            entity.HasOne(d => d.SlugNavigation).WithOne(p => p.Post)
+                .HasForeignKey<Post>(d => d.Slug)
+                .HasConstraintName("fk_posts_pages");
         });
 
         modelBuilder.Entity<PostCategory>(entity =>
@@ -118,26 +136,13 @@ public partial class LylinkdbContext : DbContext
 
             entity.ToTable("post_categories");
 
+            entity.HasIndex(e => e.Slug, "fk_post_categories_pages");
+
             entity.HasIndex(e => e.ParentId, "fk_post_hierarchy_parent");
 
             entity.Property(e => e.CategoryId)
                 .HasColumnType("int(11)")
                 .HasColumnName("categoryId");
-            entity.Property(e => e.Body)
-                .HasColumnType("varchar(60000)")
-                .HasColumnName("body");
-            entity.Property(e => e.CategoryName)
-                .HasMaxLength(80)
-                .IsFixedLength()
-                .HasColumnName("categoryName");
-            entity.Property(e => e.Description)
-                .HasMaxLength(80)
-                .IsFixedLength()
-                .HasColumnName("description");
-            entity.Property(e => e.Keywords)
-                .HasMaxLength(80)
-                .IsFixedLength()
-                .HasColumnName("keywords");
             entity.Property(e => e.ParentId)
                 .HasColumnType("int(11)")
                 .HasColumnName("parentId");
@@ -145,16 +150,16 @@ public partial class LylinkdbContext : DbContext
                 .HasMaxLength(40)
                 .IsFixedLength()
                 .HasColumnName("slug");
-            entity.Property(e => e.Title)
-                .HasMaxLength(80)
-                .IsFixedLength()
-                .HasColumnName("title");
             entity.Property(e => e.UseDateCreatedForSorting).HasColumnName("use_date_created_for_sorting");
 
             entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
                 .HasForeignKey(d => d.ParentId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("fk_post_hierarchy_parent");
+
+            entity.HasOne(d => d.SlugNavigation).WithMany(p => p.PostCategories)
+                .HasForeignKey(d => d.Slug)
+                .HasConstraintName("fk_post_categories_pages");
         });
 
         modelBuilder.Entity<VisitAnalytic>(entity =>

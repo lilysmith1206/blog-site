@@ -1,73 +1,48 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace LylinkDb_UnitTests
 {
     public static class LylinkDb_InMemoryDatabase
     {
-        private static object _lock = new();
-        private static readonly LylinkdbContext _inMemoryDbContext;
-
-        static LylinkDb_InMemoryDatabase()
-        {
-            _inMemoryDbContext = GetInMemoryDbContext();
-        }
-
         public static LylinkdbContext GetFullDataInMemoryDatabase()
         {
-            lock (_lock)
-            {
-                ClearInMemoryDatabase();
+            // Always create a new DbContext with a unique database name
+            var context = GetInMemoryDbContext();
 
-                _inMemoryDbContext.SaveChanges();
+            // Reset database schema and populate with default data
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
 
-                FillInMemoryDatabaseWithUnitTestData();
+            FillInMemoryDatabaseWithUnitTestData(context);
 
-                _inMemoryDbContext.SaveChanges();
-            }
+            context.SaveChanges();
 
-            return _inMemoryDbContext;
+            return context;
         }
 
-        private static void ClearInMemoryDatabase()
+        private static void FillInMemoryDatabaseWithUnitTestData(LylinkdbContext context)
         {
-            if (_inMemoryDbContext.Posts.Any())
+            foreach (PostCategory category in DatabaseUnitTestData.Categories)
             {
-                _inMemoryDbContext.Posts.RemoveRange(_inMemoryDbContext.Posts);
-            }
-            if (_inMemoryDbContext.PostCategories.Any())
-            {
-                _inMemoryDbContext.PostCategories.RemoveRange(_inMemoryDbContext.PostCategories);
-            }
-            if (_inMemoryDbContext.Annotations.Any())
-            {
-                _inMemoryDbContext.Annotations.RemoveRange(_inMemoryDbContext.Annotations);
-            }
-        }
-
-        private static void FillInMemoryDatabaseWithUnitTestData()
-        {
-            foreach (PostCategory category in UnitTestData.Categories)
-            {
-                _inMemoryDbContext.PostCategories.Add(category);
+                context.PostCategories.Add(category);
             }
 
-            foreach (Post post in UnitTestData.Posts)
+            foreach (Post post in DatabaseUnitTestData.Posts)
             {
-                _inMemoryDbContext.Posts.Add(post);
+                context.Posts.Add(post);
             }
 
-            foreach (Annotation annotation in UnitTestData.Annotations)
+            foreach (Annotation annotation in DatabaseUnitTestData.Annotations)
             {
-                _inMemoryDbContext.Annotations.Add(annotation);
+                context.Annotations.Add(annotation);
             }
         }
 
         private static LylinkdbContext GetInMemoryDbContext()
         {
             var options = new DbContextOptionsBuilder<LylinkdbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // Generate a unique database name per call
                 .Options;
 
             return new LylinkdbContext(options);
