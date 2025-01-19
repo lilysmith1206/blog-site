@@ -1,5 +1,6 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
 using LylinkBackend_DatabaseAccessLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
@@ -28,12 +29,16 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 .OrderByDescending(post => post.DateModified)
                 .Where(post => post.IsDraft == false)
                 .Take(amount)
+                .Include(post => post.SlugNavigation)
                 .Select(post => ConvertPostToPostPage(post));
         }
 
         public PostPage? GetPost(int id)
         {
-            Post? databasePost = context.Posts.SingleOrDefault(post => post.Id == id);
+            Post? databasePost = context.Posts
+                .Where(post => post.Id == id)
+                .Include(post => post.SlugNavigation)
+                .SingleOrDefault();
 
             if (databasePost == null)
             {
@@ -45,7 +50,10 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public PostPage? GetPost(string slug)
         {
-            Post? databasePost = context.Posts.SingleOrDefault(post => post.Slug == slug);
+            Post? databasePost = context.Posts
+                .Where(post => post.Slug == slug)
+                .Include(post => post.SlugNavigation)
+                .SingleOrDefault();
 
             if (databasePost == null)
             {
@@ -67,18 +75,20 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 currentParent = currentParent.Parent;
             }
 
+            Page databasePage = post.SlugNavigation;
+
             PostPage postPage = new PostPage
             {
-                Body = post.SlugNavigation.Body,
+                Body = databasePage.Body,
                 DateCreated = post.DateCreated,
                 DateModified = post.DateModified,
-                Description = post.SlugNavigation.Description,
+                Description = databasePage.Description,
                 IsDraft = post.IsDraft,
-                Keywords = post.SlugNavigation.Keywords,
-                Name = post.SlugNavigation.Name,
+                Keywords = databasePage.Keywords,
+                Name = databasePage.Name,
                 Parents = parents,
-                Slug = post.SlugNavigation.Slug,
-                Title = post.SlugNavigation.Title,
+                Slug = databasePage.Slug,
+                Title = databasePage.Title,
             };
 
             return postPage;
@@ -86,7 +96,12 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public CategoryPage? GetCategory(int id)
         {
-            PostCategory? databaseCategory = context.PostCategories.SingleOrDefault(category => category.CategoryId == id);
+            PostCategory? databaseCategory = context.PostCategories
+                .Where(category => category.CategoryId == id)
+                .Include(category => category.InverseParent)
+                .Include(category => category.Parent)
+                .Include(category => category.SlugNavigation)
+                .SingleOrDefault();
 
             if (databaseCategory == null)
             {
@@ -98,9 +113,21 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public CategoryPage? GetCategory(string slug)
         {
-            PostCategory? databaseCategory = context.PostCategories.SingleOrDefault(category => category.Slug == slug);
+            PostCategory? databaseCategory = context.PostCategories
+                .Where(category => category.Slug == slug)
+                .Include(category => category.InverseParent)
+                .Include(category => category.Parent)
+                .Include(category => category.SlugNavigation)
+                .SingleOrDefault();
 
             if (databaseCategory == null)
+            {
+                return null;
+            }
+
+            Page? databasePage = context.Pages.SingleOrDefault(page => page.Slug == databaseCategory.Slug);
+
+            if (databasePage == null)
             {
                 return null;
             }
@@ -120,17 +147,19 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 currentParent = currentParent.Parent;
             }
 
+            Page databasePage = databaseCategory.SlugNavigation;
+            
             CategoryPage categoryPage = new CategoryPage
             {
-                Body = databaseCategory.SlugNavigation.Body,
-                Description = databaseCategory.SlugNavigation.Description,
-                Keywords = databaseCategory.SlugNavigation.Keywords,
-                Name = databaseCategory.SlugNavigation.Name,
+                Body = databasePage.Body,
+                Description = databasePage.Description,
+                Keywords = databasePage.Keywords,
+                Name = databasePage.Name,
                 ParentCategories = categoryParents,
                 ChildrenCategories = databaseCategory.InverseParent.Select(category => KeyValuePair.Create(category.Slug, category.SlugNavigation.Name)),
                 Posts = databaseCategory.Posts.Where(post => post.IsDraft == false).Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name)),
-                Slug = databaseCategory.SlugNavigation.Slug,
-                Title = databaseCategory.SlugNavigation.Title,
+                Slug = databasePage.Slug,
+                Title = databasePage.Title,
                 UseDateCreatedForSorting = databaseCategory.UseDateCreatedForSorting
             };
 
