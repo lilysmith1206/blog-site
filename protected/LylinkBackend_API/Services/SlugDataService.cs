@@ -10,11 +10,10 @@ namespace LylinkBackend_API.Services
             while (stoppingToken.IsCancellationRequested == false)
             {
                 using var scope = scopeFactory.CreateScope();
-                IPostDatabaseService postDatabase = scope.ServiceProvider.GetRequiredService<IPostDatabaseService>();
-                IPostCategoryDatabaseService categoryDatabase = scope.ServiceProvider.GetRequiredService<IPostCategoryDatabaseService>();
+                ISlugRepository repository = scope.ServiceProvider.GetRequiredService<ISlugRepository>();
 
-                slugCache.UpdatePostSlugs(postDatabase.GetAllPostSlugs());
-                slugCache.UpdateCategorySlugs(categoryDatabase.GetAllCategorySlugs());
+                slugCache.UpdatePostSlugs(repository.GetPostSlugs());
+                slugCache.UpdateCategorySlugs(repository.GetCategorySlugs());
 
                 await Task.Delay(10000, stoppingToken);
             }

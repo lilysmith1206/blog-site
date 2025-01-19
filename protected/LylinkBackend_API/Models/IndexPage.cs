@@ -2,13 +2,13 @@
 {
     public struct IndexPage
     {
-        public IEnumerable<PageLink> ParentCategories { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> ParentCategories { get; set; }
 
-        public IEnumerable<PageLink> SubCategories { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> SubCategories { get; set; }
 
-        public IEnumerable<PageLink> Posts { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> Posts { get; set; }
 
-        public IEnumerable<PageLink> MostRecentPosts { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> MostRecentPosts { get; set; }
 
         public string PageName { get; set; }
 

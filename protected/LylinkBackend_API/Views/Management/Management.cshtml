@@ -7,8 +7,8 @@
     ViewData["Description"] = "Lylink - Management";
     ViewData["Keywords"] = "lylink, management";
     ViewData["PageName"] = "Site Management";
-    ViewData["ParentCategories"] = new PageLink[] { new PageLink() { Name = "Index", Id = "/" } };
-}
+    ViewData["ParentCategories"] = new KeyValuePair<string, string>[] { KeyValuePair.Create("/", "Index") };
+};
 
 @section Body
 {

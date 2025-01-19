@@ -12,7 +12,7 @@ namespace LylinkBackend_API.Services
             {
                 using var scope = serviceProvider.CreateScope();
 
-                IVisitAnalyticsDatabaseService visitAnalytics = scope.ServiceProvider.GetRequiredService<IVisitAnalyticsDatabaseService>();
+                IVisitAnalyticsRepository visitAnalytics = scope.ServiceProvider.GetRequiredService<IVisitAnalyticsRepository>();
 
                 IEnumerable<VisitAnalytic> analytics = visitAnalyticsCache.FlushQueuedVisitAnalytics();
 

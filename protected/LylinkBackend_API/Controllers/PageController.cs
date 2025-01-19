@@ -1,16 +1,14 @@
 ﻿using LylinkBackend_API.Caches;
 using LylinkBackend_API.Models;
 using LylinkBackend_API.Services;
-using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkBackend_DatabaseAccessLayer.BusinessModels;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
 
 namespace LylinkBackend_API.Controllers
 {
     public class PageController(
-        IPostDatabaseService postDatabase,
-        IPostCategoryDatabaseService categoryDatabase,
+        IPageRepository pageRepository,
         IUserCookieService userCookieService,
         IVisitAnalyticsCache visitAnalyticsCache,
         ISlugCache slugCache) : Controller
@@ -58,23 +56,16 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreatePostView(string slug, string? editorName)
         {
-            Post? post = postDatabase.GetPost(slug);
+            PostPage post = pageRepository.GetPost(slug) ?? throw new ArgumentOutOfRangeException($"Slug {slug} is not found despite guardrails in caller method.");
 
-            if (post == null)
-            {
-                throw new ArgumentOutOfRangeException($"Slug {slug} is not found despite guardrails in caller method.");
-            }
-
-            IEnumerable<PostCategory> parents = postDatabase.GetParentCategoriesFromParentId(post.ParentId);
-
-            return base.View(nameof(PostPage), new PostPage()
+            return base.View(nameof(PagePost), new PagePost()
             {
                 Body = post.Body,
                 EditorName = editorName,
                 Description = post.Description,
                 Keywords = post.Keywords,
                 PageName = post.Name ?? string.Empty,
-                ParentCategories = ModifyCategoriesToPageLinks(parents),
+                Parents = post.Parents,
                 Title = post.Title,
                 DateUpdated = post.DateModified
             });
@@ -82,92 +73,36 @@ namespace LylinkBackend_API.Controllers
 
         private ViewResult CreateCategoryView(string slug)
         {
-            PostCategory? postCategory = categoryDatabase.GetCategoryFromSlug(slug);
-
-            if (postCategory == null)
+            CategoryPage category = pageRepository.GetCategory(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
+            
+            return base.View(nameof(PageCategory), new PageCategory()
             {
-                throw new NullReferenceException($"Invalid post category for slug {slug}");
-            }
-
-            IEnumerable<PageLink> posts = FilterPostsForCategory(postDatabase.GetAllPostsWithParentId(postCategory.CategoryId));
-            IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
-            IEnumerable<PostCategory> parentCategories = categoryDatabase.GetParentCategoriesFromCategoryId(postCategory?.CategoryId);
-
-            return base.View(nameof(CategoryPage), new CategoryPage()
-            {
-                Body = postCategory!.Body,
-                Description = postCategory!.Description,
-                Keywords = postCategory!.Keywords,
-                PageName = postCategory!.CategoryName,
-                ParentCategories = ModifyCategoriesToPageLinks(parentCategories),
-                Posts = posts,
-                SubCategories = childCategories,
-                Title = postCategory!.Title
+                Body = category.Body,
+                Description = category.Description,
+                Keywords = category.Keywords,
+                PageName = category.Name,
+                ParentCategories = category.ParentCategories,
+                Posts = category.Posts,
+                SubCategories = category.ChildrenCategories,
+                Title = category.Title
             });
         }
 
         private ViewResult CreateIndexView()
         {
-            PostCategory postCategory = categoryDatabase.GetCategoryFromSlug("/") ?? throw new NullReferenceException($"Index not found for some reason?");
-
-            IEnumerable<PageLink> posts = FilterPostsForCategory(postDatabase.GetAllPostsWithParentId(postCategory.CategoryId));
-            IEnumerable<PageLink> childCategories = GetChildCategoriesForCategoryPage(postCategory);
-
-            IEnumerable<PageLink> mostRecentPosts = FilterPostsForCategory(postDatabase.GetRecentlyPublishedPosts(10));
+            CategoryPage category = pageRepository.GetCategory("/") ?? throw new NullReferenceException($"Index category not found for some reason?");
 
             return View(nameof(IndexPage), new IndexPage()
             {
-                Body = postCategory.Body,
-                Description = postCategory.Description,
-                Keywords = postCategory.Keywords,
-                MostRecentPosts = mostRecentPosts,
-                PageName = postCategory.CategoryName,
-                ParentCategories = [new PageLink {
-                    Id = "/",
-                    Name = "index"
-                }],
-                Posts = posts,
-                SubCategories = childCategories,
-                Title = postCategory.Title
-            });
-        }
-
-        private static IEnumerable<PageLink> FilterPostsForCategory(IEnumerable<Post> posts)
-        {
-            var postSlugs = posts.Select(post => post.Slug);
-
-            return posts
-                .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
-                .Where(post => post.IsDraft == false)
-                .Select(post => new PageLink()
-                {
-                    Name = post?.Name ?? "Unnamed Post",
-                    Id = post?.Slug ?? "404",
-                });
-        }
-
-        private IEnumerable<PageLink> GetChildCategoriesForCategoryPage(PostCategory postCategory)
-        {
-            return categoryDatabase.GetChildCategoriesOfCategory(postCategory.CategoryId)
-                .Where(childCategory => postDatabase.GetAllPostsWithParentId(childCategory.CategoryId).Any() || categoryDatabase.GetChildCategoriesOfCategory(childCategory.CategoryId).Any())
-                .Select(post => new PageLink()
-                {
-                    Name = post?.CategoryName ?? "Unnamed Post Category",
-                    Id = post?.Slug ?? "404"
-                });
-        }
-
-        protected IEnumerable<PageLink> ModifyCategoriesToPageLinks(IEnumerable<PostCategory> categories)
-        {
-            return categories
-                .Reverse()
-                .Select(parent =>
-            {
-                return new PageLink()
-                {
-                    Id = parent.Slug ?? "404",
-                    Name = parent.CategoryName ?? "Parent category not found!",
-                };
+                Body = category.Body,
+                Description = category.Description,
+                Keywords = category.Keywords,
+                MostRecentPosts = pageRepository.GetRecentlyUpdatedPostInfos(10),
+                PageName = category.Name,
+                ParentCategories = [KeyValuePair.Create("/", "index")],
+                Posts = category.Posts,
+                SubCategories = category.ChildrenCategories,
+                Title = category.Title
             });
         }
     }

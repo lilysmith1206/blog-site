@@ -2,6 +2,6 @@
 {
     public struct Categorizer
     {
-        public IEnumerable<PageLink> CategoryLinks { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> CategoryLinks { get; set; }
     }
 }

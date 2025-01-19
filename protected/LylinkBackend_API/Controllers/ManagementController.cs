@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LylinkBackend_API.Controllers
 {
+    /*
     [ApiController]
     [Route("Management")]
-    public class ManagementController(IPostDatabaseService postDatabase, IPostCategoryDatabaseService categoryDatabase) : Controller
+    public class ManagementController(IPageRepository postDatabase, ICategoryPageRepository categoryDatabase) : Controller
     {
         [HttpGet("/management")]
         public IActionResult Management()
@@ -209,4 +210,5 @@ namespace LylinkBackend_API.Controllers
             return categoryPostLinks;
         }
     }
+    */
 }

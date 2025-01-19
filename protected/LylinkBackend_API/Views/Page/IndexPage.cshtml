@@ -22,7 +22,7 @@
                 @foreach (var postCategory in Model.SubCategories)
                 {
                     <li>
-                        <a href="@postCategory.Id">@postCategory.Name</a>
+                        <a href="@postCategory.Key">@postCategory.Value</a>
                     </li>
                 }
             </ul>
@@ -35,7 +35,7 @@
                 @foreach (var posts in Model.Posts)
                 {
                     <li>
-                        <a href="@posts.Id">@posts.Name</a>
+                        <a href="@posts.Key">@posts.Value</a>
                     </li>
                 }
             </ul>
@@ -48,7 +48,7 @@
                 @foreach (var posts in Model.MostRecentPosts)
                 {
                     <li>
-                        <a href="@posts.Id">@posts.Name</a>
+                        <a href="@posts.Key">@posts.Value</a>
                     </li>
                 }
             </ul>

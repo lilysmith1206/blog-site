@@ -51,11 +51,11 @@
                 <div class="breadcrumb">
                     <ul>
                         @{
-                            IEnumerable<PageLink> parentCategories = (IEnumerable<PageLink>?)ViewData["ParentCategories"] ?? Array.Empty<PageLink>();
+                            IEnumerable<KeyValuePair<string, string>> parentCategories = (IEnumerable<KeyValuePair<string, string>>?)ViewData["ParentCategories"] ?? Array.Empty<KeyValuePair<string, string>>();
                             
-                            foreach (var parentCategory in parentCategories)
+                            foreach (KeyValuePair<string, string> parentCategory in parentCategories)
                             {
-                                <li><a href="@parentCategory.Id">@parentCategory.Name.ToLower()</a></li>
+                                <li><a href="@parentCategory.Key">@parentCategory.Value.ToLower()</a></li>
                             }
                         }
                     </ul>

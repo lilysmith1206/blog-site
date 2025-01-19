@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Page\PostPage.cshtml" />
+    <None Include="Views\Page\PagePost.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

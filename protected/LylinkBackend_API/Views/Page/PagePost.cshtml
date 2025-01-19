@@ -2,14 +2,14 @@
 @using System.Text.RegularExpressions
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 
-@model PostPage
+@model PagePost
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = Model.Title;
     ViewData["Description"] = Model.Description;
     ViewData["Keywords"] = Model.Keywords;
     ViewData["PageName"] = Model.PageName;
-    ViewData["ParentCategories"] = Model.ParentCategories;
+    ViewData["ParentCategories"] = Model.Parents;
 }
 
 @section ExtraMetadata {

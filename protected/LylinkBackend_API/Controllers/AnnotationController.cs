@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LylinkBackend_API.Controllers
 {
     [ApiController]
-    public class AnnotationController(IAnnotationDatabaseService annotationDatabase) : Controller
+    public class AnnotationController(IAnnotationRepository annotationDatabase) : Controller
     {
         [HttpGet("GetAnnotations")]
         public IActionResult GetAnnotations([FromQuery] string slug, [FromQuery] string editorName)

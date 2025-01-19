@@ -52,10 +52,10 @@ namespace LylinkBackend
             builder.Services.Configure<EmailOptions>(
                 builder.Configuration.GetSection("Email"));
 
-            builder.Services.AddTransient<IAnnotationDatabaseService, DatabaseService>();
-            builder.Services.AddTransient<IPostDatabaseService, DatabaseService>();
-            builder.Services.AddTransient<IPostCategoryDatabaseService, DatabaseService>();
-            builder.Services.AddTransient<IVisitAnalyticsDatabaseService, DatabaseService>();
+            builder.Services.AddTransient<IAnnotationRepository, AnnotationsRepository>();
+            builder.Services.AddTransient<IPageRepository, PageRepository>();
+            builder.Services.AddTransient<IVisitAnalyticsRepository, VisitAnalyticsRepository>();
+            builder.Services.AddTransient<ISlugRepository, SlugRepository>();
             builder.Services.AddTransient<IEmailService, EmailService>();
 
             builder.Services.AddSingleton<IUserCookieService, UserCookieService>();
