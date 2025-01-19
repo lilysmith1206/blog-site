@@ -26,10 +26,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
         {
             return context.Posts
                 .OrderByDescending(post => post.DateModified)
-                // Filter draft posts
                 .Where(post => post.IsDraft == false)
-                // Filter out HTTP error pages
-                .Where(post => Regex.IsMatch(post.Slug, @"\d{3}") == false)
                 .Take(amount)
                 .Select(post => ConvertPostToPostPage(post));
         }
@@ -131,7 +128,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 Name = databaseCategory.SlugNavigation.Name,
                 ParentCategories = categoryParents,
                 ChildrenCategories = databaseCategory.InverseParent.Select(category => KeyValuePair.Create(category.Slug, category.SlugNavigation.Name)),
-                Posts = databaseCategory.Posts.Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name)),
+                Posts = databaseCategory.Posts.Where(post => post.IsDraft == false).Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name)),
                 Slug = databaseCategory.SlugNavigation.Slug,
                 Title = databaseCategory.SlugNavigation.Title,
                 UseDateCreatedForSorting = databaseCategory.UseDateCreatedForSorting
