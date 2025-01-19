@@ -1,7 +1,6 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
@@ -23,14 +22,14 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             return postCategories;
         }
 
-        public IEnumerable<PostPage> GetRecentlyUpdatedPosts(int amount)
+        public IEnumerable<KeyValuePair<string, string>> GetRecentlyUpdatedPostInfos(int amount)
         {
             return context.Posts
                 .OrderByDescending(post => post.DateModified)
                 .Where(post => post.IsDraft == false)
                 .Take(amount)
                 .Include(post => post.SlugNavigation)
-                .Select(post => ConvertPostToPostPage(post));
+                .Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name));
         }
 
         public PostPage? GetPost(int id)
@@ -38,6 +37,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             Post? databasePost = context.Posts
                 .Where(post => post.Id == id)
                 .Include(post => post.SlugNavigation)
+                .Include(post => post.Parent)
+                    .ThenInclude(parent => parent!.SlugNavigation)
                 .SingleOrDefault();
 
             if (databasePost == null)
@@ -53,6 +54,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             Post? databasePost = context.Posts
                 .Where(post => post.Slug == slug)
                 .Include(post => post.SlugNavigation)
+                .Include(post => post.Parent)
+                    .ThenInclude(parent => parent!.SlugNavigation)
                 .SingleOrDefault();
 
             if (databasePost == null)
@@ -99,6 +102,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             PostCategory? databaseCategory = context.PostCategories
                 .Where(category => category.CategoryId == id)
                 .Include(category => category.InverseParent)
+                    .ThenInclude(childCategory => childCategory.SlugNavigation)
                 .Include(category => category.Parent)
                 .Include(category => category.SlugNavigation)
                 .SingleOrDefault();
@@ -116,6 +120,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             PostCategory? databaseCategory = context.PostCategories
                 .Where(category => category.Slug == slug)
                 .Include(category => category.InverseParent)
+                    .ThenInclude(childCategory => childCategory.SlugNavigation)
                 .Include(category => category.Parent)
                 .Include(category => category.SlugNavigation)
                 .SingleOrDefault();

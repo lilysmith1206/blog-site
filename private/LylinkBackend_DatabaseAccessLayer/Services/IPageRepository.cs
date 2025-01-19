@@ -11,7 +11,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public IEnumerable<string?> GetAllPostSlugs();
 
-        public IEnumerable<PostPage> GetRecentlyUpdatedPosts(int amount);
+        public IEnumerable<KeyValuePair<string, string>> GetRecentlyUpdatedPostInfos(int amount);
 
         public int CreatePost(
             string slug,
