@@ -74,7 +74,7 @@ namespace LylinkBackend_API.Controllers
         private ViewResult CreateCategoryView(string slug)
         {
             CategoryPage category = pageRepository.GetCategory(slug) ?? throw new NullReferenceException($"Invalid post category for slug {slug}");
-            
+
             return base.View(nameof(PageCategory), new PageCategory()
             {
                 Body = category.Body,

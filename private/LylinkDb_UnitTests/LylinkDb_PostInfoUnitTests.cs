@@ -127,7 +127,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             };
 
             int updatedPostId = repository.UpdatePost(postInfo);
-            PostInfo ? post = repository.GetPost(updatedPostId);
+            PostInfo? post = repository.GetPost(updatedPostId);
 
             Assert.NotNull(post);
 

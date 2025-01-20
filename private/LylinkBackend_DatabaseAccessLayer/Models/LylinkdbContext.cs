@@ -14,6 +14,8 @@ public partial class LylinkdbContext : DbContext
 
     public virtual DbSet<PostCategory> PostCategories { get; set; }
 
+    public virtual DbSet<PostSortingMethod> PostSortingMethods { get; set; }
+
     public virtual DbSet<VisitAnalytic> VisitAnalytics { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -136,6 +138,8 @@ public partial class LylinkdbContext : DbContext
 
             entity.ToTable("post_categories");
 
+            entity.HasIndex(e => e.PostSortingMethodId, "fk_category_post_sorting_method");
+
             entity.HasIndex(e => e.Slug, "fk_post_categories_pages");
 
             entity.HasIndex(e => e.ParentId, "fk_post_hierarchy_parent");
@@ -146,20 +150,42 @@ public partial class LylinkdbContext : DbContext
             entity.Property(e => e.ParentId)
                 .HasColumnType("int(11)")
                 .HasColumnName("parentId");
+            entity.Property(e => e.PostSortingMethodId)
+                .HasColumnType("int(11)")
+                .HasColumnName("post_sorting_method_id");
             entity.Property(e => e.Slug)
                 .HasMaxLength(40)
                 .IsFixedLength()
                 .HasColumnName("slug");
-            entity.Property(e => e.UseDateCreatedForSorting).HasColumnName("use_date_created_for_sorting");
 
             entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
                 .HasForeignKey(d => d.ParentId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("fk_post_hierarchy_parent");
 
+            entity.HasOne(d => d.PostSortingMethod).WithMany(p => p.PostCategories)
+                .HasForeignKey(d => d.PostSortingMethodId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_category_post_sorting_method");
+
             entity.HasOne(d => d.SlugNavigation).WithMany(p => p.PostCategories)
                 .HasForeignKey(d => d.Slug)
                 .HasConstraintName("fk_post_categories_pages");
+        });
+
+        modelBuilder.Entity<PostSortingMethod>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("post_sorting_methods");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.SortingName)
+                .HasMaxLength(80)
+                .IsFixedLength()
+                .HasColumnName("sorting_name");
         });
 
         modelBuilder.Entity<VisitAnalytic>(entity =>

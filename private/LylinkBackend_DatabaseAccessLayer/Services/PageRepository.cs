@@ -105,6 +105,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 .Include(category => category.SlugNavigation)
                 .Include(category => category.Posts)
                     .ThenInclude(post => post.SlugNavigation)
+                .Include(category => category.PostSortingMethod)
                 .SingleOrDefault();
 
             if (databaseCategory == null)
@@ -117,25 +118,32 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         private CategoryPage ConvertCategoryToCategoryPage(PostCategory databaseCategory)
         {
-            IEnumerable<KeyValuePair<string, string>> parents = GetParentsStartingFromParent(databaseCategory.Parent);
+            _ = Enum.TryParse(typeof(BusinessModels.PostSortingMethod), databaseCategory.PostSortingMethod?.SortingName, out object? parsedSortingMethod);
 
-            Page databasePage = databaseCategory.SlugNavigation;
-
-            CategoryPage categoryPage = new CategoryPage
+            if (parsedSortingMethod is BusinessModels.PostSortingMethod postSortingMethod)
             {
-                Body = databasePage.Body,
-                Description = databasePage.Description,
-                Keywords = databasePage.Keywords,
-                Name = databasePage.Name,
-                ParentCategories = parents,
-                ChildrenCategories = databaseCategory.InverseParent.Select(category => KeyValuePair.Create(category.Slug, category.SlugNavigation.Name)),
-                Posts = databaseCategory.Posts.Where(post => post.IsDraft == false).Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name)),
-                Slug = databasePage.Slug,
-                Title = databasePage.Title,
-                UseDateCreatedForSorting = databaseCategory.UseDateCreatedForSorting
-            };
+                IEnumerable<KeyValuePair<string, string>> parents = GetParentsStartingFromParent(databaseCategory.Parent);
 
-            return categoryPage;
+                Page databasePage = databaseCategory.SlugNavigation;
+
+                CategoryPage categoryPage = new CategoryPage
+                {
+                    Body = databasePage.Body,
+                    Description = databasePage.Description,
+                    Keywords = databasePage.Keywords,
+                    Name = databasePage.Name,
+                    ParentCategories = parents,
+                    ChildrenCategories = databaseCategory.InverseParent.Select(category => KeyValuePair.Create(category.Slug, category.SlugNavigation.Name)),
+                    Posts = databaseCategory.Posts.Where(post => post.IsDraft == false).Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name)),
+                    Slug = databasePage.Slug,
+                    Title = databasePage.Title,
+                    PostSortingMethod = postSortingMethod
+                };
+
+                return categoryPage;
+            }
+
+            throw new InvalidDataException($"Category has sorting method {databaseCategory.PostSortingMethod?.SortingName ?? "null sorting method"}, which is not supported by enum.");
         }
 
         private List<KeyValuePair<string, string>> GetParentsStartingFromParent(PostCategory? databaseCategory)

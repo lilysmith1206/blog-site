@@ -20,6 +20,6 @@
 
         public IEnumerable<KeyValuePair<string, string>> Posts;
 
-        public bool UseDateCreatedForSorting;
+        public PostSortingMethod PostSortingMethod;
     }
 }

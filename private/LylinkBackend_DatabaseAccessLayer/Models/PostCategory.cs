@@ -8,11 +8,13 @@ public partial class PostCategory
 
     public string Slug { get; set; } = null!;
 
-    public bool UseDateCreatedForSorting { get; set; }
+    public int? PostSortingMethodId { get; set; }
 
     public virtual ICollection<PostCategory> InverseParent { get; set; } = new List<PostCategory>();
 
     public virtual PostCategory? Parent { get; set; }
+
+    public virtual PostSortingMethod? PostSortingMethod { get; set; }
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 

@@ -1,4 +1,6 @@
 ﻿@using LylinkBackend_API.Models
+@using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+@using System.Text.RegularExpressions
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Categorizer
 
@@ -90,8 +92,16 @@
                 </label>
 
                 <label>
-                    Sort child posts by date created
-                    <input type="checkbox" id="useDateCreatedSorting" name="UseDateCreatedForSorting" checked value="true" />
+                    Post sorting method
+                    <select id="sortingMethods" name="PostSortingMethod">
+                        @foreach (PostSortingMethod sortingMethod in Enum.GetValues(typeof(PostSortingMethod)))
+                        {
+                            string sortingMethodName = Regex.Replace(sortingMethod.ToString(), @"([A-Z])", " $1").Trim();
+                            int sortingMethodId = (int)sortingMethod;
+
+                            <option value="@sortingMethodId">@sortingMethodName</option>
+                        }
+                    </select>
                 </label>
 
                 <input type="hidden" id="body" name="Body" />

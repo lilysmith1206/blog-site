@@ -18,6 +18,6 @@
 
         public int? ParentId { get; set; }
 
-        public bool UseDateCreatedForSorting { get; set; }
+        public required PostSortingMethod PostSortingMethod { get; set; }
     }
 }

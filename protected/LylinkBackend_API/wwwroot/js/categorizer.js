@@ -60,16 +60,6 @@ document.getElementById("rendered").addEventListener("keydown", (event) => {
     document.getElementById("body").value = event.target.innerHTML;
 })
 
-const checkbox = document.getElementById('useDateCreatedSorting');
-
-checkbox.addEventListener('change', function () {
-    if (checkbox.checked) {
-        checkbox.value = "true";
-    } else {
-        checkbox.value = "false";
-    }
-});
-
 function getSlugBody(slugBox) {
     if (slugBox.value == "none") {
         return;
@@ -97,8 +87,7 @@ function getSlugBody(slugBox) {
         document.getElementById('name').value = data.name;
         document.getElementById('slug').value = data.slug;
         document.getElementById('parentCategoryBox').value = data.parentId;
-        document.getElementById('useDateCreatedSorting').checked = data.useDateCreatedForSorting == true;
-        document.getElementById('useDateCreatedSorting').value = data.useDateCreatedForSorting == true;
+        document.getElementById('sortingMethods').value = data.postSortingMethod;
         document.getElementById('id').value = data.id;
 
         document.getElementById('html').textContent = beautify.html(data.body, options);

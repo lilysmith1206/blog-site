@@ -41,14 +41,14 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             const string Keywords = "new post keywords";
             const string Description = "new post description";
             const string Body = "new post body";
-            const bool IsSortedByDateCreated = false;
+            const PostSortingMethod PostSortingMethod = PostSortingMethod.ByDateCreatedAscending;
             int parentId = UnitTestData.IndexCategoryInfo.Id;
 
             CategoryInfo newCategoryInfo = new CategoryInfo
             {
                 Body = Body,
                 Description = Description,
-                UseDateCreatedForSorting = IsSortedByDateCreated,
+                PostSortingMethod = PostSortingMethod,
                 Keywords = Keywords,
                 Name = Name,
                 ParentId = parentId,
@@ -68,7 +68,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             Assert.Equal(Keywords, post.Keywords);
             Assert.Equal(Description, post.Description);
             Assert.Equal(Body, post.Body);
-            Assert.Equal(IsSortedByDateCreated, post.UseDateCreatedForSorting);
+            Assert.Equal(PostSortingMethod, post.PostSortingMethod);
             Assert.Equal(parentId, UnitTestData.IndexCategoryInfo.Id);
         }
 
@@ -89,6 +89,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
                     Keywords = string.Empty,
                     Name = string.Empty,
                     Title = string.Empty,
+                    PostSortingMethod = PostSortingMethod.ByDateCreatedAscending
                 });
             });
         }
@@ -110,6 +111,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
                     Keywords = string.Empty,
                     Name = string.Empty,
                     Title = string.Empty,
+                    PostSortingMethod = PostSortingMethod.ByDateCreatedAscending
                 });
             });
         }
@@ -129,7 +131,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
                 Keywords = UnitTestData.IndexCategoryInfo.Keywords + "A",
                 Description = UnitTestData.IndexCategoryInfo.Description + "A",
                 Body = UnitTestData.IndexCategoryInfo.Body + "A",
-                UseDateCreatedForSorting = UnitTestData.IndexCategoryInfo.UseDateCreatedForSorting == false,
+                PostSortingMethod = PostSortingMethod.ByDateModifiedDescending,
                 ParentId = null
             };
 
@@ -144,7 +146,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             Assert.NotEqual(UnitTestData.IndexCategoryInfo.Keywords, post.Keywords);
             Assert.NotEqual(UnitTestData.IndexCategoryInfo.Description, post.Description);
             Assert.NotEqual(UnitTestData.IndexCategoryInfo.Body, post.Body);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.UseDateCreatedForSorting, post.UseDateCreatedForSorting);
+            Assert.NotEqual(UnitTestData.IndexCategoryInfo.PostSortingMethod, post.PostSortingMethod);
         }
 
         [Fact]
@@ -162,12 +164,12 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
                 Keywords = UnitTestData.MostRecentPostsCategoryInfo.Keywords,
                 Description = UnitTestData.MostRecentPostsCategoryInfo.Description,
                 Body = UnitTestData.MostRecentPostsCategoryInfo.Body,
-                UseDateCreatedForSorting = UnitTestData.MostRecentPostsCategoryInfo.UseDateCreatedForSorting,
+                PostSortingMethod = UnitTestData.MostRecentPostsCategoryInfo.PostSortingMethod,
                 ParentId = DatabaseUnitTestData.TechCategory.CategoryId
             };
 
             int updatedPostId = repository.UpdateCategory(categoryInfo);
-            CategoryInfo ? category = repository.GetCategory(updatedPostId);
+            CategoryInfo? category = repository.GetCategory(updatedPostId);
 
             Assert.NotNull(category);
 
@@ -191,6 +193,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
                     Keywords = string.Empty,
                     Name = string.Empty,
                     Title = string.Empty,
+                    PostSortingMethod = PostSortingMethod.ByDateCreatedAscending
                 });
             });
         }

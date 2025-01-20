@@ -23,6 +23,11 @@ namespace LylinkDb_UnitTests
 
         private static void FillInMemoryDatabaseWithUnitTestData(LylinkdbContext context)
         {
+            foreach (PostSortingMethod postSortingMethod in DatabaseUnitTestData.PostSortingMethods)
+            {
+                context.PostSortingMethods.Add(postSortingMethod);
+            }
+
             foreach (PostCategory category in DatabaseUnitTestData.Categories)
             {
                 context.PostCategories.Add(category);

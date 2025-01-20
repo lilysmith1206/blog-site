@@ -45,7 +45,7 @@ namespace LylinkDb_UnitTests
                     CategoryId = 1,
                     Slug = "/",
                     ParentId = null,
-                    UseDateCreatedForSorting = false,
+                    PostSortingMethodId = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedDescending,
                     SlugNavigation = new Page()
                     {
                         Slug = "/",
@@ -63,7 +63,8 @@ namespace LylinkDb_UnitTests
         {
             get
             {
-                return new Post {
+                return new Post
+                {
                     Id = 2,
                     Slug = "tech-post-1",
                     ParentId = 2,
@@ -87,7 +88,8 @@ namespace LylinkDb_UnitTests
         {
             get
             {
-                return new Post {
+                return new Post
+                {
                     Id = 3,
                     Slug = "tech-post-2",
                     ParentId = 2,
@@ -111,7 +113,8 @@ namespace LylinkDb_UnitTests
         {
             get
             {
-                return new Post {
+                return new Post
+                {
                     Id = 4,
                     Slug = "tech-post-3",
                     ParentId = 2,
@@ -140,7 +143,7 @@ namespace LylinkDb_UnitTests
                     CategoryId = 2,
                     Slug = "tech",
                     ParentId = 1,
-                    UseDateCreatedForSorting = true,
+                    PostSortingMethodId = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedDescending,
                     SlugNavigation = new Page()
                     {
                         Slug = "tech",
@@ -158,7 +161,8 @@ namespace LylinkDb_UnitTests
         {
             get
             {
-                return new Post {
+                return new Post
+                {
                     Id = 5,
                     Slug = "most-recent-1",
                     ParentId = 3,
@@ -182,7 +186,8 @@ namespace LylinkDb_UnitTests
         {
             get
             {
-                return new Post {
+                return new Post
+                {
                     Id = 6,
                     Slug = "most-recent-2",
                     ParentId = 3,
@@ -206,7 +211,8 @@ namespace LylinkDb_UnitTests
         {
             get
             {
-                return new Post {
+                return new Post
+                {
                     Id = 7,
                     Slug = "most-recent-3",
                     ParentId = 3,
@@ -235,7 +241,7 @@ namespace LylinkDb_UnitTests
                     CategoryId = 3,
                     Slug = "most-recent",
                     ParentId = 1,
-                    UseDateCreatedForSorting = true,
+                    PostSortingMethodId = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedDescending,
                     SlugNavigation = new Page()
                     {
                         Slug = "most-recent",
@@ -245,6 +251,54 @@ namespace LylinkDb_UnitTests
                         Name = "Tech",
                         Title = "Tech Title"
                     }
+                };
+            }
+        }
+
+        public static LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod ByDateCreatedAscendingSort
+        {
+            get
+            {
+                return new LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod
+                {
+                    Id = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedAscending,
+                    SortingName = LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedAscending.ToString(),
+                };
+            }
+        }
+
+        public static LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod ByDateCreatedDescendingSort
+        {
+            get
+            {
+                return new LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod
+                {
+                    Id = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedDescending,
+                    SortingName = LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedDescending.ToString(),
+                };
+            }
+        }
+
+        public static LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod ByDateModifiedAscendingSort
+        {
+            get
+            {
+                return new LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod
+                {
+                    Id = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateModifiedAscending,
+                    SortingName = LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateModifiedAscending.ToString(),
+                };
+            }
+        }
+
+        public static LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod ByDateModifiedDescendingSort
+        {
+            get
+            {
+                return new LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod
+                {
+                    Id = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateModifiedDescending,
+                    SortingName = LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateModifiedDescending.ToString(),
                 };
             }
         }
@@ -278,6 +332,19 @@ namespace LylinkDb_UnitTests
             get
             {
                 return [];
+            }
+        }
+
+        public static List<LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod> PostSortingMethods
+        {
+            get
+            {
+                return [
+                    ByDateCreatedAscendingSort,
+                    ByDateCreatedDescendingSort,
+                    ByDateModifiedAscendingSort,
+                    ByDateModifiedDescendingSort
+                ];
             }
         }
     }
@@ -343,7 +410,7 @@ namespace LylinkDb_UnitTests
         public static CategoryPage IndexCategoryPage = new CategoryPage
         {
             Slug = DatabaseUnitTestData.IndexCategory.SlugNavigation.Slug,
-            UseDateCreatedForSorting = DatabaseUnitTestData.IndexCategory.UseDateCreatedForSorting,
+            PostSortingMethod = (LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod)DatabaseUnitTestData.IndexCategory.PostSortingMethodId!.Value,
             Description = DatabaseUnitTestData.IndexCategory.SlugNavigation.Description,
             Keywords = DatabaseUnitTestData.IndexCategory.SlugNavigation.Keywords,
             Body = DatabaseUnitTestData.IndexCategory.SlugNavigation.Body,
@@ -355,7 +422,7 @@ namespace LylinkDb_UnitTests
         public static CategoryInfo IndexCategoryInfo = new CategoryInfo
         {
             Slug = DatabaseUnitTestData.IndexCategory.Slug,
-            UseDateCreatedForSorting = DatabaseUnitTestData.IndexCategory.UseDateCreatedForSorting,
+            PostSortingMethod = (LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod)DatabaseUnitTestData.IndexCategory.PostSortingMethodId!.Value,
             Description = DatabaseUnitTestData.IndexCategory.SlugNavigation.Description,
             Keywords = DatabaseUnitTestData.IndexCategory.SlugNavigation.Keywords,
             Body = DatabaseUnitTestData.IndexCategory.SlugNavigation.Body,
@@ -446,7 +513,7 @@ namespace LylinkDb_UnitTests
         public static CategoryPage TechCategoryPage = new CategoryPage
         {
             Slug = DatabaseUnitTestData.TechCategory.SlugNavigation.Slug,
-            UseDateCreatedForSorting = DatabaseUnitTestData.TechCategory.UseDateCreatedForSorting,
+            PostSortingMethod = (LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod)DatabaseUnitTestData.TechCategory.PostSortingMethodId!.Value,
             Description = DatabaseUnitTestData.TechCategory.SlugNavigation.Description,
             Keywords = DatabaseUnitTestData.TechCategory.SlugNavigation.Keywords,
             Body = DatabaseUnitTestData.TechCategory.SlugNavigation.Body,
@@ -458,7 +525,7 @@ namespace LylinkDb_UnitTests
         public static CategoryInfo TechCategoryInfo = new CategoryInfo
         {
             Slug = DatabaseUnitTestData.TechCategory.Slug,
-            UseDateCreatedForSorting = DatabaseUnitTestData.TechCategory.UseDateCreatedForSorting,
+            PostSortingMethod = (LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod)DatabaseUnitTestData.TechCategory.PostSortingMethodId!.Value,
             Description = DatabaseUnitTestData.TechCategory.SlugNavigation.Description,
             Keywords = DatabaseUnitTestData.TechCategory.SlugNavigation.Keywords,
             Body = DatabaseUnitTestData.TechCategory.SlugNavigation.Body,
@@ -549,7 +616,7 @@ namespace LylinkDb_UnitTests
         public static CategoryPage MostRecentPostsCategoryPage = new CategoryPage
         {
             Slug = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Slug,
-            UseDateCreatedForSorting = DatabaseUnitTestData.MostRecentPostsCategory.UseDateCreatedForSorting,
+            PostSortingMethod = (LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod)DatabaseUnitTestData.MostRecentPostsCategory.PostSortingMethodId!.Value,
             Description = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Description,
             Keywords = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Keywords,
             Body = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Body,
@@ -561,7 +628,7 @@ namespace LylinkDb_UnitTests
         public static CategoryInfo MostRecentPostsCategoryInfo = new CategoryInfo
         {
             Slug = DatabaseUnitTestData.MostRecentPostsCategory.Slug,
-            UseDateCreatedForSorting = DatabaseUnitTestData.MostRecentPostsCategory.UseDateCreatedForSorting,
+            PostSortingMethod = (LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod)DatabaseUnitTestData.MostRecentPostsCategory.PostSortingMethodId!.Value,
             Description = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Description,
             Keywords = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Keywords,
             Body = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Body,

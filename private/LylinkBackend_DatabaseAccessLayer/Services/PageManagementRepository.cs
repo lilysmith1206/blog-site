@@ -31,6 +31,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             PostCategory? category = context.PostCategories
                 .Where(category => category.CategoryId == id)
                 .Include(category => category.SlugNavigation)
+                .Include(category => category.PostSortingMethod)
                 .SingleOrDefault();
 
             if (category == null)
@@ -38,18 +39,25 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 throw new ArgumentOutOfRangeException($"No category with id {id} found.");
             }
 
-            return new CategoryInfo
+            _ = Enum.TryParse(typeof(BusinessModels.PostSortingMethod), category.PostSortingMethod?.SortingName, out object? parsedSortingMethod);
+
+            if (parsedSortingMethod is BusinessModels.PostSortingMethod postSortingMethod)
             {
-                Id = id,
-                Body = category.SlugNavigation.Body,
-                Description = category.SlugNavigation.Description,
-                Keywords = category.SlugNavigation.Keywords,
-                Name = category.SlugNavigation.Name,
-                ParentId = category.ParentId,
-                Slug = category.SlugNavigation.Slug,
-                Title = category.SlugNavigation.Title,
-                UseDateCreatedForSorting = category.UseDateCreatedForSorting
-            };
+                return new CategoryInfo
+                {
+                    Id = id,
+                    Body = category.SlugNavigation.Body,
+                    Description = category.SlugNavigation.Description,
+                    Keywords = category.SlugNavigation.Keywords,
+                    Name = category.SlugNavigation.Name,
+                    ParentId = category.ParentId,
+                    Slug = category.SlugNavigation.Slug,
+                    Title = category.SlugNavigation.Title,
+                    PostSortingMethod = postSortingMethod
+                };
+            }
+
+            throw new InvalidDataException($"Category has sorting method {category.PostSortingMethod?.SortingName ?? "null sorting method"}, which is not supported by enum.");
         }
 
         public PostInfo GetPost(int id)
@@ -181,7 +189,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             {
                 Slug = category.Slug,
                 ParentId = category.ParentId,
-                UseDateCreatedForSorting = category.UseDateCreatedForSorting
+                PostSortingMethodId = (int?)category.PostSortingMethod
             };
 
             context.PostCategories.Add(dbCategory);
@@ -211,7 +219,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 
             existingCategory.ParentId = category.ParentId;
-            existingCategory.UseDateCreatedForSorting = category.UseDateCreatedForSorting;
+            existingCategory.PostSortingMethodId = (int?)category.PostSortingMethod;
 
             context.SaveChanges();
 

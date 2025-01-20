@@ -105,6 +105,15 @@
     <None Update="007_ExtractCommonPageDataToPagesTable\ExtractCommonPageDataToPagesTable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="008_ExpandSortingMethodsIntoNewTable\base_schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="008_ExpandSortingMethodsIntoNewTable\ExpandSortingMethodsIntoNewTable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="008_ExpandSortingMethodsIntoNewTable\new_schema.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

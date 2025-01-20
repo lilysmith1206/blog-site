@@ -104,7 +104,7 @@ namespace LylinkBackend_API.Controllers
 
             IEnumerable<KeyValuePair<int, string>> categories = pageManagementRepository.GetAllCategories()
                 .Select(category => KeyValuePair.Create(int.Parse(category.Key), category.Value));
-            
+
             foreach (KeyValuePair<int, string> category in categories)
             {
                 categoryAndPosts.Add(category.Value, pageManagementRepository.GetAllPosts(category.Key));
