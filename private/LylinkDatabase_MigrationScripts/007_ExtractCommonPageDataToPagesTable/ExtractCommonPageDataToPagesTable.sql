@@ -18,14 +18,14 @@ SELECT slug, title, categoryName AS name, keywords, description, body FROM post_
 
 ALTER TABLE posts
 	DROP COLUMN name,
-	DROP COLUMN title;
+	DROP COLUMN title,
 	DROP COLUMN keywords,
 	DROP COLUMN description,
 	DROP COLUMN body;
 
 ALTER TABLE post_categories
 	DROP COLUMN categoryName,
-	DROP COLUMN title;
+	DROP COLUMN title,
 	DROP COLUMN keywords,
 	DROP COLUMN description,
 	DROP COLUMN body;
