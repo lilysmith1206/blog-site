@@ -286,170 +286,292 @@ namespace LylinkDb_UnitTests
     {
         static UnitTestData()
         {
-            IndexPost1.Parents = [KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)];
+            IndexPostPage1.Parents = [KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)];
 
-            IndexCategory.ParentCategories = [];
-            IndexCategory.ChildrenCategories = [KeyValuePair.Create(TechCategory.Slug, TechCategory.Name)];
+            IndexCategoryPage.ParentCategories = [];
+            IndexCategoryPage.ChildrenCategories = [KeyValuePair.Create(TechCategoryPage.Slug, TechCategoryPage.Name)];
 
-            TechPost1.Parents = [KeyValuePair.Create(TechCategory.Slug, TechCategory.Name), KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)];
-            TechPost2.Parents = [KeyValuePair.Create(TechCategory.Slug, TechCategory.Name), KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)];
-            TechPost3.Parents = [KeyValuePair.Create(TechCategory.Slug, TechCategory.Name), KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)];
+            TechPostPage1.Parents = [KeyValuePair.Create(TechCategoryPage.Slug, TechCategoryPage.Name), KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)];
+            TechPostPage2.Parents = [KeyValuePair.Create(TechCategoryPage.Slug, TechCategoryPage.Name), KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)];
+            TechPostPage3.Parents = [KeyValuePair.Create(TechCategoryPage.Slug, TechCategoryPage.Name), KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)];
 
-            TechCategory.ChildrenCategories = [];
-            TechCategory.Posts = [KeyValuePair.Create(TechPost1.Slug, TechPost1.Name), KeyValuePair.Create(TechPost2.Slug, TechPost2.Name), KeyValuePair.Create(TechPost3.Slug, TechPost3.Name)];
+            TechCategoryPage.ChildrenCategories = [];
+            TechCategoryPage.Posts = [
+                KeyValuePair.Create(TechPostPage1.Slug, TechPostPage1.Name),
+                KeyValuePair.Create(TechPostPage2.Slug, TechPostPage2.Name),
+                KeyValuePair.Create(TechPostPage3.Slug, TechPostPage3.Name)
+            ];
 
-            MostRecentPostsPost1.Parents = [KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)];
-            MostRecentPostsPost2.Parents = [KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)];
-            MostRecentPostsPost3.Parents = [KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)];
+            MostRecentPostsPostPage1.Parents = [KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)];
+            MostRecentPostsPostPage2.Parents = [KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)];
+            MostRecentPostsPostPage3.Parents = [KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)];
 
-            MostRecentPostsCategory.ChildrenCategories = [];
-            MostRecentPostsCategory.Posts = [KeyValuePair.Create(MostRecentPostsPost1.Slug, MostRecentPostsPost1.Name), KeyValuePair.Create(MostRecentPostsPost2.Slug, MostRecentPostsPost2.Name), KeyValuePair.Create(MostRecentPostsPost3.Slug, MostRecentPostsPost3.Name)];
+            MostRecentPostsCategoryPage.ChildrenCategories = [];
+            MostRecentPostsCategoryPage.Posts = [
+                KeyValuePair.Create(MostRecentPostsPostPage1.Slug, MostRecentPostsPostPage1.Name),
+                KeyValuePair.Create(MostRecentPostsPostPage2.Slug, MostRecentPostsPostPage2.Name),
+                KeyValuePair.Create(MostRecentPostsPostPage3.Slug, MostRecentPostsPostPage3.Name)
+            ];
         }
 
-        public static PostPage IndexPost1 = new PostPage
+        public static PostPage IndexPostPage1 = new PostPage
         {
-            Slug = "index-post-1",
-            Title = "About Me",
-            DateCreated = Dates.CurrentDateTime.AddDays(-10),
-            DateModified = Dates.CurrentDateTime.AddDays(-5),
-            Name = "Index Post 1",
-            Keywords = "index, about me",
-            Description = "About the blogger.",
-            Body = "This post introduces the blogger on the index level category.",
-            Parents = [KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)],
-            IsDraft = false
+            Slug = DatabaseUnitTestData.IndexPost1.Slug,
+            Title = DatabaseUnitTestData.IndexPost1.SlugNavigation.Title,
+            DateCreated = DatabaseUnitTestData.IndexPost1.DateCreated,
+            DateModified = DatabaseUnitTestData.IndexPost1.DateModified,
+            Name = DatabaseUnitTestData.IndexPost1.SlugNavigation.Name,
+            Keywords = DatabaseUnitTestData.IndexPost1.SlugNavigation.Keywords,
+            Description = DatabaseUnitTestData.IndexPost1.SlugNavigation.Description,
+            Body = DatabaseUnitTestData.IndexPost1.SlugNavigation.Body,
+            IsDraft = DatabaseUnitTestData.IndexPost1.IsDraft
         };
 
-        public static CategoryPage IndexCategory = new CategoryPage
+        public static PostInfo IndexPostInfo1 = new PostInfo
         {
-            Slug = "/",
-            UseDateCreatedForSorting = false,
-            Description = "Index category description",
-            Keywords = "Index category keywords",
-            Body = "index body",
-            Name = "Index",
-            Title = "Index Title",
-            Posts = [KeyValuePair.Create(IndexPost1.Slug, IndexPost1.Name)],
+            Body = DatabaseUnitTestData.IndexPost1.SlugNavigation.Body,
+            Description = DatabaseUnitTestData.IndexPost1.SlugNavigation.Description,
+            Id = DatabaseUnitTestData.IndexPost1.Id,
+            IsDraft = DatabaseUnitTestData.IndexPost1.IsDraft,
+            Keywords = DatabaseUnitTestData.IndexPost1.SlugNavigation.Keywords,
+            Name = DatabaseUnitTestData.IndexPost1.SlugNavigation.Name,
+            ParentId = DatabaseUnitTestData.IndexPost1.ParentId,
+            Slug = DatabaseUnitTestData.IndexPost1.Slug,
+            Title = DatabaseUnitTestData.IndexPost1.SlugNavigation.Title
         };
 
-        public static PostPage TechPost1 = new PostPage
+        public static CategoryPage IndexCategoryPage = new CategoryPage
         {
-            Slug = "tech-post-1",
-            DateCreated = Dates.CurrentDateTime.AddDays(-10),
-            DateModified = Dates.CurrentDateTime.AddDays(-5),
-            Title = "Introduction to Gadgets",
-            Name = "Tech Post 1",
-            Keywords = "tech, gadgets, intro",
-            Description = "An introductory guide to gadgets.",
-            Body = "This post introduces the basics of gadgets and their use in modern tech.",
-            Parents = [KeyValuePair.Create(TechCategory.Slug, TechCategory.Name), KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)],
-            IsDraft = false
+            Slug = DatabaseUnitTestData.IndexCategory.SlugNavigation.Slug,
+            UseDateCreatedForSorting = DatabaseUnitTestData.IndexCategory.UseDateCreatedForSorting,
+            Description = DatabaseUnitTestData.IndexCategory.SlugNavigation.Description,
+            Keywords = DatabaseUnitTestData.IndexCategory.SlugNavigation.Keywords,
+            Body = DatabaseUnitTestData.IndexCategory.SlugNavigation.Body,
+            Name = DatabaseUnitTestData.IndexCategory.SlugNavigation.Name,
+            Title = DatabaseUnitTestData.IndexCategory.SlugNavigation.Title,
+            Posts = [KeyValuePair.Create(IndexPostPage1.Slug, IndexPostPage1.Name)],
         };
 
-        public static PostPage TechPost2 = new PostPage
+        public static CategoryInfo IndexCategoryInfo = new CategoryInfo
         {
-            Slug = "tech-post-2",
-            DateCreated = Dates.CurrentDateTime.AddDays(-20),
-            DateModified = Dates.CurrentDateTime.AddDays(-10),
-            Title = "Future of AI",
-            Name = "Tech Post 2",
-            Keywords = "AI, future, technology",
-            Description = "Discussing the future of AI.",
-            Body = "This post explores the possible advancements and impacts of AI in the future.",
-            Parents = [KeyValuePair.Create(TechCategory.Slug, TechCategory.Name), KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)],
-            IsDraft = false
+            Slug = DatabaseUnitTestData.IndexCategory.Slug,
+            UseDateCreatedForSorting = DatabaseUnitTestData.IndexCategory.UseDateCreatedForSorting,
+            Description = DatabaseUnitTestData.IndexCategory.SlugNavigation.Description,
+            Keywords = DatabaseUnitTestData.IndexCategory.SlugNavigation.Keywords,
+            Body = DatabaseUnitTestData.IndexCategory.SlugNavigation.Body,
+            Name = DatabaseUnitTestData.IndexCategory.SlugNavigation.Name,
+            Title = DatabaseUnitTestData.IndexCategory.SlugNavigation.Title,
+            Id = DatabaseUnitTestData.IndexCategory.CategoryId,
+            ParentId = DatabaseUnitTestData.IndexCategory.ParentId
         };
 
-        public static PostPage TechPost3 = new PostPage
+        public static PostPage TechPostPage1 = new PostPage
         {
-            Slug = "tech-post-3",
-            DateCreated = Dates.CurrentDateTime.AddDays(-30),
-            DateModified = Dates.CurrentDateTime.AddDays(-15),
-            Title = "Top Tech Trends 2024",
-            Name = "Tech Post 3",
-            Keywords = "tech trends, 2024",
-            Description = "The top technology trends to watch for in 2024.",
-            Body = "This post covers the latest technology trends expected to shape the industry in 2024.",
-            IsDraft = false
+            Slug = DatabaseUnitTestData.TechPost1.Slug,
+            Title = DatabaseUnitTestData.TechPost1.SlugNavigation.Title,
+            DateCreated = DatabaseUnitTestData.TechPost1.DateCreated,
+            DateModified = DatabaseUnitTestData.TechPost1.DateModified,
+            Name = DatabaseUnitTestData.TechPost1.SlugNavigation.Name,
+            Keywords = DatabaseUnitTestData.TechPost1.SlugNavigation.Keywords,
+            Description = DatabaseUnitTestData.TechPost1.SlugNavigation.Description,
+            Body = DatabaseUnitTestData.TechPost1.SlugNavigation.Body,
+            IsDraft = DatabaseUnitTestData.TechPost1.IsDraft,
         };
 
-        public static CategoryPage TechCategory = new CategoryPage
+        public static PostInfo TechPostInfo1 = new PostInfo
         {
-            Slug = "tech",
-            UseDateCreatedForSorting = true,
-            Description = "Technology category description",
-            Keywords = "tech, gadgets, computers",
-            Body = "This is the body of the tech category.",
-            Name = "Tech",
-            Title = "Tech Title",
-            ParentCategories = [KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)]
+            Body = DatabaseUnitTestData.TechPost1.SlugNavigation.Body,
+            Description = DatabaseUnitTestData.TechPost1.SlugNavigation.Description,
+            Id = DatabaseUnitTestData.TechPost1.Id,
+            IsDraft = DatabaseUnitTestData.TechPost1.IsDraft,
+            Keywords = DatabaseUnitTestData.TechPost1.SlugNavigation.Keywords,
+            Name = DatabaseUnitTestData.TechPost1.SlugNavigation.Name,
+            ParentId = DatabaseUnitTestData.TechPost1.ParentId,
+            Slug = DatabaseUnitTestData.TechPost1.Slug,
+            Title = DatabaseUnitTestData.TechPost1.SlugNavigation.Title
         };
 
-        public static PostPage MostRecentPostsPost1 = new PostPage
+        public static PostPage TechPostPage2 = new PostPage
         {
-            Slug = "most-recent-1",
-            DateCreated = DateTime.MaxValue.AddYears(-1).AddDays(1),
-            DateModified = DateTime.MaxValue.AddYears(-1).AddDays(1),
-            Title = "Most Recent",
-            Name = "Most Recent 1",
-            Keywords = "most recent, 1",
-            Description = "The most recent posts, 1.",
-            Body = "This post is the least most recent one.",
-            IsDraft = false
+            Slug = DatabaseUnitTestData.TechPost2.Slug,
+            Title = DatabaseUnitTestData.TechPost2.SlugNavigation.Title,
+            DateCreated = DatabaseUnitTestData.TechPost2.DateCreated,
+            DateModified = DatabaseUnitTestData.TechPost2.DateModified,
+            Name = DatabaseUnitTestData.TechPost2.SlugNavigation.Name,
+            Keywords = DatabaseUnitTestData.TechPost2.SlugNavigation.Keywords,
+            Description = DatabaseUnitTestData.TechPost2.SlugNavigation.Description,
+            Body = DatabaseUnitTestData.TechPost2.SlugNavigation.Body,
+            IsDraft = DatabaseUnitTestData.TechPost2.IsDraft,
         };
 
-        public static PostPage MostRecentPostsPost2 = new PostPage
+        public static PostInfo TechPostInfo2 = new PostInfo
         {
-            Slug = "most-recent-2",
-            DateCreated = DateTime.MaxValue.AddYears(-1).AddDays(2),
-            DateModified = DateTime.MaxValue.AddYears(-1).AddDays(2),
-            Title = "Most Recent",
-            Name = "Most Recent 2",
-            Keywords = "most recent, 2",
-            Description = "The most recent posts, 3.",
-            Body = "This post is the middle recent one.",
-            IsDraft = false
+            Body = DatabaseUnitTestData.TechPost2.SlugNavigation.Body,
+            Description = DatabaseUnitTestData.TechPost2.SlugNavigation.Description,
+            Id = DatabaseUnitTestData.TechPost2.Id,
+            IsDraft = DatabaseUnitTestData.TechPost2.IsDraft,
+            Keywords = DatabaseUnitTestData.TechPost2.SlugNavigation.Keywords,
+            Name = DatabaseUnitTestData.TechPost2.SlugNavigation.Name,
+            ParentId = DatabaseUnitTestData.TechPost2.ParentId,
+            Slug = DatabaseUnitTestData.TechPost2.Slug,
+            Title = DatabaseUnitTestData.TechPost2.SlugNavigation.Title
         };
 
-        public static PostPage MostRecentPostsPost3 = new PostPage
+        public static PostPage TechPostPage3 = new PostPage
         {
-            Slug = "most-recent-3",
-            DateCreated = DateTime.MaxValue.AddYears(-1).AddDays(3),
-            DateModified = DateTime.MaxValue.AddYears(-1).AddDays(3),
-            Title = "Most Recent",
-            Name = "Most Recent 3",
-            Keywords = "most recent, 3",
-            Description = "The most recent posts, 3.",
-            Body = "This post is the most recent one.",
-            IsDraft = false
+            Slug = DatabaseUnitTestData.TechPost3.Slug,
+            Title = DatabaseUnitTestData.TechPost3.SlugNavigation.Title,
+            DateCreated = DatabaseUnitTestData.TechPost3.DateCreated,
+            DateModified = DatabaseUnitTestData.TechPost3.DateModified,
+            Name = DatabaseUnitTestData.TechPost3.SlugNavigation.Name,
+            Keywords = DatabaseUnitTestData.TechPost3.SlugNavigation.Keywords,
+            Description = DatabaseUnitTestData.TechPost3.SlugNavigation.Description,
+            Body = DatabaseUnitTestData.TechPost3.SlugNavigation.Body,
+            IsDraft = DatabaseUnitTestData.TechPost3.IsDraft,
         };
 
-        public static CategoryPage MostRecentPostsCategory = new CategoryPage
+        public static PostInfo TechPostInfo3 = new PostInfo
         {
-            Slug = "most-recent",
-            UseDateCreatedForSorting = true,
-            Description = "Technology category description",
-            Keywords = "tech, gadgets, computers",
-            Body = "This is the body of the tech category.",
-            Name = "Tech",
-            Title = "Tech Title",
-            ParentCategories = [KeyValuePair.Create(IndexCategory.Slug, IndexCategory.Name)]
+            Body = DatabaseUnitTestData.TechPost3.SlugNavigation.Body,
+            Description = DatabaseUnitTestData.TechPost3.SlugNavigation.Description,
+            Id = DatabaseUnitTestData.TechPost3.Id,
+            IsDraft = DatabaseUnitTestData.TechPost3.IsDraft,
+            Keywords = DatabaseUnitTestData.TechPost3.SlugNavigation.Keywords,
+            Name = DatabaseUnitTestData.TechPost3.SlugNavigation.Name,
+            ParentId = DatabaseUnitTestData.TechPost3.ParentId,
+            Slug = DatabaseUnitTestData.TechPost3.Slug,
+            Title = DatabaseUnitTestData.TechPost3.SlugNavigation.Title
+        };
+
+        public static CategoryPage TechCategoryPage = new CategoryPage
+        {
+            Slug = DatabaseUnitTestData.TechCategory.SlugNavigation.Slug,
+            UseDateCreatedForSorting = DatabaseUnitTestData.TechCategory.UseDateCreatedForSorting,
+            Description = DatabaseUnitTestData.TechCategory.SlugNavigation.Description,
+            Keywords = DatabaseUnitTestData.TechCategory.SlugNavigation.Keywords,
+            Body = DatabaseUnitTestData.TechCategory.SlugNavigation.Body,
+            Name = DatabaseUnitTestData.TechCategory.SlugNavigation.Name,
+            Title = DatabaseUnitTestData.TechCategory.SlugNavigation.Title,
+            ParentCategories = [KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)]
+        };
+
+        public static CategoryInfo TechCategoryInfo = new CategoryInfo
+        {
+            Slug = DatabaseUnitTestData.TechCategory.Slug,
+            UseDateCreatedForSorting = DatabaseUnitTestData.TechCategory.UseDateCreatedForSorting,
+            Description = DatabaseUnitTestData.TechCategory.SlugNavigation.Description,
+            Keywords = DatabaseUnitTestData.TechCategory.SlugNavigation.Keywords,
+            Body = DatabaseUnitTestData.TechCategory.SlugNavigation.Body,
+            Name = DatabaseUnitTestData.TechCategory.SlugNavigation.Name,
+            Title = DatabaseUnitTestData.TechCategory.SlugNavigation.Title,
+            Id = DatabaseUnitTestData.TechCategory.CategoryId,
+            ParentId = DatabaseUnitTestData.TechCategory.ParentId
+        };
+
+        public static PostPage MostRecentPostsPostPage1 = new PostPage
+        {
+            Slug = DatabaseUnitTestData.MostRecentPostsPost1.Slug,
+            Title = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Title,
+            DateCreated = DatabaseUnitTestData.MostRecentPostsPost1.DateCreated,
+            DateModified = DatabaseUnitTestData.MostRecentPostsPost1.DateModified,
+            Name = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Name,
+            Keywords = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Keywords,
+            Description = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Description,
+            Body = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Body,
+            IsDraft = DatabaseUnitTestData.MostRecentPostsPost1.IsDraft,
+        };
+
+        public static PostInfo MostRecentPostsPostInfo1 = new PostInfo
+        {
+            Body = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Body,
+            Description = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Description,
+            Id = DatabaseUnitTestData.MostRecentPostsPost1.Id,
+            IsDraft = DatabaseUnitTestData.MostRecentPostsPost1.IsDraft,
+            Keywords = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Keywords,
+            Name = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Name,
+            ParentId = DatabaseUnitTestData.MostRecentPostsPost1.ParentId,
+            Slug = DatabaseUnitTestData.MostRecentPostsPost1.Slug,
+            Title = DatabaseUnitTestData.MostRecentPostsPost1.SlugNavigation.Title
+        };
+
+        public static PostPage MostRecentPostsPostPage2 = new PostPage
+        {
+            Slug = DatabaseUnitTestData.MostRecentPostsPost2.Slug,
+            Title = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Title,
+            DateCreated = DatabaseUnitTestData.MostRecentPostsPost2.DateCreated,
+            DateModified = DatabaseUnitTestData.MostRecentPostsPost2.DateModified,
+            Name = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Name,
+            Keywords = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Keywords,
+            Description = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Description,
+            Body = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Body,
+            IsDraft = DatabaseUnitTestData.MostRecentPostsPost2.IsDraft,
+        };
+
+        public static PostInfo MostRecentPostsPostInfo2 = new PostInfo
+        {
+            Body = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Body,
+            Description = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Description,
+            Id = DatabaseUnitTestData.MostRecentPostsPost2.Id,
+            IsDraft = DatabaseUnitTestData.MostRecentPostsPost2.IsDraft,
+            Keywords = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Keywords,
+            Name = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Name,
+            ParentId = DatabaseUnitTestData.MostRecentPostsPost2.ParentId,
+            Slug = DatabaseUnitTestData.MostRecentPostsPost2.Slug,
+            Title = DatabaseUnitTestData.MostRecentPostsPost2.SlugNavigation.Title
+        };
+
+        public static PostPage MostRecentPostsPostPage3 = new PostPage
+        {
+            Slug = DatabaseUnitTestData.MostRecentPostsPost3.Slug,
+            Title = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Title,
+            DateCreated = DatabaseUnitTestData.MostRecentPostsPost3.DateCreated,
+            DateModified = DatabaseUnitTestData.MostRecentPostsPost3.DateModified,
+            Name = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Name,
+            Keywords = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Keywords,
+            Description = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Description,
+            Body = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Body,
+            IsDraft = DatabaseUnitTestData.MostRecentPostsPost3.IsDraft,
+        };
+
+        public static PostInfo MostRecentPostsPostInfo3 = new PostInfo
+        {
+            Body = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Body,
+            Description = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Description,
+            Id = DatabaseUnitTestData.MostRecentPostsPost3.Id,
+            IsDraft = DatabaseUnitTestData.MostRecentPostsPost3.IsDraft,
+            Keywords = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Keywords,
+            Name = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Name,
+            ParentId = DatabaseUnitTestData.MostRecentPostsPost3.ParentId,
+            Slug = DatabaseUnitTestData.MostRecentPostsPost3.Slug,
+            Title = DatabaseUnitTestData.MostRecentPostsPost3.SlugNavigation.Title
+        };
+
+        public static CategoryPage MostRecentPostsCategoryPage = new CategoryPage
+        {
+            Slug = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Slug,
+            UseDateCreatedForSorting = DatabaseUnitTestData.MostRecentPostsCategory.UseDateCreatedForSorting,
+            Description = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Description,
+            Keywords = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Keywords,
+            Body = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Body,
+            Name = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Name,
+            Title = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Title,
+            ParentCategories = [KeyValuePair.Create(IndexCategoryPage.Slug, IndexCategoryPage.Name)]
+        };
+
+        public static CategoryInfo MostRecentPostsCategoryInfo = new CategoryInfo
+        {
+            Slug = DatabaseUnitTestData.MostRecentPostsCategory.Slug,
+            UseDateCreatedForSorting = DatabaseUnitTestData.MostRecentPostsCategory.UseDateCreatedForSorting,
+            Description = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Description,
+            Keywords = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Keywords,
+            Body = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Body,
+            Name = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Name,
+            Title = DatabaseUnitTestData.MostRecentPostsCategory.SlugNavigation.Title,
+            Id = DatabaseUnitTestData.MostRecentPostsCategory.CategoryId,
+            ParentId = DatabaseUnitTestData.MostRecentPostsCategory.ParentId
         };
 
         /*
-        public static PostCategory IndexCategory = new PostCategory { CategoryId = 1, Slug = "", ParentId = null, UseDateCreatedForSorting = false, Description = "Index category description", Keywords = "Index category keywords", Body = "index body", CategoryName = "Index", Title = "Index Title" };
-        public static PostCategory BlogCategory = new PostCategory { CategoryId = 3, Slug = "blog", ParentId = 1, UseDateCreatedForSorting = false, Description = "Blog category description", Keywords = "blog, articles, updates", Body = "This is the body of the blog category.", CategoryName = "Blog", Title = "Blog Title" };
-        public static PostCategory WritingCategory = new PostCategory { CategoryId = 4, Slug = "writing", ParentId = 1, UseDateCreatedForSorting = true, Description = "Writing category description", Keywords = "writing, stories, fiction", Body = "This is the body of the writing category.", CategoryName = "Writing", Title = "Writing Title" };
-        public static PostCategory BrushCategory = new PostCategory { CategoryId = 5, Slug = "brush", ParentId = 3, UseDateCreatedForSorting = false, Description = "Brush category description", Keywords = "brush, art, painting", Body = "This is the body of the brush category.", CategoryName = "Brush", Title = "Brush Title" };
-        public static Post BlogPost1 = new Post { Slug = "blog-post-1", Title = "Starting Your Blog", ParentId = 3, DateCreated = Dates.CurrentDateTime.AddDays(-15), DateModified = Dates.CurrentDateTime.AddDays(-7), Name = "Blog Post 1", Keywords = "blog, start, guide", Description = "A guide to starting your own blog.", Body = "This post guides you through the steps to start your own blog and make it successful." };
-        public static Post BlogPost2 = new Post { Slug = "blog-post-2", Title = "Content Ideas for Blogging", ParentId = 3, DateCreated = Dates.CurrentDateTime.AddDays(-25), DateModified = Dates.CurrentDateTime.AddDays(-12), Name = "Blog Post 2", Keywords = "blog, content, ideas", Description = "Generate great content ideas for your blog.", Body = "In this post, we share a variety of content ideas to keep your blog fresh and engaging." };
-        public static Post BlogPost3 = new Post { Slug = "blog-post-3", Title = "SEO Tips for Bloggers", ParentId = 3, DateCreated = Dates.CurrentDateTime.AddDays(-35), DateModified = Dates.CurrentDateTime.AddDays(-20), Name = "Blog Post 3", Keywords = "SEO, blog, tips", Description = "SEO tips to help your blog rank higher.", Body = "This post provides SEO tips specifically aimed at bloggers to help them improve their search engine rankings." };
-        public static Post WritingPost1 = new Post { Slug = "writing-post-1", Title = "Developing Characters", ParentId = 4, DateCreated = Dates.CurrentDateTime.AddDays(-12), DateModified = Dates.CurrentDateTime.AddDays(-8), Name = "Writing Post 1", Keywords = "writing, characters, fiction", Description = "How to develop engaging characters.", Body = "This post dives into strategies for developing memorable and engaging characters in your writing." };
-        public static Post WritingPost2 = new Post { Slug = "writing-post-2", Title = "World-Building for Stories", ParentId = 4, DateCreated = Dates.CurrentDateTime.AddDays(-22), DateModified = Dates.CurrentDateTime.AddDays(-11), Name = "Writing Post 2", Keywords = "world-building, writing, fiction", Description = "Creating immersive worlds for your stories.", Body = "In this post, we explore the elements that go into creating immersive worlds for fictional stories." };
-        public static Post WritingPost3 = new Post { Slug = "writing-post-3", Title = "Overcoming Writer’s Block", ParentId = 4, DateCreated = Dates.CurrentDateTime.AddDays(-32), DateModified = Dates.CurrentDateTime.AddDays(-18), Name = "Writing Post 3", Keywords = "writer's block, writing tips", Description = "Tips for overcoming writer’s block.", Body = "This post provides actionable tips for writers struggling with writer’s block." };
-        public static Post BrushPost1 = new Post { Slug = "brush-post-1", Title = "Acrylic Painting Techniques", ParentId = 5, DateCreated = Dates.CurrentDateTime.AddDays(-18), DateModified = Dates.CurrentDateTime.AddDays(-10), Name = "Brush Post 1", Keywords = "acrylic painting, techniques", Description = "Techniques for working with acrylic paints.", Body = "This post explores a variety of acrylic painting techniques for beginners and experienced artists alike." };
-        public static Post BrushPost2 = new Post { Slug = "brush-post-2", Title = "Choosing the Right Brushes", ParentId = 5, DateCreated = Dates.CurrentDateTime.AddDays(-28), DateModified = Dates.CurrentDateTime.AddDays(-15), Name = "Brush Post 2", Keywords = "art brushes, painting, tools", Description = "How to choose the right brushes for your painting style.", Body = "This post helps artists choose the best brushes for different painting techniques and styles." };
-        public static Post BrushPost3 = new Post { Slug = "brush-post-3", Title = "Mixing Colors Effectively", ParentId = 5, DateCreated = Dates.CurrentDateTime.AddDays(-38), DateModified = Dates.CurrentDateTime.AddDays(-20), Name = "Brush Post 3", Keywords = "mixing colors, painting", Description = "Tips for mixing colors to achieve desired effects.", Body = "This post offers tips for artists looking to improve their color-mixing techniques." };
         public static Annotation Annotation1 = new Annotation() { AnnotationContent = "Annotation Content 1", EditorName = "JohnSmith", Id = "f3a5c3e2-166b-495a-827a-3314b82b130b", Slug = "tech-post-1" };
         public static Annotation Annotation2 = new Annotation() { AnnotationContent = "Annotation Content 2", EditorName = "JaneSmith", Id = "165e7c5b-c9db-405d-9f53-cef9b2f73d43", Slug = "tech-post-3" };
         public static Annotation Annotation3 = new Annotation() { AnnotationContent = "Annotation Content 3", EditorName = "LilithSmith", Id = "9f47620e-69a9-44d1-810b-3c54d16089b9", Slug = "blog-post-2" };

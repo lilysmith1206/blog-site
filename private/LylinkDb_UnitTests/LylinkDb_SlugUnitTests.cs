@@ -22,13 +22,13 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.NotNull(slugs);
 
-            Assert.Contains(UnitTestData.IndexPost1.Slug, slugs);
-            Assert.Contains(UnitTestData.TechPost1.Slug, slugs);
-            Assert.Contains(UnitTestData.TechPost2.Slug, slugs);
-            Assert.Contains(UnitTestData.TechPost3.Slug, slugs);
-            Assert.Contains(UnitTestData.MostRecentPostsPost1.Slug, slugs);
-            Assert.Contains(UnitTestData.MostRecentPostsPost2.Slug, slugs);
-            Assert.Contains(UnitTestData.MostRecentPostsPost3.Slug, slugs);
+            Assert.Contains(UnitTestData.IndexPostPage1.Slug, slugs);
+            Assert.Contains(UnitTestData.TechPostPage1.Slug, slugs);
+            Assert.Contains(UnitTestData.TechPostPage2.Slug, slugs);
+            Assert.Contains(UnitTestData.TechPostPage3.Slug, slugs);
+            Assert.Contains(UnitTestData.MostRecentPostsPostPage1.Slug, slugs);
+            Assert.Contains(UnitTestData.MostRecentPostsPostPage2.Slug, slugs);
+            Assert.Contains(UnitTestData.MostRecentPostsPostPage3.Slug, slugs);
         }
 
         [Fact]
@@ -42,9 +42,9 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.NotNull(slugs);
 
-            Assert.Contains(UnitTestData.IndexCategory.Slug, slugs);
-            Assert.Contains(UnitTestData.TechCategory.Slug, slugs);
-            Assert.Contains(UnitTestData.MostRecentPostsCategory.Slug, slugs);
+            Assert.Contains(UnitTestData.IndexCategoryPage.Slug, slugs);
+            Assert.Contains(UnitTestData.TechCategoryPage.Slug, slugs);
+            Assert.Contains(UnitTestData.MostRecentPostsCategoryPage.Slug, slugs);
         }
     }
 }
