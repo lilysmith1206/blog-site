@@ -83,7 +83,12 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 _ = repository.CreateCategory(new CategoryInfo
                 {
-                    Slug = UnitTestData.IndexPostPage1.Slug
+                    Slug = UnitTestData.IndexPostPage1.Slug,
+                    Body = string.Empty,
+                    Description = string.Empty,
+                    Keywords = string.Empty,
+                    Name = string.Empty,
+                    Title = string.Empty,
                 });
             });
         }
@@ -99,7 +104,12 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 _ = repository.CreateCategory(new CategoryInfo
                 {
-                    Slug = UnitTestData.IndexPostPage1.Slug
+                    Slug = UnitTestData.IndexPostPage1.Slug,
+                    Body = string.Empty,
+                    Description = string.Empty,
+                    Keywords = string.Empty,
+                    Name = string.Empty,
+                    Title = string.Empty,
                 });
             });
         }
@@ -176,6 +186,11 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
                 _ = repository.UpdateCategory(new CategoryInfo
                 {
                     Slug = "Non existent slug",
+                    Body = string.Empty,
+                    Description = string.Empty,
+                    Keywords = string.Empty,
+                    Name = string.Empty,
+                    Title = string.Empty,
                 });
             });
         }
