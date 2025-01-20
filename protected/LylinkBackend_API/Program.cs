@@ -54,6 +54,7 @@ namespace LylinkBackend
 
             builder.Services.AddTransient<IAnnotationRepository, AnnotationsRepository>();
             builder.Services.AddTransient<IPageRepository, PageRepository>();
+            builder.Services.AddTransient<IPageManagementRepository, PageManagementRepository>();
             builder.Services.AddTransient<IVisitAnalyticsRepository, VisitAnalyticsRepository>();
             builder.Services.AddTransient<ISlugRepository, SlugRepository>();
             builder.Services.AddTransient<IEmailService, EmailService>();

@@ -41,22 +41,34 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             const string Keywords = "new post keywords";
             const string Description = "new post description";
             const string Body = "new post body";
-            const bool isSortedByDateCreated = false;
+            const bool IsSortedByDateCreated = false;
             int parentId = UnitTestData.IndexCategoryInfo.Id;
 
-            int newPostId = repository.CreateCategory(Slug, Title, Name, Keywords, Description, Body, isSortedByDateCreated, parentId);
+            CategoryInfo newCategoryInfo = new CategoryInfo
+            {
+                Body = Body,
+                Description = Description,
+                UseDateCreatedForSorting = IsSortedByDateCreated,
+                Keywords = Keywords,
+                Name = Name,
+                ParentId = parentId,
+                Slug = Slug,
+                Title = Title
+            };
+
+            int newPostId = repository.CreateCategory(newCategoryInfo);
 
             CategoryInfo? post = repository.GetCategory(newPostId);
 
             Assert.NotNull(post);
 
-            Assert.Equal(Slug, post.Value.Slug);
-            Assert.Equal(Title, post.Value.Title);
-            Assert.Equal(Name, post.Value.Name);
-            Assert.Equal(Keywords, post.Value.Keywords);
-            Assert.Equal(Description, post.Value.Description);
-            Assert.Equal(Body, post.Value.Body);
-            Assert.Equal(isSortedByDateCreated, post.Value.UseDateCreatedForSorting);
+            Assert.Equal(Slug, post.Slug);
+            Assert.Equal(Title, post.Title);
+            Assert.Equal(Name, post.Name);
+            Assert.Equal(Keywords, post.Keywords);
+            Assert.Equal(Description, post.Description);
+            Assert.Equal(Body, post.Body);
+            Assert.Equal(IsSortedByDateCreated, post.UseDateCreatedForSorting);
             Assert.Equal(parentId, UnitTestData.IndexCategoryInfo.Id);
         }
 
@@ -69,7 +81,10 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.Throws<InvalidOperationException>(() =>
             {
-                _ = repository.CreateCategory(UnitTestData.IndexPostPage1.Slug, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, false, null);
+                _ = repository.CreateCategory(new CategoryInfo
+                {
+                    Slug = UnitTestData.IndexPostPage1.Slug
+                });
             });
         }
 
@@ -82,7 +97,10 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.Throws<InvalidOperationException>(() =>
             {
-                _ = repository.CreateCategory(UnitTestData.IndexCategoryPage.Slug, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, false, null);
+                _ = repository.CreateCategory(new CategoryInfo
+                {
+                    Slug = UnitTestData.IndexPostPage1.Slug
+                });
             });
         }
 
@@ -93,26 +111,30 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             IPageManagementRepository repository = new PageManagementRepository(context);
 
-            int updatedCategoryId = repository.UpdateCategory(
-                UnitTestData.IndexCategoryInfo.Slug,
-                UnitTestData.IndexCategoryInfo.Title + "A",
-                UnitTestData.IndexCategoryInfo.Name + "A",
-                UnitTestData.IndexCategoryInfo.Keywords + "A",
-                UnitTestData.IndexCategoryInfo.Description + "A",
-                UnitTestData.IndexCategoryInfo.Body + "A",
-                UnitTestData.IndexCategoryInfo.UseDateCreatedForSorting == false,
-                null);
+            CategoryInfo categoryInfo = new CategoryInfo
+            {
+                Slug = UnitTestData.IndexCategoryInfo.Slug,
+                Title = UnitTestData.IndexCategoryInfo.Title + "A",
+                Name = UnitTestData.IndexCategoryInfo.Name + "A",
+                Keywords = UnitTestData.IndexCategoryInfo.Keywords + "A",
+                Description = UnitTestData.IndexCategoryInfo.Description + "A",
+                Body = UnitTestData.IndexCategoryInfo.Body + "A",
+                UseDateCreatedForSorting = UnitTestData.IndexCategoryInfo.UseDateCreatedForSorting == false,
+                ParentId = null
+            };
+
+            int updatedCategoryId = repository.UpdateCategory(categoryInfo);
 
             CategoryInfo? post = repository.GetCategory(updatedCategoryId);
 
             Assert.NotNull(post);
 
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Title, post.Value.Title);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Name, post.Value.Name);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Keywords, post.Value.Keywords);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Description, post.Value.Description);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Body, post.Value.Body);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.UseDateCreatedForSorting, post.Value.UseDateCreatedForSorting);
+            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Title, post.Title);
+            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Name, post.Name);
+            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Keywords, post.Keywords);
+            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Description, post.Description);
+            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Body, post.Body);
+            Assert.NotEqual(UnitTestData.IndexCategoryInfo.UseDateCreatedForSorting, post.UseDateCreatedForSorting);
         }
 
         [Fact]
@@ -122,21 +144,24 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             IPageManagementRepository repository = new PageManagementRepository(context);
 
-            int updatedPostId = repository.UpdateCategory(
-                UnitTestData.MostRecentPostsCategoryInfo.Slug,
-                UnitTestData.MostRecentPostsCategoryInfo.Title,
-                UnitTestData.MostRecentPostsCategoryInfo.Name,
-                UnitTestData.MostRecentPostsCategoryInfo.Keywords,
-                UnitTestData.MostRecentPostsCategoryInfo.Description,
-                UnitTestData.MostRecentPostsCategoryInfo.Body,
-                UnitTestData.MostRecentPostsCategoryInfo.UseDateCreatedForSorting,
-                DatabaseUnitTestData.TechCategory.CategoryId);
+            CategoryInfo categoryInfo = new CategoryInfo
+            {
+                Slug = UnitTestData.MostRecentPostsCategoryInfo.Slug,
+                Title = UnitTestData.MostRecentPostsCategoryInfo.Title,
+                Name = UnitTestData.MostRecentPostsCategoryInfo.Name,
+                Keywords = UnitTestData.MostRecentPostsCategoryInfo.Keywords,
+                Description = UnitTestData.MostRecentPostsCategoryInfo.Description,
+                Body = UnitTestData.MostRecentPostsCategoryInfo.Body,
+                UseDateCreatedForSorting = UnitTestData.MostRecentPostsCategoryInfo.UseDateCreatedForSorting,
+                ParentId = DatabaseUnitTestData.TechCategory.CategoryId
+            };
 
-            CategoryInfo? category = repository.GetCategory(updatedPostId);
+            int updatedPostId = repository.UpdateCategory(categoryInfo);
+            CategoryInfo ? category = repository.GetCategory(updatedPostId);
 
             Assert.NotNull(category);
 
-            Assert.Equal(UnitTestData.TechCategoryInfo.Id, category.Value.ParentId);
+            Assert.Equal(UnitTestData.TechCategoryInfo.Id, category.ParentId);
         }
 
         [Fact]
@@ -148,7 +173,10 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.Throws<InvalidOperationException>(() =>
             {
-                _ = repository.UpdateCategory("nonexistent post slug", string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, false, null);
+                _ = repository.UpdateCategory(new CategoryInfo
+                {
+                    Slug = "Non existent slug",
+                });
             });
         }
     }

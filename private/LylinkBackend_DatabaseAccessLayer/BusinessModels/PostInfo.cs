@@ -1,6 +1,6 @@
 ﻿namespace LylinkBackend_DatabaseAccessLayer.BusinessModels
 {
-    public struct PostInfo
+    public class PostInfo
     {
         public int Id { get; set; }
 

@@ -91,17 +91,15 @@ function getSlugBody(slugBox) {
         return JSON.parse(response);
     })
     .then(data => {
-        console.log(data);
-
         document.getElementById('title').value = data.title;
         document.getElementById('keywords').value = data.keywords;
         document.getElementById('description').value = data.description;
-        document.getElementById('name').value = data.categoryName;
+        document.getElementById('name').value = data.name;
         document.getElementById('slug').value = data.slug;
         document.getElementById('parentCategoryBox').value = data.parentId;
         document.getElementById('useDateCreatedSorting').checked = data.useDateCreatedForSorting == true;
         document.getElementById('useDateCreatedSorting').value = data.useDateCreatedForSorting == true;
-        document.getElementById('categoryId').value = data.categoryId;
+        document.getElementById('id').value = data.id;
 
         document.getElementById('html').textContent = beautify.html(data.body, options);
         document.getElementById('rendered').innerHTML = data.body;

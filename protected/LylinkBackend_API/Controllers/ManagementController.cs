@@ -1,14 +1,13 @@
 ﻿using LylinkBackend_API.Models;
-using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkBackend_DatabaseAccessLayer.BusinessModels;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LylinkBackend_API.Controllers
 {
-    /*
     [ApiController]
     [Route("Management")]
-    public class ManagementController(IPageRepository postDatabase, ICategoryPageRepository categoryDatabase) : Controller
+    public class ManagementController(IPageManagementRepository pageManagementRepository) : Controller
     {
         [HttpGet("/management")]
         public IActionResult Management()
@@ -21,194 +20,97 @@ namespace LylinkBackend_API.Controllers
         {
             return base.View(nameof(Models.Categorizer), new Categorizer()
             {
-                CategoryLinks = categoryDatabase.GetAllCategories()
-                    .Where(category => category.CategoryId != 6)
-                    .Select(category => new PageLink { Id = category.CategoryId.ToString(), Name = category.CategoryName })
+                CategoryLinks = pageManagementRepository.GetAllCategories()
+                    .Where(category => category.Key != "6")
             });
         }
 
         [HttpGet("/publisher")]
         public IActionResult Publisher([FromQuery] bool? successfulPostSubmit)
         {
-            Dictionary<string, IEnumerable<PageLink>> categoryPostLinks = GetPostsForEachCategory();
-            IEnumerable<PageLink> categories = categoryDatabase.GetAllCategories()
-                .Select(category => new PageLink { Id = category.CategoryId.ToString(), Name = category.CategoryName });
+            Dictionary<string, IEnumerable<KeyValuePair<string, string>>> categoryAndChildPosts = GetPostsOrganizedByCategoryName();
 
             return base.View(nameof(Models.Publisher), new Publisher()
             {
                 NavigatedFromFormSubmit = successfulPostSubmit == true,
-                Categories = categories,
-                CategoryPosts = categoryPostLinks,
+                Categories = pageManagementRepository.GetAllCategories(),
+                CategoryPosts = categoryAndChildPosts,
             });
-        }
-
-        [HttpPost("/ping")]
-        public IActionResult Ping([FromBody] object body)
-        {
-            return Ok("yeah?");
         }
 
         [HttpGet("/getPostFromId")]
         public IActionResult GetSlugPost([FromQuery] int id)
         {
-            Post? post = postDatabase.GetPost(id);
+            PostInfo post = pageManagementRepository.GetPost(id);
 
-            if (post == null)
-            {
-                return StatusCode(404);
-            }
-
-            var remotePost = new RemotePost
-            {
-                Id = post.Id,
-                Slug = post.Slug,
-                Title = post.Title,
-                ParentId = post.ParentId,
-                Name = post.Name,
-                Keywords = post.Keywords,
-                Description = post.Description,
-                Body = post.Body,
-                IsDraft = post.IsDraft
-            };
-
-            return Ok(remotePost);
+            return Ok(post);
         }
 
         [HttpGet("/getPostCategoryFromId")]
         public IActionResult GetPostCategoryFromSlug([FromQuery] int categoryId)
         {
-            var category = categoryDatabase.GetCategoryFromId(categoryId);
+            CategoryInfo category = pageManagementRepository.GetCategory(categoryId);
 
-            if (category == null)
-            {
-                return StatusCode(404);
-            }
-
-            var postCategory = categoryDatabase.GetCategoryFromId(category.CategoryId);
-
-            var remotePost = new RemoteCategory
-            {
-                Slug = category.Slug,
-                Title = category.Title,
-                ParentId = postCategory?.ParentId,
-                CategoryName = category.CategoryName,
-                CategoryId = category.CategoryId,
-                Keywords = category.Keywords,
-                Description = category.Description,
-                Body = category.Body,
-                UseDateCreatedForSorting = category.UseDateCreatedForSorting
-            };
-
-            return Ok(remotePost);
+            return Ok(category);
         }
 
         [HttpPost("/savePost")]
-        public IActionResult SaveDraft([FromForm] RemotePost remotePost)
+        public IActionResult SaveDraft([FromForm] PostInfo remotePost)
         {
-            if (remotePost.Id == null)
-            {
-                return StatusCode(406);
-            }
-
-            Post? existingPost = postDatabase.GetPost(remotePost.Id.Value);
-            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-
-            DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
-
-            var post = new Post
-            {
-                Slug = remotePost.Slug ?? throw new ArgumentNullException("Slug is null!"),
-                DateModified = currentEasternTime,
-                DateCreated = existingPost == null ? currentEasternTime : existingPost.DateCreated,
-                Name = remotePost.Name ?? "Post not given a name.",
-                Title = remotePost.Title ?? "Post not given a title.",
-                ParentId = remotePost.ParentId,
-                Keywords = remotePost.Keywords ?? "Post not given keywords.",
-                Description = remotePost.Description ?? "Post not given a description.",
-                Body = remotePost.Body ?? "Post not given a body.",
-                IsDraft = remotePost.IsDraft ?? true,
-            };
-
             try
             {
-                if (existingPost != null)
+                if (pageManagementRepository.DoesPageWithSlugExist(remotePost.Slug))
                 {
-                    post.Id = remotePost.Id.Value;
-
-                    postDatabase.UpdatePost(post);
+                    pageManagementRepository.UpdatePost(remotePost);
                 }
                 else
                 {
-                    postDatabase.CreatePost(post);
+                    pageManagementRepository.CreatePost(remotePost);
                 }
 
                 return RedirectToAction("Publisher", "Management", new { successfulPostSubmit = true });
             }
             catch (Exception)
             {
-                return StatusCode(500, $"Issue adding/updating post {post.Name}");
+                return StatusCode(500, $"Issue adding/updating post {remotePost.Name}");
             }
         }
 
         [HttpPost("/saveCategory")]
-        public IActionResult SaveCategory([FromForm] RemoteCategory remoteCategory)
+        public IActionResult SaveCategory([FromForm] CategoryInfo remoteCategory)
         {
-            if (remoteCategory.Slug == null)
-            {
-                return StatusCode(406);
-            }
-
-            PostCategory? existingCategory = categoryDatabase.GetCategoryFromId(remoteCategory.CategoryId ?? -1);
-
-            var category = new PostCategory
-            {
-                Slug = remoteCategory.Slug,
-                CategoryName = remoteCategory.CategoryName ?? "Category not given a name.",
-                Title = remoteCategory.Title ?? "Category not given a title.",
-                ParentId = remoteCategory.ParentId,
-                Keywords = remoteCategory.Keywords ?? "Category not given keywords.",
-                Description = remoteCategory.Description ?? "Category not given a description.",
-                Body = remoteCategory.Body ?? "Category not given a body.",
-                UseDateCreatedForSorting = remoteCategory.UseDateCreatedForSorting ?? false,
-            };
-
             try
             {
-                if (existingCategory != null)
+                if (pageManagementRepository.DoesPageWithSlugExist(remoteCategory.Slug))
                 {
-                    category.CategoryId = existingCategory.CategoryId;
-
-                    categoryDatabase.UpdateCategory(category);
+                    pageManagementRepository.UpdateCategory(remoteCategory);
                 }
                 else
                 {
-                    categoryDatabase.CreateCategory(category);
+                    pageManagementRepository.CreateCategory(remoteCategory);
                 }
 
                 return RedirectToAction("Categorizer", "Management", new { successfulPostSubmit = true });
             }
             catch (Exception)
             {
-                return StatusCode(500, $"Issue adding/updating post {category.CategoryName}");
+                return StatusCode(500, $"Issue adding/updating post {remoteCategory.Name}");
             }
         }
 
-        private Dictionary<string, IEnumerable<PageLink>> GetPostsForEachCategory()
+        private Dictionary<string, IEnumerable<KeyValuePair<string, string>>> GetPostsOrganizedByCategoryName()
         {
-            Dictionary<string, IEnumerable<PageLink>> categoryPostLinks = [];
+            Dictionary<string, IEnumerable<KeyValuePair<string, string>>> categoryAndPosts = [];
 
-            IEnumerable<PostCategory> categories = categoryDatabase.GetAllCategories();
-
-            foreach (PostCategory category in categories)
+            IEnumerable<KeyValuePair<int, string>> categories = pageManagementRepository.GetAllCategories()
+                .Select(category => KeyValuePair.Create(int.Parse(category.Key), category.Value));
+            
+            foreach (KeyValuePair<int, string> category in categories)
             {
-                IEnumerable<PageLink> postsUnderCategory = postDatabase.GetAllPostsWithParentId(category.CategoryId)
-                    .Select(post => new PageLink { Id = post.Id.ToString(), Name = post.Name });
-
-                categoryPostLinks.Add(category.CategoryName, postsUnderCategory);
+                categoryAndPosts.Add(category.Value, pageManagementRepository.GetAllPosts(category.Key));
             }
 
-            return categoryPostLinks;
+            return categoryAndPosts;
         }
     }
-    */
 }

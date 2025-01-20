@@ -4,7 +4,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 {
     public interface IPageManagementRepository
     {
-        public IEnumerable<KeyValuePair<string, string>> GetAllPosts();
+        public IEnumerable<KeyValuePair<string, string>> GetAllPosts(int? parentId = null);
 
         public IEnumerable<KeyValuePair<string, string>> GetAllCategories();
 
@@ -12,44 +12,14 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public CategoryInfo GetCategory(int id);
 
-        public int CreatePost(
-            string slug,
-            string title,
-            string name,
-            string keywords,
-            string description,
-            string body,
-            bool isDraft,
-            int? parentId);
+        public bool DoesPageWithSlugExist(string slug);
 
-        public int UpdatePost(
-            string slug,
-            string title,
-            string name,
-            string keywords,
-            string description,
-            string body,
-            bool isDraft,
-            int? parentId);
+        public int CreatePost(PostInfo post);
 
-        public int CreateCategory(
-            string slug,
-            string title,
-            string name,
-            string keywords,
-            string description,
-            string body,
-            bool isSortingPostsByDateCreated,
-            int? parentId);
+        public int UpdatePost(PostInfo post);
 
-        public int UpdateCategory(
-            string slug,
-            string title,
-            string name,
-            string keywords,
-            string description,
-            string body,
-            bool isSortingPostsByDateCreated,
-            int? parentId);
+        public int CreateCategory(CategoryInfo categoryInfo);
+
+        public int UpdateCategory(CategoryInfo categoryInfo);
     }
 }

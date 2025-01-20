@@ -13,11 +13,17 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 .Select(category => KeyValuePair.Create(category.CategoryId.ToString(), category.SlugNavigation.Name));
         }
 
-        public IEnumerable<KeyValuePair<string, string>> GetAllPosts()
+        public IEnumerable<KeyValuePair<string, string>> GetAllPosts(int? parentId = null)
         {
             return context.Posts
+                .Where(post => parentId == null || post.ParentId == parentId)
                 .Include(post => post.SlugNavigation)
                 .Select(post => KeyValuePair.Create(post.Id.ToString(), post.SlugNavigation.Name));
+        }
+
+        public bool DoesPageWithSlugExist(string slug)
+        {
+            return context.Pages.Where(page => page.Slug == slug).Any();
         }
 
         public CategoryInfo GetCategory(int id)
@@ -72,24 +78,24 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             };
         }
 
-        public int CreatePost(string slug, string title, string name, string keywords, string description, string body, bool isDraft, int? parentId)
+        public int CreatePost(PostInfo post)
         {
-            Page? existingPage = context.Pages.SingleOrDefault(page => page.Slug == slug);
-            Post? existingPost = context.Posts.SingleOrDefault(post => post.Slug == slug);
+            Page? existingPage = context.Pages.SingleOrDefault(dbPage => dbPage.Slug == post.Slug);
+            Post? existingPost = context.Posts.SingleOrDefault(dbPost => dbPost.Slug == post.Slug);
 
             if (existingPage is not null || existingPost is not null)
             {
-                throw new InvalidOperationException($"Page or post with slug {slug} already exists.");
+                throw new InvalidOperationException($"Page or post with slug {post.Slug} already exists.");
             }
 
             Page postPage = new Page()
             {
-                Slug = slug,
-                Body = body,
-                Description = description,
-                Keywords = keywords,
-                Name = name,
-                Title = title
+                Slug = post.Slug,
+                Body = post.Body,
+                Description = post.Description,
+                Keywords = post.Keywords,
+                Name = post.Name,
+                Title = post.Title
             };
 
             context.Pages.Add(postPage);
@@ -99,69 +105,69 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
             DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 
-            Post post = new Post()
+            Post dbPost = new Post()
             {
-                Slug = slug,
+                Slug = post.Slug,
                 DateCreated = currentEasternTime,
                 DateModified = currentEasternTime,
-                IsDraft = isDraft,
-                ParentId = parentId
+                IsDraft = post.IsDraft,
+                ParentId = post.ParentId
             };
 
-            context.Posts.Add(post);
+            context.Posts.Add(dbPost);
 
             context.SaveChanges();
 
-            return context.Posts.Single(post => post.Slug == slug).Id;
+            return context.Posts.Single(dbPost => dbPost.Slug == post.Slug).Id;
         }
 
-        public int UpdatePost(string slug, string title, string name, string keywords, string description, string body, bool isDraft, int? parentId)
+        public int UpdatePost(PostInfo post)
         {
-            Page? existingPage = context.Pages.SingleOrDefault(page => page.Slug == slug);
-            Post? existingPost = context.Posts.SingleOrDefault(post => post.Slug == slug);
+            Page? existingPage = context.Pages.SingleOrDefault(dbPage => dbPage.Slug == post.Slug);
+            Post? existingPost = context.Posts.SingleOrDefault(dbPost => dbPost.Slug == post.Slug);
 
             if (existingPage is null || existingPost is null)
             {
-                throw new InvalidOperationException($"Page or post with slug {slug} does not exist.");
+                throw new InvalidOperationException($"Page or post with slug {post.Slug} does not exist.");
             }
 
-            existingPage.Body = body;
-            existingPage.Description = description;
-            existingPage.Keywords = keywords;
-            existingPage.Name = name;
-            existingPage.Title = title;
+            existingPage.Body = post.Body;
+            existingPage.Description = post.Description;
+            existingPage.Keywords = post.Keywords;
+            existingPage.Name = post.Name;
+            existingPage.Title = post.Title;
 
             TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
             DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 
             existingPost.DateModified = currentEasternTime;
-            existingPost.IsDraft = isDraft;
-            existingPost.ParentId = parentId;
+            existingPost.IsDraft = post.IsDraft;
+            existingPost.ParentId = post.ParentId;
 
             context.SaveChanges();
 
-            return context.Posts.Single(post => post.Slug == slug).Id;
+            return context.Posts.Single(dbPost => dbPost.Slug == post.Slug).Id;
         }
 
 
-        public int CreateCategory(string slug, string title, string name, string keywords, string description, string body, bool isSortingPostsByDateCreated, int? parentId)
+        public int CreateCategory(CategoryInfo category)
         {
-            Page? existingPage = context.Pages.SingleOrDefault(page => page.Slug == slug);
-            PostCategory? existingCategory = context.PostCategories.SingleOrDefault(category => category.Slug == slug);
+            Page? existingPage = context.Pages.SingleOrDefault(dbPage => dbPage.Slug == category.Slug);
+            PostCategory? existingCategory = context.PostCategories.SingleOrDefault(dbCategory => dbCategory.Slug == category.Slug);
 
             if (existingPage is not null || existingCategory is not null)
             {
-                throw new InvalidOperationException($"Page or post with slug {slug} already exists.");
+                throw new InvalidOperationException($"Page or post with slug {category.Slug} already exists.");
             }
 
             Page categoryPage = new Page()
             {
-                Slug = slug,
-                Body = body,
-                Description = description,
-                Keywords = keywords,
-                Name = name,
-                Title = title
+                Slug = category.Slug,
+                Body = category.Body,
+                Description = category.Description,
+                Keywords = category.Keywords,
+                Name = category.Name,
+                Title = category.Title
             };
 
             context.Pages.Add(categoryPage);
@@ -171,45 +177,45 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
             TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
             DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 
-            PostCategory category = new()
+            PostCategory dbCategory = new()
             {
-                Slug = slug,
-                ParentId = parentId,
-                UseDateCreatedForSorting = isSortingPostsByDateCreated
+                Slug = category.Slug,
+                ParentId = category.ParentId,
+                UseDateCreatedForSorting = category.UseDateCreatedForSorting
             };
 
-            context.PostCategories.Add(category);
+            context.PostCategories.Add(dbCategory);
 
             context.SaveChanges();
 
-            return context.PostCategories.Single(category => category.Slug == slug).CategoryId;
+            return context.PostCategories.Single(dbCategory => dbCategory.Slug == category.Slug).CategoryId;
         }
 
-        public int UpdateCategory(string slug, string title, string name, string keywords, string description, string body, bool isSortingPostsByDateCreated, int? parentId)
+        public int UpdateCategory(CategoryInfo category)
         {
-            Page? existingPage = context.Pages.SingleOrDefault(page => page.Slug == slug);
-            PostCategory? existingCategory = context.PostCategories.SingleOrDefault(category => category.Slug == slug);
+            Page? existingPage = context.Pages.SingleOrDefault(page => page.Slug == category.Slug);
+            PostCategory? existingCategory = context.PostCategories.SingleOrDefault(dbCategory => dbCategory.Slug == category.Slug);
 
             if (existingPage is null || existingCategory is null)
             {
-                throw new InvalidOperationException($"Page or post with slug {slug} does not exist.");
+                throw new InvalidOperationException($"Page or post with slug {category.Slug} does not exist.");
             }
 
-            existingPage.Body = body;
-            existingPage.Description = description;
-            existingPage.Keywords = keywords;
-            existingPage.Name = name;
-            existingPage.Title = title;
+            existingPage.Body = category.Body;
+            existingPage.Description = category.Description;
+            existingPage.Keywords = category.Keywords;
+            existingPage.Name = category.Name;
+            existingPage.Title = category.Title;
 
             TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
             DateTime currentEasternTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 
-            existingCategory.ParentId = parentId;
-            existingCategory.UseDateCreatedForSorting = isSortingPostsByDateCreated;
+            existingCategory.ParentId = category.ParentId;
+            existingCategory.UseDateCreatedForSorting = category.UseDateCreatedForSorting;
 
             context.SaveChanges();
 
-            return context.PostCategories.Single(category => category.Slug == slug).CategoryId;
+            return context.PostCategories.Single(dbCategory => dbCategory.Slug == category.Slug).CategoryId;
         }
 
     }
