@@ -3,7 +3,7 @@ using MySqlConnector;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
-    internal class DatabaseVersionService(LylinkdbContext context) : IDatabaseVersionService
+    public class DatabaseVersionService(LylinkdbContext context) : IDatabaseVersionService
     {
         public string? GetDatabaseVersion()
         {

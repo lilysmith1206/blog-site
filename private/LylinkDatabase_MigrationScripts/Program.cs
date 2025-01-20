@@ -16,7 +16,7 @@ namespace LylinkDatabase_MigrationScript
                 ?? throw new NullReferenceException("Can't retrieve maria db connection string.");
 
             LylinkdbContext context = new LylinkdbContext(mariaDbConnection);
-            IDatabaseVersionService database = new PageRepository(context);
+            IDatabaseVersionService database = new DatabaseVersionService(context);
 
             bool successfulParse = int.TryParse(database.GetDatabaseVersion(), out int dbVersion);
 
