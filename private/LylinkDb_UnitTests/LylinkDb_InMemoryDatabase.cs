@@ -1,7 +1,7 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LylinkDb_UnitTests
+namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 {
     public static class LylinkDb_InMemoryDatabase
     {

@@ -126,6 +126,17 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
                 Page databasePage = databaseCategory.SlugNavigation;
 
+                IEnumerable<Post> posts = databaseCategory.Posts.Where(post => post.IsDraft == false);
+
+                posts = postSortingMethod switch
+                {
+                    BusinessModels.PostSortingMethod.ByDateCreatedAscending => posts.OrderBy(post => post.DateCreated),
+                    BusinessModels.PostSortingMethod.ByDateCreatedDescending => posts.OrderByDescending(post => post.DateCreated),
+                    BusinessModels.PostSortingMethod.ByDateModifiedAscending => posts.OrderBy(post => post.DateModified),
+                    BusinessModels.PostSortingMethod.ByDateModifiedDescending => posts.OrderByDescending(post => post.DateModified),
+                    _ => throw new NotSupportedException($"Sorting method")
+                };
+
                 CategoryPage categoryPage = new CategoryPage
                 {
                     Body = databasePage.Body,
@@ -134,7 +145,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                     Name = databasePage.Name,
                     ParentCategories = parents,
                     ChildrenCategories = databaseCategory.InverseParent.Select(category => KeyValuePair.Create(category.Slug, category.SlugNavigation.Name)),
-                    Posts = databaseCategory.Posts.Where(post => post.IsDraft == false).Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name)),
+                    Posts = posts.Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name)),
                     Slug = databasePage.Slug,
                     Title = databasePage.Title,
                     PostSortingMethod = postSortingMethod
