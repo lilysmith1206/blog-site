@@ -1,4 +1,6 @@
-﻿namespace LylinkBackend_API.Models
+﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+
+namespace LylinkBackend_API.Models
 {
     public struct PagePost
     {
@@ -6,7 +8,7 @@
 
         public DateTime DateUpdated { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> Parents { get; set; }
+        public IEnumerable<PageLink> Parents { get; set; }
 
         public string PageName { get; set; }
 

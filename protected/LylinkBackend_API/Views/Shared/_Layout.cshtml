@@ -1,4 +1,5 @@
 ﻿@using LylinkBackend_API.Models
+@using LylinkBackend_DatabaseAccessLayer.BusinessModels
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 
 <!DOCTYPE html>
@@ -51,11 +52,11 @@
                 <div class="breadcrumb">
                     <ul>
                         @{
-                            IEnumerable<KeyValuePair<string, string>> parentCategories = (IEnumerable<KeyValuePair<string, string>>?)ViewData["ParentCategories"] ?? Array.Empty<KeyValuePair<string, string>>();
+                            IEnumerable<PageLink> parentCategories = (IEnumerable<PageLink>?)ViewData["ParentCategories"] ?? Array.Empty<PageLink>();
                             
-                            foreach (KeyValuePair<string, string> parentCategory in parentCategories)
+                            foreach (PageLink parentCategory in parentCategories)
                             {
-                                <li><a href="@parentCategory.Key">@parentCategory.Value.ToLower()</a></li>
+                                <li><a href="@parentCategory.Slug" title="@parentCategory.Description">@parentCategory.Name.ToLower()</a></li>
                             }
                         }
                     </ul>

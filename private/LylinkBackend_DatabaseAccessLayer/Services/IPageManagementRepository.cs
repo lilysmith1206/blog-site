@@ -4,9 +4,9 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 {
     public interface IPageManagementRepository
     {
-        public IEnumerable<KeyValuePair<string, string>> GetAllPosts(int? parentId = null);
+        public IEnumerable<PostInfo> GetAllPosts(string? parentSlug = null);
 
-        public IEnumerable<KeyValuePair<string, string>> GetAllCategories();
+        public IEnumerable<CategoryInfo> GetAllCategories();
 
         public PostInfo GetPost(int id);
 

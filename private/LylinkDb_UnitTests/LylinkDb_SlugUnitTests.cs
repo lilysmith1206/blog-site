@@ -15,13 +15,12 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.NotNull(slugs);
 
-            Assert.Contains(UnitTestData.IndexPostPage1.Slug, slugs);
-            Assert.Contains(UnitTestData.TechPostPage1.Slug, slugs);
-            Assert.Contains(UnitTestData.TechPostPage2.Slug, slugs);
-            Assert.Contains(UnitTestData.TechPostPage3.Slug, slugs);
-            Assert.Contains(UnitTestData.MostRecentPostsPostPage1.Slug, slugs);
-            Assert.Contains(UnitTestData.MostRecentPostsPostPage2.Slug, slugs);
-            Assert.Contains(UnitTestData.MostRecentPostsPostPage3.Slug, slugs);
+            IEnumerable<string> databaseSlugs = DatabaseUnitTestData.Posts.Select(post => post.Slug);
+
+            foreach (string databaseSlug in databaseSlugs)
+            {
+                Assert.Contains(databaseSlug, slugs);
+            }
         }
 
         [Fact]
@@ -35,9 +34,12 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.NotNull(slugs);
 
-            Assert.Contains(UnitTestData.IndexCategoryPage.Slug, slugs);
-            Assert.Contains(UnitTestData.TechCategoryPage.Slug, slugs);
-            Assert.Contains(UnitTestData.MostRecentPostsCategoryPage.Slug, slugs);
+            IEnumerable<string> databaseSlugs = DatabaseUnitTestData.Categories.Select(post => post.Slug);
+
+            foreach (string databaseSlug in databaseSlugs)
+            {
+                Assert.Contains(databaseSlug, slugs);
+            }
         }
     }
 }

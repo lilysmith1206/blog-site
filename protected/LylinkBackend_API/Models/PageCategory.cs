@@ -1,12 +1,14 @@
-﻿namespace LylinkBackend_API.Models
+﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+
+namespace LylinkBackend_API.Models
 {
     public struct PageCategory
     {
-        public IEnumerable<KeyValuePair<string, string>> ParentCategories { get; set; }
+        public IEnumerable<PageLink> ParentCategories { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> SubCategories { get; set; }
+        public IEnumerable<PageLink> SubCategories { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> Posts { get; set; }
+        public IEnumerable<PageLink> Posts { get; set; }
 
         public string PageName { get; set; }
 

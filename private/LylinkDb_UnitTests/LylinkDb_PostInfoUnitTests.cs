@@ -1,4 +1,6 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+using LylinkBackend_DatabaseAccessLayer.Mappers;
+using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
 
 namespace LylinkBackend_DatabaseAccessLayer_UnitTests
@@ -22,13 +24,12 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
         public static IEnumerable<object[]> GetPostFromIdUnitTestData()
         {
-            yield return [DatabaseUnitTestData.IndexPost1.Id, UnitTestData.IndexPostInfo1];
-            yield return [DatabaseUnitTestData.TechPost1.Id, UnitTestData.TechPostInfo1];
-            yield return [DatabaseUnitTestData.TechPost2.Id, UnitTestData.TechPostInfo2];
-            yield return [DatabaseUnitTestData.TechPost3.Id, UnitTestData.TechPostInfo3];
-            yield return [DatabaseUnitTestData.MostRecentPostsPost1.Id, UnitTestData.MostRecentPostsPostInfo1];
-            yield return [DatabaseUnitTestData.MostRecentPostsPost2.Id, UnitTestData.MostRecentPostsPostInfo2];
-            yield return [DatabaseUnitTestData.MostRecentPostsPost3.Id, UnitTestData.MostRecentPostsPostInfo3];
+            foreach (Post post in DatabaseUnitTestData.Posts)
+            {
+                post.Map(out PostInfo postInfo);
+
+                yield return [post.Id, postInfo];
+            }
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             const string Description = "new post description";
             const string Body = "new post body";
             const bool IsDraft = false;
-            int parentId = UnitTestData.IndexCategoryInfo.Id;
+            int parentId = DatabaseUnitTestData.IndexCategory.CategoryId;
 
             PostInfo newPostInfo = new PostInfo
             {
@@ -71,7 +72,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             Assert.Equal(Description, post.Description);
             Assert.Equal(Body, post.Body);
             Assert.Equal(IsDraft, post.IsDraft);
-            Assert.Equal(parentId, UnitTestData.IndexCategoryInfo.Id);
+            Assert.Equal(parentId, DatabaseUnitTestData.IndexCategory.CategoryId);
         }
 
         [Fact]
@@ -85,7 +86,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 _ = repository.CreatePost(new PostInfo
                 {
-                    Slug = UnitTestData.IndexPostInfo1.Slug
+                    Slug = DatabaseUnitTestData.IndexPost1.Slug
                 });
             });
         }
@@ -101,7 +102,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 _ = repository.CreatePost(new PostInfo
                 {
-                    Slug = UnitTestData.IndexPostInfo1.Slug
+                    Slug = DatabaseUnitTestData.IndexPost1.Slug
                 });
             });
         }
@@ -113,15 +114,23 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             IPageManagementRepository repository = new PageManagementRepository(context);
 
+            string slug = DatabaseUnitTestData.IndexPost1.Slug;
+            string title = DatabaseUnitTestData.IndexPost1.SlugNavigation.Title;
+            string name = DatabaseUnitTestData.IndexPost1.SlugNavigation.Name;
+            string keywords = DatabaseUnitTestData.IndexPost1.SlugNavigation.Keywords;
+            string description = DatabaseUnitTestData.IndexPost1.SlugNavigation.Description;
+            string body = DatabaseUnitTestData.IndexPost1.SlugNavigation.Body;
+            bool isDraft = DatabaseUnitTestData.IndexPost1.IsDraft;
+
             PostInfo postInfo = new PostInfo
             {
-                Slug = UnitTestData.IndexPostInfo1.Slug,
-                Title = UnitTestData.IndexPostInfo1.Title + "A",
-                Name = UnitTestData.IndexPostInfo1.Name + "A",
-                Keywords = UnitTestData.IndexPostInfo1.Keywords + "A",
-                Description = UnitTestData.IndexPostInfo1.Description + "A",
-                Body = UnitTestData.IndexPostInfo1.Body + "A",
-                IsDraft = UnitTestData.IndexPostInfo1.IsDraft == false,
+                Slug = slug,
+                Title = title + "A",
+                Name = name + "A",
+                Keywords = keywords + "A",
+                Description = description + "A",
+                Body = body + "A",
+                IsDraft = isDraft == false,
                 ParentId = DatabaseUnitTestData.IndexCategory.CategoryId
             };
 
@@ -130,12 +139,12 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.NotNull(post);
 
-            Assert.NotEqual(UnitTestData.IndexPostInfo1.Title, post.Title);
-            Assert.NotEqual(UnitTestData.IndexPostInfo1.Name, post.Name);
-            Assert.NotEqual(UnitTestData.IndexPostInfo1.Keywords, post.Keywords);
-            Assert.NotEqual(UnitTestData.IndexPostInfo1.Description, post.Description);
-            Assert.NotEqual(UnitTestData.IndexPostInfo1.Body, post.Body);
-            Assert.NotEqual(UnitTestData.IndexPostInfo1.IsDraft, post.IsDraft);
+            Assert.NotEqual(title, post.Title);
+            Assert.NotEqual(name, post.Name);
+            Assert.NotEqual(keywords, post.Keywords);
+            Assert.NotEqual(description, post.Description);
+            Assert.NotEqual(body, post.Body);
+            Assert.NotEqual(isDraft, post.IsDraft);
         }
 
         [Fact]
@@ -145,15 +154,23 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             IPageManagementRepository repository = new PageManagementRepository(context);
 
+            string slug = DatabaseUnitTestData.IndexPost1.Slug;
+            string title = DatabaseUnitTestData.IndexPost1.SlugNavigation.Title;
+            string name = DatabaseUnitTestData.IndexPost1.SlugNavigation.Name;
+            string keywords = DatabaseUnitTestData.IndexPost1.SlugNavigation.Keywords;
+            string description = DatabaseUnitTestData.IndexPost1.SlugNavigation.Description;
+            string body = DatabaseUnitTestData.IndexPost1.SlugNavigation.Body;
+            bool isDraft = DatabaseUnitTestData.IndexPost1.IsDraft;
+
             PostInfo postInfo = new PostInfo
             {
-                Slug = UnitTestData.IndexPostInfo1.Slug,
-                Title = UnitTestData.IndexPostInfo1.Title,
-                Name = UnitTestData.IndexPostInfo1.Name,
-                Keywords = UnitTestData.IndexPostInfo1.Keywords,
-                Description = UnitTestData.IndexPostInfo1.Description,
-                Body = UnitTestData.IndexPostInfo1.Body,
-                IsDraft = UnitTestData.IndexPostInfo1.IsDraft,
+                Slug = slug,
+                Title = title,
+                Name = name,
+                Keywords = keywords,
+                Description = description,
+                Body = body,
+                IsDraft = isDraft,
                 ParentId = DatabaseUnitTestData.TechCategory.CategoryId
             };
 
@@ -162,7 +179,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.NotNull(post);
 
-            Assert.NotEqual(UnitTestData.IndexPostInfo1.ParentId, post.ParentId);
+            Assert.NotEqual(DatabaseUnitTestData.IndexPost1.ParentId, post.ParentId);
         }
 
         [Fact]

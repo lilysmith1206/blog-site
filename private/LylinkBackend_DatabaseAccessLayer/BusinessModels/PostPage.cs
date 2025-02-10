@@ -6,7 +6,7 @@
 
         public string Title;
 
-        public IEnumerable<KeyValuePair<string, string>> Parents;
+        public IEnumerable<PageLink> Parents;
 
         public DateTime DateModified;
 

@@ -14,11 +14,11 @@
 
         public string Body;
 
-        public IEnumerable<KeyValuePair<string, string>> ParentCategories;
+        public IEnumerable<PageLink> ParentCategories;
 
-        public IEnumerable<KeyValuePair<string, string>> ChildrenCategories;
+        public IEnumerable<PageLink> ChildrenCategories;
 
-        public IEnumerable<KeyValuePair<string, string>> Posts;
+        public IEnumerable<PageLink> Posts;
 
         public PostSortingMethod PostSortingMethod;
     }

@@ -1,4 +1,5 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+using LylinkBackend_DatabaseAccessLayer.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,31 +9,14 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
     {
         private readonly PostCategory IndexCategory = context.PostCategories.Single(category => category.Slug == "/");
 
-        public IEnumerable<KeyValuePair<string, string>> GetRecentlyUpdatedPostInfos(int amount)
+        public IEnumerable<PageLink> GetRecentlyUpdatedPostInfos(int amount)
         {
             return context.Posts
                 .OrderByDescending(post => post.DateModified)
                 .Where(post => post.IsDraft == false)
                 .Take(amount)
                 .Include(post => post.SlugNavigation)
-                .Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name));
-        }
-
-        public PostPage? GetPost(int id)
-        {
-            Post? databasePost = context.Posts
-                .Where(post => post.Id == id)
-                .Include(post => post.SlugNavigation)
-                .Include(post => post.Parent)
-                    .ThenInclude(parent => parent!.SlugNavigation)
-                .SingleOrDefault();
-
-            if (databasePost == null)
-            {
-                return null;
-            }
-
-            return ConvertPostToPostPage(databasePost);
+                .Select(post => new PageLink { Description = post.SlugNavigation.Description, Name = post.SlugNavigation.Name, Slug = post.Slug });
         }
 
         public PostPage? GetPost(string slug)
@@ -49,50 +33,11 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 return null;
             }
 
-            return ConvertPostToPostPage(databasePost);
-        }
+            IEnumerable<PageLink> parents = GetParentCategories(databasePost.Parent);
 
-        public PostPage ConvertPostToPostPage(Post post)
-        {
-            IEnumerable<KeyValuePair<string, string>> parents = GetParentsStartingFromParent(post.Parent);
+            databasePost.Map(parents, out PostPage page);
 
-            Page databasePage = post.SlugNavigation;
-
-            PostPage postPage = new PostPage
-            {
-                Body = databasePage.Body,
-                DateCreated = post.DateCreated,
-                DateModified = post.DateModified,
-                Description = databasePage.Description,
-                IsDraft = post.IsDraft,
-                Keywords = databasePage.Keywords,
-                Name = databasePage.Name,
-                Parents = parents,
-                Slug = databasePage.Slug,
-                Title = databasePage.Title,
-            };
-
-            return postPage;
-        }
-
-        public CategoryPage? GetCategory(int id)
-        {
-            PostCategory? databaseCategory = context.PostCategories
-                .Where(category => category.CategoryId == id)
-                .Include(category => category.InverseParent)
-                    .ThenInclude(childCategory => childCategory.SlugNavigation)
-                .Include(category => category.Parent)
-                .Include(category => category.SlugNavigation)
-                .Include(category => category.Posts)
-                    .ThenInclude(post => post.SlugNavigation)
-                .SingleOrDefault();
-
-            if (databaseCategory == null)
-            {
-                return null;
-            }
-
-            return ConvertCategoryToCategoryPage(databaseCategory);
+            return page;
         }
 
         public CategoryPage? GetCategory(string slug)
@@ -113,72 +58,71 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 return null;
             }
 
-            return ConvertCategoryToCategoryPage(databaseCategory);
+            IEnumerable<PageLink> parents = GetParentCategories(databaseCategory.Parent);
+
+            BusinessModels.PostSortingMethod postSortingMethod = databaseCategory.PostSortingMethod!.Map();
+
+            IEnumerable<Post> posts = databaseCategory.Posts.Where(post => post.IsDraft == false);
+
+            posts = postSortingMethod switch
+            {
+                BusinessModels.PostSortingMethod.ByDateCreatedAscending => posts.OrderBy(post => post.DateCreated),
+                BusinessModels.PostSortingMethod.ByDateCreatedDescending => posts.OrderByDescending(post => post.DateCreated),
+                BusinessModels.PostSortingMethod.ByDateModifiedAscending => posts.OrderBy(post => post.DateModified),
+                BusinessModels.PostSortingMethod.ByDateModifiedDescending => posts.OrderByDescending(post => post.DateModified),
+                _ => throw new NotSupportedException($"Sorting method")
+            };
+
+            IEnumerable<PageLink> postLinks = posts.Select(post => post.Map());
+
+            IEnumerable<PageLink> childCategories = databaseCategory.InverseParent.Select(childCategory => childCategory.Map());
+
+            databaseCategory.Map(postLinks, parents, childCategories, postSortingMethod, out CategoryPage page);
+
+            return page;
         }
 
-        private CategoryPage ConvertCategoryToCategoryPage(PostCategory databaseCategory)
+        private IEnumerable<PageLink> GetParentCategories(PostCategory? parentCategory)
         {
-            _ = Enum.TryParse(typeof(BusinessModels.PostSortingMethod), databaseCategory.PostSortingMethod?.SortingName, out object? parsedSortingMethod);
+            IEnumerable<PageLink> parents;
 
-            if (parsedSortingMethod is BusinessModels.PostSortingMethod postSortingMethod)
+            if (parentCategory is null)
             {
-                IEnumerable<KeyValuePair<string, string>> parents = GetParentsStartingFromParent(databaseCategory.Parent);
+                PostCategory? indexCategory = context.PostCategories.Include(category => category.SlugNavigation)
+                    .SingleOrDefault(category => category.Slug == "/");
 
-                Page databasePage = databaseCategory.SlugNavigation;
-
-                IEnumerable<Post> posts = databaseCategory.Posts.Where(post => post.IsDraft == false);
-
-                posts = postSortingMethod switch
+                if (indexCategory == null)
                 {
-                    BusinessModels.PostSortingMethod.ByDateCreatedAscending => posts.OrderBy(post => post.DateCreated),
-                    BusinessModels.PostSortingMethod.ByDateCreatedDescending => posts.OrderByDescending(post => post.DateCreated),
-                    BusinessModels.PostSortingMethod.ByDateModifiedAscending => posts.OrderBy(post => post.DateModified),
-                    BusinessModels.PostSortingMethod.ByDateModifiedDescending => posts.OrderByDescending(post => post.DateModified),
-                    _ => throw new NotSupportedException($"Sorting method")
-                };
+                    throw new NullReferenceException("Index category with slug '/' does not exist in the database!");
+                }
 
-                CategoryPage categoryPage = new CategoryPage
-                {
-                    Body = databasePage.Body,
-                    Description = databasePage.Description,
-                    Keywords = databasePage.Keywords,
-                    Name = databasePage.Name,
-                    ParentCategories = parents,
-                    ChildrenCategories = databaseCategory.InverseParent.Select(category => KeyValuePair.Create(category.Slug, category.SlugNavigation.Name)),
-                    Posts = posts.Select(post => KeyValuePair.Create(post.Slug, post.SlugNavigation.Name)),
-                    Slug = databasePage.Slug,
-                    Title = databasePage.Title,
-                    PostSortingMethod = postSortingMethod
-                };
-
-                return categoryPage;
+                parents = [new PageLink { Description = indexCategory.SlugNavigation.Description, Name = indexCategory.SlugNavigation.Name, Slug = indexCategory.Slug }];
+            }
+            else
+            {
+                parents = MapToParentList(parentCategory, context.PostCategories.Include(category => category.SlugNavigation));
             }
 
-            throw new InvalidDataException($"Category has sorting method {databaseCategory.PostSortingMethod?.SortingName ?? "null sorting method"}, which is not supported by enum.");
+            return parents;
         }
 
-        private List<KeyValuePair<string, string>> GetParentsStartingFromParent(PostCategory? databaseCategory)
+        public static List<PageLink> MapToParentList(PostCategory databaseCategory, IEnumerable<PostCategory> possibleParentCategories)
         {
-            if (databaseCategory == null)
-            {
-                return [KeyValuePair.Create("/", "Index")];
-            }
-
-            List<KeyValuePair<string, string>> categoryParents = [];
+            List<PageLink> categoryParents = [];
             PostCategory? currentParent = databaseCategory;
 
             while (currentParent is not null)
             {
-                Page? parentPage = context.Pages.SingleOrDefault(page => page.Slug == currentParent.Slug);
+                PostCategory? parentPage = possibleParentCategories.SingleOrDefault(category => category.CategoryId == currentParent.CategoryId);
 
                 if (parentPage == null)
                 {
                     break;
                 }
 
-                categoryParents.Add(KeyValuePair.Create(currentParent.Slug, parentPage.Name));
+                categoryParents.Add(currentParent.Map());
 
-                currentParent = context.PostCategories.SingleOrDefault(category => category.CategoryId == currentParent.ParentId);
+                currentParent = possibleParentCategories.SingleOrDefault(category => category.CategoryId == currentParent.ParentId);
             }
 
             categoryParents.Reverse();

@@ -1,4 +1,5 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+using LylinkBackend_DatabaseAccessLayer.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,19 +7,35 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 {
     public class PageManagementRepository(LylinkdbContext context) : IPageManagementRepository
     {
-        public IEnumerable<KeyValuePair<string, string>> GetAllCategories()
+        public IEnumerable<CategoryInfo> GetAllCategories()
         {
-            return context.PostCategories
+            IEnumerable<PostCategory> categories = context.PostCategories
                 .Include(category => category.SlugNavigation)
-                .Select(category => KeyValuePair.Create(category.CategoryId.ToString(), category.SlugNavigation.Name));
+                .Include(category => category.PostSortingMethod);
+
+            foreach (PostCategory category in categories)
+            {
+                BusinessModels.PostSortingMethod sortingMethod = (category.PostSortingMethod?.Map()) ?? throw new NullReferenceException($"Category {category.SlugNavigation.Name} has no sorting method defined.");
+                
+                category.Map(sortingMethod, out CategoryInfo categoryInfo);
+                
+                yield return categoryInfo;
+            }
         }
 
-        public IEnumerable<KeyValuePair<string, string>> GetAllPosts(int? parentId = null)
+        public IEnumerable<PostInfo> GetAllPosts(string? parentSlug = null)
         {
-            return context.Posts
-                .Where(post => parentId == null || post.ParentId == parentId)
+            IEnumerable<Post> posts = context.Posts
                 .Include(post => post.SlugNavigation)
-                .Select(post => KeyValuePair.Create(post.Id.ToString(), post.SlugNavigation.Name));
+                .Where(post => parentSlug == null || (post.Parent != null && post.Parent.Slug == parentSlug))
+                .Include(post => post.Parent);
+
+            foreach (Post post in posts)
+            {
+                post.Map(out PostInfo postInfo);
+
+                yield return postInfo;
+            }
         }
 
         public bool DoesPageWithSlugExist(string slug)
@@ -39,25 +56,11 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 throw new ArgumentOutOfRangeException($"No category with id {id} found.");
             }
 
-            _ = Enum.TryParse(typeof(BusinessModels.PostSortingMethod), category.PostSortingMethod?.SortingName, out object? parsedSortingMethod);
+            BusinessModels.PostSortingMethod postSortingMethod = category.PostSortingMethod?.Map() ?? throw new NullReferenceException("Post sorting method is null.");
 
-            if (parsedSortingMethod is BusinessModels.PostSortingMethod postSortingMethod)
-            {
-                return new CategoryInfo
-                {
-                    Id = id,
-                    Body = category.SlugNavigation.Body,
-                    Description = category.SlugNavigation.Description,
-                    Keywords = category.SlugNavigation.Keywords,
-                    Name = category.SlugNavigation.Name,
-                    ParentId = category.ParentId,
-                    Slug = category.SlugNavigation.Slug,
-                    Title = category.SlugNavigation.Title,
-                    PostSortingMethod = postSortingMethod
-                };
-            }
+            category.Map(postSortingMethod, out CategoryInfo categoryInfo);
 
-            throw new InvalidDataException($"Category has sorting method {category.PostSortingMethod?.SortingName ?? "null sorting method"}, which is not supported by enum.");
+            return categoryInfo;
         }
 
         public PostInfo GetPost(int id)
@@ -72,18 +75,9 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 throw new ArgumentOutOfRangeException($"No post with id {id} found.");
             }
 
-            return new PostInfo
-            {
-                Id = id,
-                Body = post.SlugNavigation.Body,
-                Description = post.SlugNavigation.Description,
-                Keywords = post.SlugNavigation.Keywords,
-                Name = post.SlugNavigation.Name,
-                ParentId = post.ParentId,
-                Slug = post.SlugNavigation.Slug,
-                Title = post.SlugNavigation.Title,
-                IsDraft = post.IsDraft
-            };
+            post.Map(out PostInfo postInfo);
+
+            return postInfo;
         }
 
         public int CreatePost(PostInfo post)

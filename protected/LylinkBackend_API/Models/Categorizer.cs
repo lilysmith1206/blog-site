@@ -1,7 +1,9 @@
-﻿namespace LylinkBackend_API.Models
+﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+
+namespace LylinkBackend_API.Models
 {
     public struct Categorizer
     {
-        public IEnumerable<KeyValuePair<string, string>> CategoryLinks { get; set; }
+        public IEnumerable<CategoryInfo> Categories { get; set; }
     }
 }

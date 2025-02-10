@@ -20,19 +20,31 @@ namespace LylinkBackend_API.Controllers
         {
             return base.View(nameof(Models.Categorizer), new Categorizer()
             {
-                CategoryLinks = pageManagementRepository.GetAllCategories()
-                    .Where(category => category.Key != "6")
+                Categories = pageManagementRepository.GetAllCategories()
+                    .Where(category => category.Id != 6)
             });
         }
 
         [HttpGet("/publisher")]
         public IActionResult Publisher([FromQuery] bool? successfulPostSubmit)
         {
-            Dictionary<string, IEnumerable<KeyValuePair<string, string>>> categoryAndChildPosts = GetPostsOrganizedByCategoryName();
+            Dictionary<string, IEnumerable<PostInfo>> categoryAndChildPosts = GetPostsOrganizedByCategoryName();
 
             return base.View(nameof(Models.Publisher), new Publisher()
             {
                 NavigatedFromFormSubmit = successfulPostSubmit == true,
+                Categories = pageManagementRepository.GetAllCategories(),
+                CategoryPosts = categoryAndChildPosts,
+            });
+        }
+
+        [HttpGet("/styler")]
+        public IActionResult Styler()
+        {
+            Dictionary<string, IEnumerable<PostInfo>> categoryAndChildPosts = GetPostsOrganizedByCategoryName();
+
+            return base.View(nameof(Models.Publisher), new Publisher()
+            {
                 Categories = pageManagementRepository.GetAllCategories(),
                 CategoryPosts = categoryAndChildPosts,
             });
@@ -98,16 +110,15 @@ namespace LylinkBackend_API.Controllers
             }
         }
 
-        private Dictionary<string, IEnumerable<KeyValuePair<string, string>>> GetPostsOrganizedByCategoryName()
+        private Dictionary<string, IEnumerable<PostInfo>> GetPostsOrganizedByCategoryName()
         {
-            Dictionary<string, IEnumerable<KeyValuePair<string, string>>> categoryAndPosts = [];
+            Dictionary<string, IEnumerable<PostInfo>> categoryAndPosts = [];
 
-            IEnumerable<KeyValuePair<int, string>> categories = pageManagementRepository.GetAllCategories()
-                .Select(category => KeyValuePair.Create(int.Parse(category.Key), category.Value));
+            IEnumerable<CategoryInfo> categories = pageManagementRepository.GetAllCategories();
 
-            foreach (KeyValuePair<int, string> category in categories)
+            foreach (CategoryInfo category in categories)
             {
-                categoryAndPosts.Add(category.Value, pageManagementRepository.GetAllPosts(category.Key));
+                categoryAndPosts.Add(category.Name, pageManagementRepository.GetAllPosts(category.Slug));
             }
 
             return categoryAndPosts;

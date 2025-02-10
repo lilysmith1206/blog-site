@@ -1,4 +1,5 @@
 ﻿@using LylinkBackend_API.Models
+@using LylinkBackend_DatabaseAccessLayer.BusinessModels
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model IndexPage
 
@@ -19,10 +20,10 @@
         {
             <h3>Sub-categories</h3>
             <ul>
-                @foreach (var postCategory in Model.SubCategories)
+                @foreach (PageLink postCategory in Model.SubCategories)
                 {
                     <li>
-                        <a href="@postCategory.Key">@postCategory.Value</a>
+                        <a href="@postCategory.Slug" title="@postCategory.Description">@postCategory.Name</a>
                     </li>
                 }
             </ul>
@@ -32,10 +33,10 @@
         {
             <h3>Posts</h3>
             <ul>
-                @foreach (var posts in Model.Posts)
+                @foreach (var post in Model.Posts)
                 {
                     <li>
-                        <a href="@posts.Key">@posts.Value</a>
+                        <a href="@post.Slug" title="@post.Description">@post.Name</a>
                     </li>
                 }
             </ul>
@@ -45,10 +46,10 @@
         {
             <h3>Most recently updated posts</h3>
             <ul>
-                @foreach (var posts in Model.MostRecentPosts)
+                @foreach (var post in Model.MostRecentPosts)
                 {
                     <li>
-                        <a href="@posts.Key">@posts.Value</a>
+                        <a href="@post.Slug" title="@post.Description">@post.Name</a>
                     </li>
                 }
             </ul>

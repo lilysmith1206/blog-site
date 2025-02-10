@@ -6,7 +6,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
     {
         public PostPage? GetPost(string slug);
 
-        public IEnumerable<KeyValuePair<string, string>> GetRecentlyUpdatedPostInfos(int amount);
+        public IEnumerable<PageLink> GetRecentlyUpdatedPostInfos(int amount);
 
         public CategoryPage? GetCategory(string slug);
     }

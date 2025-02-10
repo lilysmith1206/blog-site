@@ -1,4 +1,5 @@
 ﻿@using LylinkBackend_API.Models
+@using LylinkBackend_DatabaseAccessLayer.BusinessModels
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model Publisher
 
@@ -8,7 +9,7 @@
     ViewData["Description"] = "Lylink - Publisher";
     ViewData["Keywords"] = "lylink, management, publisher";
     ViewData["PageName"] = "Publisher";
-    ViewData["ParentCategories"] = new KeyValuePair<string, string>[] { KeyValuePair.Create("/", "Index"), KeyValuePair.Create("management", "management") };
+    ViewData["ParentCategories"] = new PageLink[] { new PageLink { Description = "Index", Name = "Index", Slug = "/" }, new PageLink { Description = "Lylink - Management", Name = "Management", Slug = "management" } };
 };
 }
 
@@ -44,12 +45,12 @@
                     Posts
                     <select onchange="getSlugBody(this)">
                         <option selected value="">Select a post</option>
-                        @foreach (KeyValuePair<string, IEnumerable<KeyValuePair<string, string>>> category in Model.CategoryPosts)
+                        @foreach (KeyValuePair<string, IEnumerable<PostInfo>> categoryPosts in Model.CategoryPosts)
                         {
-                            <optgroup label="@category.Key">
-                                @foreach (KeyValuePair<string, string> post in category.Value)
+                            <optgroup label="@categoryPosts.Key">
+                                @foreach (PostInfo post in categoryPosts.Value)
                                 {
-                                    <option value="@post.Key">@post.Value</option>
+                                    <option value="@post.Id">@post.Name</option>
                                 }
                             </optgroup>
                         }
@@ -81,9 +82,9 @@
                     Categories
                     <select id="categoryBox" name="ParentId" required>
                         <option value="" selected>Select a category</option>
-                        @foreach (KeyValuePair<string, string> category in Model.Categories)
+                        @foreach (CategoryInfo category in Model.Categories)
                         {
-                            <option value="@category.Key">@category.Value</option>
+                            <option value="@category.Id">@category.Name</option>
                         }
                     </select>
                 </label>

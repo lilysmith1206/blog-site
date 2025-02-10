@@ -10,7 +10,7 @@
     ViewData["Description"] = "Lylink - Categorizer";
     ViewData["Keywords"] = "lylink, management, categorizer";
     ViewData["PageName"] = "Categorizer";
-    ViewData["ParentCategories"] = new KeyValuePair<string, string>[] { KeyValuePair.Create("/", "Index"), KeyValuePair.Create("management", "management") };
+    ViewData["ParentCategories"] = new PageLink[] { new PageLink { Description = "Index", Name = "Index", Slug = "/" }, new PageLink { Description = "Lylink - Management", Name = "Management", Slug = "management" } };
 }
 
 @section ExtraMetadata
@@ -45,8 +45,8 @@
                     Categories
                     <select onchange="getSlugBody(this)">
                         <option value="none">Select a category</option>
-                        @foreach (KeyValuePair<string, string> categoryLink in Model.CategoryLinks) {
-                            <option value="@categoryLink.Key">@categoryLink.Value</option>
+                        @foreach (CategoryInfo category in Model.Categories) {
+                            <option value="@category.Id">@category.Name</option>
                         }
                     </select>
                 </label>
@@ -78,9 +78,9 @@
                         <option value="">Select a category</option>
                         <option value="6">Index</option>
                         @{
-                            foreach (KeyValuePair<string, string> parentCategoryLink in Model.CategoryLinks)
+                            foreach (CategoryInfo parentCategory in Model.Categories)
                             {
-                                <option value="@parentCategoryLink.Key">@parentCategoryLink.Value</option>
+                                <option value="@parentCategory.Id">@parentCategory.Name</option>
                             }
                         }
                     </select>

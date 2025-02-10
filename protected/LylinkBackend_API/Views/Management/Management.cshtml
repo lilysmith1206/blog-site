@@ -1,4 +1,5 @@
 ﻿@using LylinkBackend_API.Models
+@using LylinkBackend_DatabaseAccessLayer.BusinessModels
 @model Management
 
 @{
@@ -7,7 +8,7 @@
     ViewData["Description"] = "Lylink - Management";
     ViewData["Keywords"] = "lylink, management";
     ViewData["PageName"] = "Site Management";
-    ViewData["ParentCategories"] = new KeyValuePair<string, string>[] { KeyValuePair.Create("/", "Index") };
+    ViewData["ParentCategories"] = new PageLink[] { new PageLink { Description = "Index", Name = "Index", Slug = "/" } };
 };
 
 @section Body

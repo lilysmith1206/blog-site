@@ -1,4 +1,5 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+using LylinkBackend_DatabaseAccessLayer.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Services;
 
 namespace LylinkBackend_DatabaseAccessLayer_UnitTests
@@ -22,9 +23,13 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
         public static IEnumerable<object[]> GetCategoryFromIdUnitTestData()
         {
-            yield return [DatabaseUnitTestData.IndexCategory.CategoryId, UnitTestData.IndexCategoryInfo];
-            yield return [DatabaseUnitTestData.TechCategory.CategoryId, UnitTestData.TechCategoryInfo];
-            yield return [DatabaseUnitTestData.MostRecentPostsCategory.CategoryId, UnitTestData.MostRecentPostsCategoryInfo];
+            DatabaseUnitTestData.IndexCategory.Map((PostSortingMethod)(DatabaseUnitTestData.IndexCategory.PostSortingMethodId ?? 1), out CategoryInfo indexCategoryInfo);
+            DatabaseUnitTestData.TechCategory.Map((PostSortingMethod)(DatabaseUnitTestData.TechCategory.PostSortingMethodId ?? 1), out CategoryInfo techCategoryInfo);
+            DatabaseUnitTestData.MostRecentPostsCategory.Map((PostSortingMethod)(DatabaseUnitTestData.MostRecentPostsCategory.PostSortingMethodId ?? 1), out CategoryInfo mostRecentPostsCategoryInfo);
+
+            yield return [DatabaseUnitTestData.IndexCategory.CategoryId, indexCategoryInfo];
+            yield return [DatabaseUnitTestData.TechCategory.CategoryId, techCategoryInfo];
+            yield return [DatabaseUnitTestData.MostRecentPostsCategory.CategoryId, mostRecentPostsCategoryInfo];
         }
 
         [Fact]
@@ -41,7 +46,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             const string Description = "new post description";
             const string Body = "new post body";
             const PostSortingMethod PostSortingMethod = PostSortingMethod.ByDateCreatedAscending;
-            int parentId = UnitTestData.IndexCategoryInfo.Id;
+            int parentId = DatabaseUnitTestData.IndexCategory.CategoryId;
 
             CategoryInfo newCategoryInfo = new CategoryInfo
             {
@@ -68,7 +73,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             Assert.Equal(Description, post.Description);
             Assert.Equal(Body, post.Body);
             Assert.Equal(PostSortingMethod, post.PostSortingMethod);
-            Assert.Equal(parentId, UnitTestData.IndexCategoryInfo.Id);
+            Assert.Equal(parentId, DatabaseUnitTestData.IndexCategory.CategoryId);
         }
 
         [Fact]
@@ -82,7 +87,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 _ = repository.CreateCategory(new CategoryInfo
                 {
-                    Slug = UnitTestData.IndexPostPage1.Slug,
+                    Slug = DatabaseUnitTestData.IndexPost1.SlugNavigation.Slug,
                     Body = string.Empty,
                     Description = string.Empty,
                     Keywords = string.Empty,
@@ -104,7 +109,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 _ = repository.CreateCategory(new CategoryInfo
                 {
-                    Slug = UnitTestData.IndexPostPage1.Slug,
+                    Slug = DatabaseUnitTestData.IndexPost1.SlugNavigation.Slug,
                     Body = string.Empty,
                     Description = string.Empty,
                     Keywords = string.Empty,
@@ -122,15 +127,24 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             IPageManagementRepository repository = new PageManagementRepository(context);
 
+            string slug = DatabaseUnitTestData.IndexCategory.Slug;
+            string title = DatabaseUnitTestData.IndexCategory.SlugNavigation.Title;
+            string name = DatabaseUnitTestData.IndexCategory.SlugNavigation.Name;
+            string keywords = DatabaseUnitTestData.IndexCategory.SlugNavigation.Keywords;
+            string description = DatabaseUnitTestData.IndexCategory.SlugNavigation.Description;
+            string body = DatabaseUnitTestData.IndexCategory.SlugNavigation.Body;
+            
+            _ = Enum.TryParse(DatabaseUnitTestData.IndexCategory.PostSortingMethod?.SortingName, out PostSortingMethod sortingMethod);
+            
             CategoryInfo categoryInfo = new CategoryInfo
             {
-                Slug = UnitTestData.IndexCategoryInfo.Slug,
-                Title = UnitTestData.IndexCategoryInfo.Title + "A",
-                Name = UnitTestData.IndexCategoryInfo.Name + "A",
-                Keywords = UnitTestData.IndexCategoryInfo.Keywords + "A",
-                Description = UnitTestData.IndexCategoryInfo.Description + "A",
-                Body = UnitTestData.IndexCategoryInfo.Body + "A",
-                PostSortingMethod = PostSortingMethod.ByDateModifiedDescending,
+                Slug = slug,
+                Title = title + "A",
+                Name = name + "A",
+                Keywords = keywords + "A",
+                Description = description + "A",
+                Body = body + "A",
+                PostSortingMethod = PostSortingMethod.ByDateModifiedAscending,
                 ParentId = null
             };
 
@@ -139,13 +153,13 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             CategoryInfo? post = repository.GetCategory(updatedCategoryId);
 
             Assert.NotNull(post);
-
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Title, post.Title);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Name, post.Name);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Keywords, post.Keywords);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Description, post.Description);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.Body, post.Body);
-            Assert.NotEqual(UnitTestData.IndexCategoryInfo.PostSortingMethod, post.PostSortingMethod);
+                                                                        
+            Assert.NotEqual(title, post.Title);
+            Assert.NotEqual(name, post.Name);
+            Assert.NotEqual(keywords, post.Keywords);
+            Assert.NotEqual(description, post.Description);
+            Assert.NotEqual(body, post.Body);
+            Assert.NotEqual(sortingMethod, post.PostSortingMethod);
         }
 
         [Fact]
@@ -155,15 +169,23 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             IPageManagementRepository repository = new PageManagementRepository(context);
 
+            string slug = DatabaseUnitTestData.IndexCategory.Slug;
+            string title = DatabaseUnitTestData.IndexCategory.SlugNavigation.Title;
+            string name = DatabaseUnitTestData.IndexCategory.SlugNavigation.Name;
+            string keywords = DatabaseUnitTestData.IndexCategory.SlugNavigation.Keywords;
+            string description = DatabaseUnitTestData.IndexCategory.SlugNavigation.Description;
+            string body = DatabaseUnitTestData.IndexCategory.SlugNavigation.Body;
+            const PostSortingMethod CategorySortingMethod = PostSortingMethod.ByDateModifiedDescending;
+
             CategoryInfo categoryInfo = new CategoryInfo
             {
-                Slug = UnitTestData.MostRecentPostsCategoryInfo.Slug,
-                Title = UnitTestData.MostRecentPostsCategoryInfo.Title,
-                Name = UnitTestData.MostRecentPostsCategoryInfo.Name,
-                Keywords = UnitTestData.MostRecentPostsCategoryInfo.Keywords,
-                Description = UnitTestData.MostRecentPostsCategoryInfo.Description,
-                Body = UnitTestData.MostRecentPostsCategoryInfo.Body,
-                PostSortingMethod = UnitTestData.MostRecentPostsCategoryInfo.PostSortingMethod,
+                Slug = slug,
+                Title = title,
+                Name = name,
+                Keywords = keywords,
+                Description = description,
+                Body = body,
+                PostSortingMethod = CategorySortingMethod,
                 ParentId = DatabaseUnitTestData.TechCategory.CategoryId
             };
 
@@ -172,7 +194,7 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             Assert.NotNull(category);
 
-            Assert.Equal(UnitTestData.TechCategoryInfo.Id, category.ParentId);
+            Assert.Equal(DatabaseUnitTestData.TechCategory.CategoryId, category.ParentId);
         }
 
         [Fact]

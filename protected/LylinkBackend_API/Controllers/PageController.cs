@@ -99,7 +99,7 @@ namespace LylinkBackend_API.Controllers
                 Keywords = category.Keywords,
                 MostRecentPosts = pageRepository.GetRecentlyUpdatedPostInfos(10),
                 PageName = category.Name,
-                ParentCategories = [KeyValuePair.Create("/", "index")],
+                ParentCategories = [new PageLink { Description = "", Name = "index", Slug = "/" }],
                 Posts = category.Posts,
                 SubCategories = category.ChildrenCategories,
                 Title = category.Title

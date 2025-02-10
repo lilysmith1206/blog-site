@@ -23,11 +23,6 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
         private static void FillInMemoryDatabaseWithUnitTestData(LylinkdbContext context)
         {
-            foreach (PostSortingMethod postSortingMethod in DatabaseUnitTestData.PostSortingMethods)
-            {
-                context.PostSortingMethods.Add(postSortingMethod);
-            }
-
             foreach (PostCategory category in DatabaseUnitTestData.Categories)
             {
                 context.PostCategories.Add(category);
@@ -42,12 +37,18 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 context.Annotations.Add(annotation);
             }
+
+            foreach (PostSortingMethod postSortingMethod in DatabaseUnitTestData.PostSortingMethods)
+            {
+                context.PostSortingMethods.Add(postSortingMethod);
+            }
         }
 
         private static LylinkdbContext GetInMemoryDbContext()
         {
             var options = new DbContextOptionsBuilder<LylinkdbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // Generate a unique database name per call
+                .EnableSensitiveDataLogging()
                 .Options;
 
             return new LylinkdbContext(options);

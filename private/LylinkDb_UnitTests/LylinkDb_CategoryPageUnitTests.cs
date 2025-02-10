@@ -1,4 +1,5 @@
 using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+using LylinkBackend_DatabaseAccessLayer.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Services;
 
 namespace LylinkBackend_DatabaseAccessLayer_UnitTests
@@ -22,15 +23,61 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
         public static IEnumerable<object[]> GetCategoryFromSlugUnitTestData()
         {
-            yield return [DatabaseUnitTestData.IndexCategory.Slug, UnitTestData.IndexCategoryPage];
-            yield return [DatabaseUnitTestData.TechCategory.Slug, UnitTestData.TechCategoryPage];
-            yield return [DatabaseUnitTestData.MostRecentPostsCategory.Slug, UnitTestData.MostRecentPostsCategoryPage];
-            yield return [DatabaseUnitTestData.PostSortingMethodCategory.Slug, UnitTestData.PostSortingMethodCategoryPage];
+            PageLink indexLink = DatabaseUnitTestData.IndexCategory.Map();
+            PageLink techLink = DatabaseUnitTestData.TechCategory.Map();
+            PageLink mostRecentPostsLink = DatabaseUnitTestData.MostRecentPostsCategory.Map();
+            PageLink postSortingMethodsLink = DatabaseUnitTestData.PostSortingMethodCategory.Map();
+
+            PageLink indexPost1Link = DatabaseUnitTestData.IndexPost1.Map();
+            PageLink techPost1Link = DatabaseUnitTestData.TechPost1.Map();
+            PageLink techPost2Link = DatabaseUnitTestData.TechPost2.Map();
+            PageLink techPost3Link = DatabaseUnitTestData.TechPost3.Map();
+            PageLink mostRecentPost1Link = DatabaseUnitTestData.MostRecentPostsPost1.Map();
+            PageLink mostRecentPost2Link = DatabaseUnitTestData.MostRecentPostsPost2.Map();
+            PageLink mostRecentPost3Link = DatabaseUnitTestData.MostRecentPostsPost3.Map();
+            PageLink postSortingMethodsPost1Link = DatabaseUnitTestData.PostSortingMethodPost1.Map();
+            PageLink postSortingMethodsPost2Link = DatabaseUnitTestData.PostSortingMethodPost2.Map();
+            PageLink postSortingMethodsPost3Link = DatabaseUnitTestData.PostSortingMethodPost3.Map();
+            PageLink postSortingMethodsPost4Link = DatabaseUnitTestData.PostSortingMethodPost4.Map();
+
+            DatabaseUnitTestData.IndexCategory.Map(
+                [indexPost1Link],
+                [indexLink],
+                [techLink, mostRecentPostsLink, postSortingMethodsLink],
+                (PostSortingMethod)(DatabaseUnitTestData.IndexCategory.PostSortingMethodId ?? 1),
+                out CategoryPage indexCategoryPage
+            );
+            
+            DatabaseUnitTestData.TechCategory.Map(
+                [techPost1Link, techPost2Link, techPost3Link],
+                [indexLink],
+                [],
+                (PostSortingMethod)(DatabaseUnitTestData.TechCategory.PostSortingMethodId ?? 1),
+                out CategoryPage techCategoryPage);
+
+            DatabaseUnitTestData.MostRecentPostsCategory.Map(
+                [mostRecentPost1Link, mostRecentPost2Link, mostRecentPost3Link],
+                [indexLink],
+                [],
+                (PostSortingMethod)(DatabaseUnitTestData.MostRecentPostsCategory.PostSortingMethodId ?? 1),
+                out CategoryPage mostRecentPostsCategoryPage);
+
+            DatabaseUnitTestData.PostSortingMethodCategory.Map(
+                [postSortingMethodsPost1Link, postSortingMethodsPost2Link, postSortingMethodsPost3Link, postSortingMethodsPost4Link],
+                [indexLink],
+                [],
+                (PostSortingMethod)(DatabaseUnitTestData.PostSortingMethodCategory.PostSortingMethodId ?? 1),
+                out CategoryPage postSortingMethodCategoryPage);
+
+            yield return [DatabaseUnitTestData.IndexCategory.Slug, indexCategoryPage];
+            yield return [DatabaseUnitTestData.TechCategory.Slug, techCategoryPage];
+            yield return [DatabaseUnitTestData.MostRecentPostsCategory.Slug, mostRecentPostsCategoryPage];
+            yield return [DatabaseUnitTestData.PostSortingMethodCategory.Slug, postSortingMethodCategoryPage];
         }
 
         [Theory]
         [MemberData(nameof(GetCategoryPostSortingUnitTestData))]
-        public void GetCategory_WithSortingMethod_SortsChildPostsAccordingly(PostSortingMethod sortingMethod, params KeyValuePair<string, string>[] expectedPostData)
+        public void GetCategory_WithSortingMethod_SortsChildPostsAccordingly(PostSortingMethod sortingMethod, params PageLink[] expectedPostData)
         {
             var context = LylinkDb_InMemoryDatabase.GetFullDataInMemoryDatabase();
 
@@ -52,44 +99,72 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 
             foreach ((var expected, var actual) in expectedPostData.Zip(categoryPage.Value.Posts))
             {
-                Assert.Equal(expected.Key, actual.Key);
-                Assert.Equal(expected.Value, actual.Value);
+                Assert.Equal(expected.Description, actual.Description);
+                Assert.Equal(expected.Name, actual.Name);
+                Assert.Equal(expected.Slug, actual.Slug);
             }
         }
 
-
         public static IEnumerable<object[]> GetCategoryPostSortingUnitTestData()
         {
+            PageLink sortingPage1Link = new()
+            {
+                Description = DatabaseUnitTestData.PostSortingMethodPost1.SlugNavigation.Description,
+                Name = DatabaseUnitTestData.PostSortingMethodPost1.SlugNavigation.Name,
+                Slug = DatabaseUnitTestData.PostSortingMethodPost1.SlugNavigation.Slug,
+            };
+
+            PageLink sortingPage2Link = new()
+            {
+                Description = DatabaseUnitTestData.PostSortingMethodPost2.SlugNavigation.Description,
+                Name = DatabaseUnitTestData.PostSortingMethodPost2.SlugNavigation.Name,
+                Slug = DatabaseUnitTestData.PostSortingMethodPost2.SlugNavigation.Slug,
+            };
+            
+            PageLink sortingPage3Link = new()
+            {
+                Description = DatabaseUnitTestData.PostSortingMethodPost3.SlugNavigation.Description,
+                Name = DatabaseUnitTestData.PostSortingMethodPost3.SlugNavigation.Name,
+                Slug = DatabaseUnitTestData.PostSortingMethodPost3.SlugNavigation.Slug,
+            };
+            
+            PageLink sortingPage4Link = new()
+            {
+                Description = DatabaseUnitTestData.PostSortingMethodPost4.SlugNavigation.Description,
+                Name = DatabaseUnitTestData.PostSortingMethodPost4.SlugNavigation.Name,
+                Slug = DatabaseUnitTestData.PostSortingMethodPost4.SlugNavigation.Slug,
+            };
+
             yield return [
                 PostSortingMethod.ByDateCreatedAscending,
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage4.Slug, UnitTestData.PostSortingMethodPostPage4.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage1.Slug, UnitTestData.PostSortingMethodPostPage1.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage2.Slug, UnitTestData.PostSortingMethodPostPage2.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage3.Slug, UnitTestData.PostSortingMethodPostPage3.Name),
+                sortingPage4Link,
+                sortingPage1Link,
+                sortingPage2Link,
+                sortingPage3Link,
             ];
 
             yield return [
                 PostSortingMethod.ByDateCreatedDescending,
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage3.Slug, UnitTestData.PostSortingMethodPostPage3.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage2.Slug, UnitTestData.PostSortingMethodPostPage2.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage1.Slug, UnitTestData.PostSortingMethodPostPage1.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage4.Slug, UnitTestData.PostSortingMethodPostPage4.Name),
+                sortingPage3Link,
+                sortingPage2Link,
+                sortingPage1Link,
+                sortingPage4Link,
             ];
 
             yield return [
                 PostSortingMethod.ByDateModifiedAscending,
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage3.Slug, UnitTestData.PostSortingMethodPostPage3.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage4.Slug, UnitTestData.PostSortingMethodPostPage4.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage1.Slug, UnitTestData.PostSortingMethodPostPage1.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage2.Slug, UnitTestData.PostSortingMethodPostPage2.Name),
+                sortingPage3Link,
+                sortingPage4Link,
+                sortingPage1Link,
+                sortingPage2Link,
             ];
 
             yield return [
                 PostSortingMethod.ByDateModifiedDescending,
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage2.Slug, UnitTestData.PostSortingMethodPostPage2.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage1.Slug, UnitTestData.PostSortingMethodPostPage1.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage4.Slug, UnitTestData.PostSortingMethodPostPage4.Name),
-                KeyValuePair.Create(UnitTestData.PostSortingMethodPostPage3.Slug, UnitTestData.PostSortingMethodPostPage3.Name),
+                sortingPage2Link,
+                sortingPage1Link,
+                sortingPage4Link,
+                sortingPage3Link,
             ];
         }
     }
