@@ -58,6 +58,7 @@ namespace LylinkBackend
             builder.Services.AddTransient<IVisitAnalyticsRepository, VisitAnalyticsRepository>();
             builder.Services.AddTransient<ISlugRepository, SlugRepository>();
             builder.Services.AddTransient<IEmailService, EmailService>();
+            builder.Services.AddTransient<IStylesheetManagementRepository, StylesheetManagementRepository>();
 
             builder.Services.AddSingleton<IUserCookieService, UserCookieService>();
             builder.Services.AddSingleton<ISlugCache, SlugCache>();

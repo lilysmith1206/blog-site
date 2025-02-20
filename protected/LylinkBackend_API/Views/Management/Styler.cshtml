@@ -1,0 +1,95 @@
+﻿@using LylinkBackend_DatabaseAccessLayer.BusinessModels
+@using LylinkBackend_API.Models
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@model Styler
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Styler";
+    ViewData["Description"] = "Lylink - Styler";
+    ViewData["Keywords"] = "lylink, management, styler";
+    ViewData["PageName"] = "Styler";
+    ViewData["ParentCategories"] = new PageLink[] { new PageLink { Description = "Index", Name = "Index", Slug = "/" }, new PageLink { Description = "Lylink - Management", Name = "Management", Slug = "management" } };
+}
+
+@section ExtraMetadata
+{
+    <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+    <link id="maintenanceStyle" rel="stylesheet" href="css/maintenance_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+
+    <script src="js/styler.js" defer></script>
+    
+    <style>
+        .css-rule-card {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .selectors {
+            font-weight: bold;
+        }
+
+        .rules-header {
+            margin-top: 0.5rem;
+        }
+
+        textarea {
+            resize: vertical;
+            vertical-align: middle;
+            width: 100%;
+            min-height: 60px;
+            overflow-y: auto;
+            word-wrap: break-word;
+            page-break-before: avoid;
+        }
+    </style>
+}
+
+@section Body
+{
+    <div class="tab-container">
+        <template id="css-rule-template">
+            <div class="css-rule-card">
+                <button class="delete-rule-button">Delete rule</button>
+                <label>
+                    Selector(s)
+                    <input class="selectors-input" type="text" placeholder="CSS selectors" />
+                </label>
+                <label>
+                    Declarations(s)
+                    <textarea class="declarations-input" style="" placeholder="CSS declarations"></textarea>
+                </label>
+            </div>
+        </template>
+        <template id="css-declarations">
+        </template>
+        <main>
+            <div>
+                <button id="add-rule-button">Add Rule</button>
+            </div>
+            <div id="rule-container"></div>
+        </main>
+        <aside>
+            <form style="display: inline-block">
+                <label>
+                    Stylesheets
+                    <select id="stylesheet-select">
+                        <option selected value="">Select a stylesheet</option>
+                        @foreach (PageLink stylesheet in Model.Stylesheets)
+                        {
+                            <option value="@stylesheet.Slug">@stylesheet.Name</option>
+                        }
+                    </select>
+                </label>
+            </form>
+            <form style="display: inline-block">
+                <label>Stylesheet Name
+                    <input type="text" id="file-name" name="FileName" />
+                </label>
+                <input type="hidden" id="stylesheet-content" name="stylesheetText"/>
+
+                <button type="button" id="submit-css-button">Save Draft</button>
+            </form>
+        </aside>
+    </div>
+}

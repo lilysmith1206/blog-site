@@ -1,13 +1,15 @@
 ﻿using LylinkBackend_API.Models;
+using LylinkBackend_API.Services;
 using LylinkBackend_DatabaseAccessLayer.BusinessModels;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace LylinkBackend_API.Controllers
 {
     [ApiController]
     [Route("Management")]
-    public class ManagementController(IPageManagementRepository pageManagementRepository) : Controller
+    public class ManagementController(IPageManagementRepository pageManagementRepository, IStylesheetManagementRepository stylesheetManagementRepository) : Controller
     {
         [HttpGet("/management")]
         public IActionResult Management()
@@ -41,12 +43,9 @@ namespace LylinkBackend_API.Controllers
         [HttpGet("/styler")]
         public IActionResult Styler()
         {
-            Dictionary<string, IEnumerable<PostInfo>> categoryAndChildPosts = GetPostsOrganizedByCategoryName();
-
-            return base.View(nameof(Models.Publisher), new Publisher()
+            return base.View(nameof(Models.Styler), new Styler()
             {
-                Categories = pageManagementRepository.GetAllCategories(),
-                CategoryPosts = categoryAndChildPosts,
+                Stylesheets = stylesheetManagementRepository.GetAllStylesheets() 
             });
         }
 
@@ -64,6 +63,25 @@ namespace LylinkBackend_API.Controllers
             CategoryInfo category = pageManagementRepository.GetCategory(categoryId);
 
             return Ok(category);
+        }
+
+        [HttpGet("/getStylesheetFromName")]
+        public IActionResult GetStylesheetFromName([FromQuery] string name)
+        {
+            try
+            {
+                IEnumerable<CssRule> stylesheetData = stylesheetManagementRepository.RetrieveStylesheetData(name);
+
+                return Ok(stylesheetData);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return StatusCode(404, ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         [HttpPost("/savePost")]
@@ -107,6 +125,21 @@ namespace LylinkBackend_API.Controllers
             catch (Exception)
             {
                 return StatusCode(500, $"Issue adding/updating post {remoteCategory.Name}");
+            }
+        }
+
+        [HttpPost("/saveStylesheet")]
+        public IActionResult SaveStylesheet([FromQuery] string sheetName, [FromBody] List<CssRule> stylesheetData)
+        {
+            bool updated = stylesheetManagementRepository.UpdateStylesheet(sheetName, stylesheetData);
+
+            if (updated)
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(400, "Stylesheet does not exist.");
             }
         }
 

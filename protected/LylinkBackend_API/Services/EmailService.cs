@@ -1,7 +1,10 @@
 ﻿using LylinkBackend_API.Models;
 using Microsoft.Extensions.Options;
+
+#if !DEBUG
 using SendGrid;
 using SendGrid.Helpers.Mail;
+#endif
 
 namespace LylinkBackend_API.Services
 {
@@ -9,6 +12,7 @@ namespace LylinkBackend_API.Services
     {
         public async Task SendEmail(string toAddress, string subject, string body, IEnumerable<EmailAttachment>? attachments = null)
         {
+#if !DEBUG
             SendGridClient client = new(authentication.Value.SendGridAPIKey);
 
             EmailAddress fromAddress = new("analytics@lylink.org", "Analytics");
@@ -33,6 +37,7 @@ namespace LylinkBackend_API.Services
             {
                 throw new Exception($"Email sending failed with status: {response.StatusCode}");
             }
+#endif
         }
     }
 }
