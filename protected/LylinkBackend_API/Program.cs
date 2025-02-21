@@ -19,8 +19,7 @@ namespace LylinkBackend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-#if DEBUG
-#else
+#if !DEBUG
             builder.WebHost.ConfigureKestrel((context, options) =>
             {
                 var certPath = context.Configuration["Kestrel:EndPoints:Https:Certificate:Path"] ?? throw new NullReferenceException("Certificate path is null");
@@ -36,6 +35,9 @@ namespace LylinkBackend
                 });
             });
 #endif
+
+            builder.AddServiceDefaults();
+
 
             builder.Services.AddAuthorization();
             builder.Services.AddEndpointsApiExplorer();
@@ -72,6 +74,8 @@ namespace LylinkBackend
             builder.Services.AddRazorComponents();
 
             var app = builder.Build();
+
+            app.MapDefaultEndpoints();
 
             if (app.Environment.IsDevelopment())
             {

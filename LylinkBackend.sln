@@ -15,6 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_API", "protec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkDatabase_MigrationScripts", "private\LylinkDatabase_MigrationScripts\LylinkDatabase_MigrationScripts.csproj", "{9BBE904F-96C0-4809-82FA-2948C838B8A6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_ManagementAPI", "protected\LylinkBackend_API_UnitTests\LylinkBackend_ManagementAPI\LylinkBackend_ManagementAPI.csproj", "{388D223F-B57F-4BC2-8E6D-3A8DC1D08F22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkBackend.AppHost", "LylinkBackend.AppHost\LylinkBackend.AppHost.csproj", "{178C3FB1-86E8-43BE-B4E1-931D0F7AFD24}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend.ServiceDefaults", "LylinkBackend.ServiceDefaults\LylinkBackend.ServiceDefaults.csproj", "{B0AC5A2D-8C7D-4F78-A9E4-B7D788017F92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +43,18 @@ Global
 		{9BBE904F-96C0-4809-82FA-2948C838B8A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BBE904F-96C0-4809-82FA-2948C838B8A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BBE904F-96C0-4809-82FA-2948C838B8A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{388D223F-B57F-4BC2-8E6D-3A8DC1D08F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{388D223F-B57F-4BC2-8E6D-3A8DC1D08F22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{388D223F-B57F-4BC2-8E6D-3A8DC1D08F22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{388D223F-B57F-4BC2-8E6D-3A8DC1D08F22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178C3FB1-86E8-43BE-B4E1-931D0F7AFD24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178C3FB1-86E8-43BE-B4E1-931D0F7AFD24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178C3FB1-86E8-43BE-B4E1-931D0F7AFD24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178C3FB1-86E8-43BE-B4E1-931D0F7AFD24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0AC5A2D-8C7D-4F78-A9E4-B7D788017F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0AC5A2D-8C7D-4F78-A9E4-B7D788017F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0AC5A2D-8C7D-4F78-A9E4-B7D788017F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0AC5A2D-8C7D-4F78-A9E4-B7D788017F92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +64,9 @@ Global
 		{151BECB8-A478-4154-A631-A7C9498C178A} = {AA03FEFF-7BD9-4E95-AD45-5B7835F1F465}
 		{51885D02-6E1C-4D19-AD68-BFC7168E191F} = {86A815C9-0276-4BA4-9394-3F66A35D1735}
 		{9BBE904F-96C0-4809-82FA-2948C838B8A6} = {AA03FEFF-7BD9-4E95-AD45-5B7835F1F465}
+		{388D223F-B57F-4BC2-8E6D-3A8DC1D08F22} = {86A815C9-0276-4BA4-9394-3F66A35D1735}
+		{178C3FB1-86E8-43BE-B4E1-931D0F7AFD24} = {86A815C9-0276-4BA4-9394-3F66A35D1735}
+		{B0AC5A2D-8C7D-4F78-A9E4-B7D788017F92} = {86A815C9-0276-4BA4-9394-3F66A35D1735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FC83A25-ED6F-4F75-BF38-62694D52CD98}

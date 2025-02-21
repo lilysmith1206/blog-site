@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure.Internal;
 
 namespace LylinkBackend_DatabaseAccessLayer.Models
@@ -33,6 +34,10 @@ namespace LylinkBackend_DatabaseAccessLayer.Models
                     optionsBuilder.UseMySql(_connectionString, ServerVersion.Parse("11.5.2-mariadb"));
                 }
             }
+
+#if DEBUG
+            optionsBuilder.ConfigureWarnings(w => w.Log(RelationalEventId.MultipleCollectionIncludeWarning));
+#endif
         }
     }
 }

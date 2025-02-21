@@ -48,7 +48,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                     .ThenInclude(childCategory => childCategory.SlugNavigation)
                 .Include(category => category.Parent)
                 .Include(category => category.SlugNavigation)
-                .Include(category => category.Posts)
+                .Include(category => category.Posts.Where(post => post.IsDraft == false))
                     .ThenInclude(post => post.SlugNavigation)
                 .Include(category => category.PostSortingMethod)
                 .SingleOrDefault();
@@ -62,18 +62,14 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
             BusinessModels.PostSortingMethod postSortingMethod = databaseCategory.PostSortingMethod!.Map();
 
-            IEnumerable<Post> posts = databaseCategory.Posts.Where(post => post.IsDraft == false);
-
-            posts = postSortingMethod switch
+            IEnumerable<PageLink> postLinks = (postSortingMethod switch
             {
-                BusinessModels.PostSortingMethod.ByDateCreatedAscending => posts.OrderBy(post => post.DateCreated),
-                BusinessModels.PostSortingMethod.ByDateCreatedDescending => posts.OrderByDescending(post => post.DateCreated),
-                BusinessModels.PostSortingMethod.ByDateModifiedAscending => posts.OrderBy(post => post.DateModified),
-                BusinessModels.PostSortingMethod.ByDateModifiedDescending => posts.OrderByDescending(post => post.DateModified),
+                BusinessModels.PostSortingMethod.ByDateCreatedAscending => databaseCategory.Posts.OrderBy(post => post.DateCreated),
+                BusinessModels.PostSortingMethod.ByDateCreatedDescending => databaseCategory.Posts.OrderByDescending(post => post.DateCreated),
+                BusinessModels.PostSortingMethod.ByDateModifiedAscending => databaseCategory.Posts.OrderBy(post => post.DateModified),
+                BusinessModels.PostSortingMethod.ByDateModifiedDescending => databaseCategory.Posts.OrderByDescending(post => post.DateModified),
                 _ => throw new NotSupportedException($"Sorting method")
-            };
-
-            IEnumerable<PageLink> postLinks = posts.Select(post => post.Map());
+            }).Select(post => post.Map());
 
             IEnumerable<PageLink> childCategories = databaseCategory.InverseParent.Select(childCategory => childCategory.Map());
 

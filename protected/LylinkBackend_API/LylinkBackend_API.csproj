@@ -40,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\LylinkBackend.ServiceDefaults\LylinkBackend.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\private\LylinkBackend_DatabaseAccessLayer\LylinkBackend_DatabaseAccessLayer.csproj" />
   </ItemGroup>
 
