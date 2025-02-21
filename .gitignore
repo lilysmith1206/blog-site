@@ -9,3 +9,5 @@ private/mysqldump.sql
 /private/sqlbackup.sql
 /private/db_dump.sql
 /protected/LylinkBackend_API/appsettings.Development.json
+/protected/APIs/LylinkBackend_API/appsettings.Development.json
+/protected/APIs/LylinkBackend_ManagementAPI/appsettings.Development.json

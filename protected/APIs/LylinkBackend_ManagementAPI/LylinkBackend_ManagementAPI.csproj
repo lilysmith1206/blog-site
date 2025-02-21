@@ -11,11 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\LylinkBackend.ServiceDefaults\LylinkBackend.ServiceDefaults.csproj" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\LylinkBackend.ServiceDefaults\LylinkBackend.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>
