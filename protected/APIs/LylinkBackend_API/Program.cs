@@ -48,15 +48,11 @@ namespace LylinkBackend
                 options.UseMySql(builder.Configuration.GetConnectionString("MariaDbConnection"), ServerVersion.Parse("11.5.2-mariadb"));
             });
 
-            builder.Services.Configure<Authentication>(
-                builder.Configuration.GetSection("Authentication"));
-
             builder.Services.Configure<EmailOptions>(
-                builder.Configuration.GetSection("Email"));
+                builder.Configuration.GetSection("EmailOptions"));
 
             builder.Services.AddTransient<IAnnotationRepository, AnnotationsRepository>();
             builder.Services.AddTransient<IPageRepository, PageRepository>();
-            builder.Services.AddTransient<IPageManagementRepository, PageManagementRepository>();
             builder.Services.AddTransient<IVisitAnalyticsRepository, VisitAnalyticsRepository>();
             builder.Services.AddTransient<ISlugRepository, SlugRepository>();
             builder.Services.AddTransient<IEmailService, EmailService>();

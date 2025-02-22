@@ -5,11 +5,11 @@ using SendGrid.Helpers.Mail;
 
 namespace LylinkBackend_API.Services
 {
-    public class EmailService(IOptions<Authentication> authentication) : IEmailService
+    public class EmailService(IOptions<EmailOptions> emailOptions) : IEmailService
     {
         public async Task SendEmail(string toAddress, string subject, string body, IEnumerable<EmailAttachment>? attachments = null)
         {
-            SendGridClient client = new(authentication.Value.SendGridAPIKey);
+            SendGridClient client = new(emailOptions.Value.SendGridAPIKey);
 
             EmailAddress fromAddress = new("analytics@lylink.org", "Analytics");
 
