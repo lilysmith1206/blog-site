@@ -11,9 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\css\annotations\recogito.min.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Update="wwwroot\css\color.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -51,15 +48,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\js\adblocker_popup.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\js\annotations\annotation.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\js\annotations\recogito-polyfills.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\js\annotations\recogito.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\js\color_slider.js">

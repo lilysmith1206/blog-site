@@ -117,6 +117,7 @@ namespace LylinkBackend
                 await next();
             });
 
+            app.UseStaticFiles();
 
             app.UseMiddleware<CreateVisitIdMiddleware>();
             app.UseMiddleware<RetrieveStaticAssetMiddleware>();
