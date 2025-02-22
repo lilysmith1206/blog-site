@@ -2,22 +2,24 @@ let currentColorStatus = localStorage.getItem("currentColor");
 let darkMoon = document.getElementById("darkMoon");
 let lightSun = document.getElementById("lightSun");
 
-if (currentColorStatus !== null) {
-    if (currentColorStatus == "dark") {
-        showDarkMode();
+setTimeout(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+* {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+`;
 
-        darkMoon.style.display = 'inline';
-    }
-    else if (currentColorStatus == "light") {
-        showLightMode();
+    document.head.appendChild(style);
+}, 500)
 
-        lightSun.style.display = 'inline';
-    }
+const validColorOptions = ["dark", "light"];
+
+if (currentColorStatus !== null && validColorOptions.includes(currentColorStatus)) {
+    setColorStyle(currentColorStatus);
 }
 else {
     localStorage.setItem('currentColor', 'light');
-
-    lightSun.style.display = 'inline';
 
 	showLightMode();
 }
@@ -25,42 +27,27 @@ else {
 document.getElementById("darkMoon").addEventListener("click", handleDarkMoonClick);
 document.getElementById("lightSun").addEventListener("click", handleLightSunClick);
 
-setTimeout(() => {
-    document.getElementById('colorTransitionStyle').removeAttribute('disabled');
-}, 300)
-
 function setColorStyle(color) {
     localStorage.setItem("currentColor", color);
 
+    darkMoon.classList.remove('shown', 'hidden');
+    lightSun.classList.remove('shown', 'hidden');
+
     if (color == "dark") {
-        hideImage(lightSun, darkMoon);
+        darkMoon.classList.add('shown');
+        lightSun.classList.add('hidden');
 
         showDarkMode();
     }
     else if (color == "light") {
-        hideImage(darkMoon, lightSun);
+        lightSun.classList.add('shown');
+        darkMoon.classList.add('hidden');
 
         showLightMode();
     }
     else {
         throw `${currentColorStatus} is not a valid color style.`;
     }
-
-    localStorage.setItem('theme', this.checked ? 'dark' : 'light');
-}
-
-function hideImage(element, newElement) {
-    newElement.style.display = 'inline';
-
-    element.classList.add('hideImage');
-    newElement.classList.add('showImage');
-
-    setTimeout(() => {
-        element.style.display = 'none';
-
-        element.classList.remove('hideImage');
-        newElement.classList.remove('showImage');
-    }, 300);
 }
 
 function showDarkMode() {

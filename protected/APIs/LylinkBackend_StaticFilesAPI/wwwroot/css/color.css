@@ -1,10 +1,24 @@
-﻿@keyframes bringToFront {
+﻿@keyframes showImage {
     0% {
-        z-index: 1;
+        filter: blur(2px) opacity(0.3) contrast(0.9);
+        transform: scale(0.9) translateZ(-10px) translateY(-10px);
     }
 
     100% {
-        z-index: 2;
+        filter: opacity(1) drop-shadow(0 0 10px var(--color-toggle-image-shadow-color));
+        transform: scale(1) translateZ(0) translateY(0px);
+    }
+}
+
+@keyframes hideImage {
+    0% {
+        filter: opacity(1) drop-shadow(0 0 10px var(--color-toggle-image-shadow-color));
+        transform: scale(1) translateZ(0) translateY(0px);
+    }
+
+    100% {
+        filter: blur(2px) opacity(0.3) contrast(0.9);
+        transform: scale(0.9) translateZ(-10px) translateY(-10px);
     }
 }
 
@@ -31,6 +45,7 @@
     --tab-content-bg-color: #E7C7ED;
     --tab-content-border-color: #D7AED8;
     --scrollbar-color: #b384c8;
+    --color-toggle-image-shadow-color: #3f3a52;
 }
 
 html.dark-mode {
@@ -56,6 +71,7 @@ html.dark-mode {
     --tab-content-bg-color: #4A4460;
     --tab-content-border-color: #3E3951;
     --scrollbar-color: #867097;
+    --color-toggle-image-shadow-color: #ffe6ff;
 }
 
 div#siteColorToggle {
@@ -71,29 +87,25 @@ div#siteColorToggle img {
     height: 75px;
     cursor: pointer;
     position: absolute;
-    display: inline;
     left: 0;
     top: 0;
+    animation-fill-mode: forwards;
 }
 
-div#siteColorToggle img.shown {
-    filter: drop-shadow(0, 0, 10px, #ffffff);
+img.hidden {
+    pointer-events: none;
+    animation: hideImage 0.5s ease forwards;
+    z-index: 1;
 }
 
-div#siteColorToggle img.hidden {
-    filter: blur(2px) contrast(0.9);
+img.shown {
+    animation: showImage 0.5s ease forwards;
+    z-index: 2;
 }
 
-* {
-    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
-}
-
-div#siteColorToggle img.hideImage {
-    transition: filter 0.5s !important;
-    animation: bringToFront 0.5s cubic-bezier(0.4, 0, 1, 1) forwards;
-}
-
-div#siteColorToggle img.showImage {
-    transition: filter 0.5s !important;
-    animation: bringToFront 0.5s cubic-bezier(0.4, 0, 1, 1) reverse;
-}
+/* This css is added by the color_slider.js class after 500 milliseconds to avoid some color issues when loading a page.
+ * For documentation purposes, it is included here.
+    * {
+        transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+    }
+*/

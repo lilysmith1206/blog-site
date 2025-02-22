@@ -11,11 +11,10 @@
 
         <title>@(ViewData["Title"]?.ToString() ?? string.Empty)</title>
 
+        <link id="colorStyle" rel="stylesheet" href="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/css/color.css" onerror="showAdblockPopup()" asp-append-version="true" />
+
         <link id="siteStyle" rel="stylesheet" href="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/css/site_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
         <link id="inputStyle" rel="stylesheet" href="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/css/input_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
-
-        <link id="colorStyle" rel="stylesheet" href="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/css/color.css" onerror="showAdblockPopup()" asp-append-version="true" />
-        <link id="colorTransitionStyle" rel="stylesheet" href="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/css/color_transition_style.css" onerror="showAdblockPopup()" defer disabled asp-append-version="true" />
 
         <link id="tabsStyle" rel="stylesheet" href="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/css/tabs_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
 
@@ -39,7 +38,7 @@
             <button onclick="closePopup()">Close</button>
         </div>
         <div id="page-container">
-            <div id="siteColorToggle">
+            <div id="siteColorToggle" title="Click to change themes.">
                 <img 
                     id="darkMoon"
                     src="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/images/DarkMode.svg"
