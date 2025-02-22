@@ -1,15 +1,6 @@
-﻿using LylinkBackend_API.Caches;
-using LylinkBackend_API.Models;
-using LylinkBackend_API.Services;
-using Microsoft.Extensions.Options;
-
-namespace LylinkBackend_API.Middleware
+﻿namespace LylinkBackend_ManagementAPI.Middleware
 {
-    public class TokenValidationMiddleware(
-        RequestDelegate next,
-        IVisitAnalyticsCache visitAnalyticsCache,
-        IUserCookieService userCookieService,
-        IOptions<Authentication> authentication)
+    public class TokenValidationMiddleware(RequestDelegate next)
     {
         private readonly string[] RestrictedSlugs = [
             "/management",
@@ -26,6 +17,7 @@ namespace LylinkBackend_API.Middleware
 
             if (RestrictedSlugs.Contains(requestedSlug))
             {
+                /*
                 string? token = userCookieService.GetUserAuthenticationToken(context.Request.Cookies);
 
                 if (token == null || authentication.Value.UserIds.Contains(token) == false)
@@ -37,12 +29,12 @@ namespace LylinkBackend_API.Middleware
 
                     context.Items["new_visitor_id"] = visitorId;
 
-                    visitAnalyticsCache.QueueVisitAnalyticsForProcessing(requestedSlug, "403", visitorId);
-
                     context.Response.Redirect("/403");
 
                     return;
-                }
+                }*/
+
+                Console.WriteLine("Restricted page accessed!");
             }
 
             await next(context);

@@ -1,83 +1,95 @@
-﻿@using LylinkBackend_API.Models
+﻿@using LylinkBackend_API_Shared.Models
 @using LylinkBackend_DatabaseAccessLayer.BusinessModels
+@using LylinkBackend_ManagementAPI.Models
+@using Microsoft.Extensions.Options
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@inject IOptions<AssetsOriginOptions> AssetsOriginOptions;
+
+@{
+    var assetsEndpoint = AssetsOriginOptions.Value.AssetsEndpointHttps;
+}
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <script src="js/adblocker_popup.js"></script>
+<head>
+    <script src="@($"{assetsEndpoint}")/js/adblocker_popup.js"></script>
 
-        <title>@(ViewData["Title"]?.ToString() ?? string.Empty)</title>
+    <title>@(ViewData["Title"]?.ToString() ?? string.Empty)</title>
 
-        <link id="siteStyle" rel="stylesheet" href="css/site_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
-        <link id="inputStyle" rel="stylesheet" href="css/input_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+    <link id="colorStyle" rel="stylesheet" href="@($"{assetsEndpoint}")/css/color.css" onerror="showAdblockPopup()" asp-append-version="true" />
 
-        <link id="colorStyle" rel="stylesheet" href="css/color.css" onerror="showAdblockPopup()" asp-append-version="true" />
-        <link id="colorTransitionStyle" rel="stylesheet" href="css/color_transition_style.css" onerror="showAdblockPopup()" defer disabled asp-append-version="true" />
+    <link id="siteStyle" rel="stylesheet" href="@($"{assetsEndpoint}")/css/site_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+    <link id="inputStyle" rel="stylesheet" href="@($"{assetsEndpoint}")/css/input_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
 
-        <link id="tabsStyle" rel="stylesheet" href="css/tabs_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+    <link id="tabsStyle" rel="stylesheet" href="@($"{assetsEndpoint}")/css/tabs_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
 
-        <link id="icon" rel="icon" type="image/x-icon" href="css/lylink_icon.ico" onerror="showAdblockPopup()" asp-append-version="true" />
-        
-        <script src="js/color_slider.js" defer ></script>
-        <script src="js/tabs.js" defer ></script>
+    <link id="icon" rel="icon" type="image/x-icon" href="@($"{assetsEndpoint}")/css/lylink_icon.ico" onerror="showAdblockPopup()" asp-append-version="true" />
 
-        <meta charset="UTF-8" />
-        <meta name="keywords" content="@(ViewData["Keywords"]?.ToString() ?? string.Empty)" />
-        <meta name="description" content="@(ViewData["Description"]?.ToString() ?? string.Empty)" />
-        <meta name="author" content="Lylink">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="@($"{assetsEndpoint}")/js/color_slider.js" defer></script>
+    <script src="@($"{assetsEndpoint}")/js/tabs.js" defer></script>
 
-        @RenderSection("ExtraMetadata", required: false)
-    </head>
-    <body>
-        <div id="adblock-background"></div>
-        <div id="adblock-popup">
-            <p>Hey, it looks like a resource failed to load. If you have an ad-blocker, please turn it off.</p>
-            <button onclick="closePopup()">Close</button>
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="@(ViewData["Keywords"]?.ToString() ?? string.Empty)" />
+    <meta name="description" content="@(ViewData["Description"]?.ToString() ?? string.Empty)" />
+    <meta name="author" content="Lylink">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link id="tableStyle" rel="stylesheet" href="@($"{assetsEndpoint}")/css/table_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+    <link id="maintenanceStyle" rel="stylesheet" href="css/maintenance_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+
+    <script src="js/medium/medium-editor.min.js"></script>
+    <script src="js/medium/medium-editor-tables.min.js"></script>
+    <script src="js/beautify/beautify.js"></script>
+    <link rel="stylesheet" href="css/medium/medium-editor.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="css/medium/medium-editor-tables.min.css" asp-append-version="true">
+    <link rel="stylesheet" href="css/medium/themes/default.min.css" asp-append-version="true">
+
+    @RenderSection("ExtraMetadata", required: false)
+</head>
+<body>
+    <div id="adblock-background"></div>
+    <div id="adblock-popup">
+        <p>Hey, it looks like a resource failed to load. If you have an ad-blocker, please turn it off.</p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+    <div id="page-container">
+        <div id="siteColorToggle" title="Click to change themes.">
+            <img id="darkMoon"
+                 src="@($"{assetsEndpoint}")/images/DarkMode.svg"
+                 alt="Dark Mode" />
+            <img id="lightSun"
+                 src="@($"{assetsEndpoint}")/images/LightMode.svg"
+                 alt="Light Mode" />
         </div>
-        <div id="page-container">
-            <div id="siteColorToggle">
-                <img 
-                    id="darkMoon"
-                    src="~/images/DarkMode.svg"
-                    alt="Dark Mode" />
-                <img
-                     id="lightSun"
-                     src="~/images/LightMode.svg"
-                     alt="Light Mode" />
-            </div>
-            <header>
-                <div class="breadcrumb">
-                    <ul>
-                        @{
-                            IEnumerable<PageLink> parentCategories = (IEnumerable<PageLink>?)ViewData["ParentCategories"] ?? Array.Empty<PageLink>();
-                            
-                            foreach (PageLink parentCategory in parentCategories)
-                            {
-                                <li><a href="@parentCategory.Slug" title="@parentCategory.Description">@parentCategory.Name.ToLower()</a></li>
-                            }
+        <header>
+            <div class="breadcrumb">
+                <ul>
+                    @{
+                        IEnumerable<PageLink> parentCategories = (IEnumerable<PageLink>?)ViewData["ParentCategories"] ?? Array.Empty<PageLink>();
+
+                        foreach (PageLink parentCategory in parentCategories)
+                        {
+                            <li><a href="@parentCategory.Slug" title="@parentCategory.Description">@parentCategory.Name.ToLower()</a></li>
                         }
-                    </ul>
-                </div>
-                @{
-                    string pageName = ViewData["PageName"]?.ToString() ?? string.Empty;
-
-                    <h1 id="website-header">
-                        @pageName
-                    </h1>
-                }
-
-                @RenderSection("ExtraHeader", required: false)
-            </header>
-            <div id="content-wrap">
-                <div class="container">
-                    @RenderSection("Body")
-                </div>
+                    }
+                </ul>
             </div>
-            <footer>
-                <p><a href="/privacy">Privacy Policy</a> - Copyright 2025, All Rights Reserved</p>
-            </footer>
+            @{
+                string pageName = ViewData["PageName"]?.ToString() ?? string.Empty;
+
+                <h1 id="website-header">
+                    @pageName
+                </h1>
+            }
+        </header>
+        <div id="content-wrap">
+            <div class="container">
+                @RenderSection("Body")
+            </div>
         </div>
-    </body>
+        <footer>
+            <p><a href="/privacy">Privacy Policy</a> - Copyright 2025, All Rights Reserved</p>
+        </footer>
+    </div>
+</body>
 </html>

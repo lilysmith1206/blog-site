@@ -1,6 +1,6 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
 
-namespace LylinkBackend_API.Models
+namespace LylinkBackend_ManagementAPI.Models
 {
     public struct Publisher
     {
