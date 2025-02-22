@@ -3,7 +3,7 @@
 ========================================================== */
 @font-face {
 	font-family: "MonospaceTypewriter";
-	src: url("fonts-dir/monospacetypewriter.ttf");
+	src: url("fonts/monospacetypewriter.ttf");
 }
 
 /* ==========================================================
@@ -11,7 +11,9 @@
 ========================================================== */
 html {
 	scrollbar-width: thin;
-	background-color: #888;
+	scrollbar-color: var(--scrollbar-color) var(--header-border-color);
+	background-color: var(--background-color);
+	color: var(--text-color);
 }
 
 body {
@@ -35,6 +37,7 @@ body .container {
 	margin-top: 1%;
 	margin-left: 1.5%;
 	margin-bottom: 2.5%;
+	z-index: -5;
 }
 
 /* ==========================================================
@@ -45,16 +48,19 @@ body header {
 	width: 100%;
 	padding: 0.25em 0;
 	padding-left: 10%;
-	border-bottom-style: inset;
-	border-bottom-width: 7px;
 	box-sizing: border-box;
+    background-color: var(--header-bg-color);
+	border-bottom-width: 7px;
+	border-bottom-style: inset;
+    border-bottom-color: var(--header-border-color);
+	z-index: -4;
 }
 
 body header>#website-header {
 	font-variant: small-caps;
 }
 
-header .breadcrumb {
+body header .breadcrumb {
 	box-sizing: border-box;
 	overflow-x: visible;
 	border-width: 0px;
@@ -62,6 +68,7 @@ header .breadcrumb {
 	border-style: solid;
 	display: inline-block;
 	white-space: nowrap;
+	border-bottom-color: var(--breadcrumb-border-color);
 }
 
 header .breadcrumb ul {
@@ -95,6 +102,9 @@ body aside {
 	border-width: 3px;
 	border-style: outset;
 	padding: 0.5% 1%;
+	background-color: var(--main-aside-bg-color);
+	border-color: var(--main-aside-border-color);
+	z-index: -4;
 }
 
 body main {
@@ -114,6 +124,7 @@ body footer {
 	width: 100%;
 	margin: 0;
 	text-align: center;
+	background-color: var(--footer-bg-color);
 }
 
 /* ==========================================================
@@ -125,6 +136,7 @@ body h5 {
 
 body a {
 	text-decoration: none;
+	color: var(--link-color);
 }
 
 body a:hover {
@@ -136,11 +148,13 @@ body hr {
 	border-top: 1px solid;
 	height: 2px;
 	width: 75%;
+	border-top-color: var(--hr-border-color);
 }
 
 body h2 {
 	min-width: 25%;
 	max-width: 50%;
+	border-bottom-color: var(--h2-border-color);
 }
 
 body main li {

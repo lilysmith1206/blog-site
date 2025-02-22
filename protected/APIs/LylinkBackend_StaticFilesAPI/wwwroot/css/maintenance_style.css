@@ -27,12 +27,6 @@ body aside {
     width: 100%;
 }
 
-button {
-    margin: 0 auto;
-    margin-top: 5px;
-    display: block;
-}
-
 pre {
     white-space: pre-wrap;
 }

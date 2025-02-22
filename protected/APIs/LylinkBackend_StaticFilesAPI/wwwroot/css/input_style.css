@@ -20,10 +20,22 @@ form select, input[type="text"] {
     background-color: #f9f9f9; /* Input background */
 }
 
-form button {
+button {
+    background-color: var(--button-bg-color);
+    border-color: var(--button-border-color);
+    color: var(--text-color);
+    font-weight: bold;
     margin: 0 auto;
     margin-top: 5px;
     display: block;
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+button.active {
+    background-color: var(--button-active-bg-color);
 }
 
 form optgroup {

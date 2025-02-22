@@ -21,6 +21,8 @@ button {
     border-width: 1px;
     border-style: outset;
     margin-top: 20px;
+    background-color: var(--tab-content-bg-color);
+    border-color: var(--tab-content-border-color);
 }
 
 .tab-content h2 {
