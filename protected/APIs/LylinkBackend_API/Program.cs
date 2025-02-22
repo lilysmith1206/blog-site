@@ -36,9 +36,6 @@ namespace LylinkBackend
             });
 #endif
 
-            builder.AddServiceDefaults();
-
-
             builder.Services.AddAuthorization();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -50,6 +47,28 @@ namespace LylinkBackend
 
             builder.Services.Configure<EmailOptions>(
                 builder.Configuration.GetSection("EmailOptions"));
+
+
+            const string AssetsOrigins = "_assetsOrigin";
+            
+            string assetUrl = builder.Configuration.GetSection("AssetsOriginOptions").GetValue<string>("AssetsEndpointHttps")
+                ?? throw new NullReferenceException("No assets https endpoint configured.");
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: AssetsOrigins, policy =>
+                {
+                    policy.WithOrigins(assetUrl)
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .WithExposedHeaders("Content-Disposition")
+                      .SetIsOriginAllowedToAllowWildcardSubdomains()
+                      .AllowCredentials();
+                });
+            });
+
+            builder.Services.Configure<AssetsOriginOptions>(
+                builder.Configuration.GetSection("AssetsOriginOptions"));
 
             builder.Services.AddTransient<IAnnotationRepository, AnnotationsRepository>();
             builder.Services.AddTransient<IPageRepository, PageRepository>();
@@ -71,7 +90,7 @@ namespace LylinkBackend
 
             var app = builder.Build();
 
-            app.MapDefaultEndpoints();
+            app.UseCors(AssetsOrigins);
 
             if (app.Environment.IsDevelopment())
             {
@@ -79,19 +98,26 @@ namespace LylinkBackend
                 app.UseSwaggerUI();
             }
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers.Append("Cache-Control", "public, max-age=31536000");
-                }
-            });
-
             app.UseHttpsRedirection();
             app.UseAuthorization();
 
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Method == "OPTIONS")
+                {
+                    context.Response.Headers.Append("Access-Control-Allow-Origin", assetUrl);
+                    context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, OPTIONS");
+                    context.Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type");
+                    context.Response.StatusCode = 204;
+
+                    return;
+                }
+
+                await next();
+            });
+
+
             app.UseMiddleware<CreateVisitIdMiddleware>();
-            app.UseMiddleware<TokenValidationMiddleware>();
 
             app.MapControllers();
 

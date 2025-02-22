@@ -1,6 +1,8 @@
 ﻿@using LylinkBackend_API.Models
 @using System.Text.RegularExpressions
+@using Microsoft.Extensions.Options
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
+@inject IOptions<AssetsOriginOptions> AssetsOriginOptions;
 
 @model PagePost
 @{
@@ -18,8 +20,7 @@
 
         if (tableTagRegex.IsMatch(Model.Body))
         {
-
-            <link id="tableStyle" rel="stylesheet" href="css/table_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+            <link id="tableStyle" rel="stylesheet" href="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/css/table_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
         }
     }
 
