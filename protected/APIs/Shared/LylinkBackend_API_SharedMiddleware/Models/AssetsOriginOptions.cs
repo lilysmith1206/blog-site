@@ -1,4 +1,4 @@
-﻿namespace LylinkBackend_API.Models
+﻿namespace LylinkBackend_API_Shared.Models
 {
     public class AssetsOriginOptions
     {

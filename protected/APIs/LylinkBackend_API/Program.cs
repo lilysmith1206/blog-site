@@ -2,6 +2,8 @@ using LylinkBackend_API.Caches;
 using LylinkBackend_API.Middleware;
 using LylinkBackend_API.Models;
 using LylinkBackend_API.Services;
+using LylinkBackend_API_Shared.Middleware;
+using LylinkBackend_API_Shared.Models;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +49,6 @@ namespace LylinkBackend
 
             builder.Services.Configure<EmailOptions>(
                 builder.Configuration.GetSection("EmailOptions"));
-
 
             const string AssetsOrigins = "_assetsOrigin";
             
@@ -118,6 +119,7 @@ namespace LylinkBackend
 
 
             app.UseMiddleware<CreateVisitIdMiddleware>();
+            app.UseMiddleware<RetrieveStaticAssetMiddleware>();
 
             app.MapControllers();
 
