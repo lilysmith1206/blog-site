@@ -1,6 +1,6 @@
-﻿using LylinkBackend_API.Models;
+﻿using LylinkBackend_EmailService.Models;
 
-namespace LylinkBackend_API.Services
+namespace LylinkBackend_EmailService.Services
 {
     public interface IEmailService
     {

@@ -1,4 +1,4 @@
-﻿namespace LylinkBackend_API.Models
+﻿namespace LylinkBackend_EmailService.Models
 {
     public class EmailOptions
     {

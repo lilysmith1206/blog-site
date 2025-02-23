@@ -59,3 +59,5 @@ private/mysqldump.sql
 /protected/Test/AspireApp1/AspireApp1.Web/wwwroot/bootstrap/bootstrap.min.css
 /protected/Test/AspireApp1/AspireApp1.Web/wwwroot/bootstrap/bootstrap.min.css.map
 /protected/Test/AspireApp1/AspireApp1.Web/wwwroot/favicon.png
+/protected/Hosted Services/LylinkBackend_EmailService/appsettings.Development.json
+/protected/Hosted Services/LylinkBackend_EmailService/appsettings.Development.json

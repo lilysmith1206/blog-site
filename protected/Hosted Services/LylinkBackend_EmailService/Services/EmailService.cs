@@ -1,9 +1,9 @@
-﻿using LylinkBackend_API.Models;
+﻿using LylinkBackend_EmailService.Models;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace LylinkBackend_API.Services
+namespace LylinkBackend_EmailService.Services
 {
     public class EmailService(IOptions<EmailOptions> emailOptions) : IEmailService
     {

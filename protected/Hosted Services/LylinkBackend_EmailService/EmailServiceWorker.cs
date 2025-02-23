@@ -1,19 +1,21 @@
-﻿using LylinkBackend_API.Models;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
+using LylinkBackend_EmailService.Models;
+using LylinkBackend_EmailService.Services;
 using Microsoft.Extensions.Options;
 using System.Text;
 
-namespace LylinkBackend_API.Services
+namespace LylinkBackend_EmailService
 {
-    public class VisitAnalyticsEmailService(IServiceProvider serviceProvider, IOptions<EmailOptions> emailOptions) : BackgroundService
+    public class EmailServiceWorker(IServiceProvider serviceProvider, IOptions<EmailOptions> emailOptions) : BackgroundService
     {
         private readonly TimeSpan targetTime = new(0, 00, 0);
 
-        protected async override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (stoppingToken.IsCancellationRequested == false)
             {
+
                 TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
                 DateTime currentEastern = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 

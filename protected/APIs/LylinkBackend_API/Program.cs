@@ -47,9 +47,6 @@ namespace LylinkBackend
                 options.UseMySql(builder.Configuration.GetConnectionString("MariaDbConnection"), ServerVersion.Parse("11.5.2-mariadb"));
             });
 
-            builder.Services.Configure<EmailOptions>(
-                builder.Configuration.GetSection("EmailOptions"));
-
             const string AssetsOrigins = "_assetsOrigin";
             
             string assetUrl = builder.Configuration.GetSection("AssetsOriginOptions").GetValue<string>("AssetsEndpointHttps")
@@ -75,7 +72,6 @@ namespace LylinkBackend
             builder.Services.AddTransient<IPageRepository, PageRepository>();
             builder.Services.AddTransient<IVisitAnalyticsRepository, VisitAnalyticsRepository>();
             builder.Services.AddTransient<ISlugRepository, SlugRepository>();
-            builder.Services.AddTransient<IEmailService, EmailService>();
 
             builder.Services.AddSingleton<IUserCookieService, UserCookieService>();
             builder.Services.AddSingleton<ISlugCache, SlugCache>();
@@ -83,7 +79,6 @@ namespace LylinkBackend
 
             builder.Services.AddHostedService<SlugDataService>();
             builder.Services.AddHostedService<VisitAnalyticsProcessingService>();
-            builder.Services.AddHostedService<VisitAnalyticsEmailService>();
 
             builder.Services.AddControllers();
             builder.Services.AddRazorPages();
