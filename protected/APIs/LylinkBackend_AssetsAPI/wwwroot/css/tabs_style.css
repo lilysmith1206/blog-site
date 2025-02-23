@@ -5,7 +5,13 @@
 
 .tab-buttons {
     display: flex;
-    justify-content: space-around;
+}
+
+@media screen and (max-width: 800px) {
+    .tab-buttons {
+        overflow-x: scroll;
+        padding-bottom: 10px;
+    }
 }
 
 button {
