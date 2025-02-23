@@ -3,7 +3,9 @@ using LylinkBackend_API_Shared.Middleware;
 using LylinkBackend_API_Shared.Models;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
+using LylinkBackend_ManagementAPI.Middleware;
 using LylinkBackend_ManagementAPI.Models;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 
 namespace LylinkBackend_ManagementAPI;
@@ -13,8 +15,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        // Add services to the container.
 
         builder.Services.AddControllers();
 
@@ -44,6 +44,9 @@ public class Program
 
         builder.Services.Configure<MainSiteOptions>(
             builder.Configuration.GetSection("MainSiteOptions"));
+
+        builder.Services.Configure<AuthenticationOptions>(
+            builder.Configuration.GetSection("AuthenticationOptions"));
 
         builder.Services.AddDbContext<LylinkdbContext>(options =>
         {
@@ -83,6 +86,7 @@ public class Program
         });
 
         app.UseMiddleware<RetrieveStaticAssetMiddleware>();
+        app.UseMiddleware<CertificateValidationMiddleware>();
 
         app.UseStaticFiles();
 
