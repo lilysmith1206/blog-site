@@ -164,6 +164,7 @@ body main li {
 pre {
 	white-space: pre-wrap;
 }
+
 /* ==========================================================
 7. Adblock Popup Styles
 ========================================================== */
@@ -265,8 +266,11 @@ img {
 }
 
 @media screen and (max-width: 800px) {
-	body table.desktop {
-		display: none;
+	pre {
+		white-space: pre;
+		overflow-x: scroll;
+		overflow-wrap: break-word;
+		word-wrap: break-word;
 	}
 
 	body table.mobile {
