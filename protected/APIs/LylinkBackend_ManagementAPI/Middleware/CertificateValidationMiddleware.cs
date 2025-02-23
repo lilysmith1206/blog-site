@@ -8,6 +8,7 @@ namespace LylinkBackend_ManagementAPI.Middleware
     {
         public async Task InvokeAsync(HttpContext context)
         {
+#if !DEBUG
             X509Certificate2? clientCertificate = await context.Connection.GetClientCertificateAsync();
 
             if (clientCertificate == null || IsCertificateValid(clientCertificate) == false)
@@ -17,8 +18,10 @@ namespace LylinkBackend_ManagementAPI.Middleware
                 return;
             }
 
+#endif
             await next(context);
         }
+
 
         private bool IsCertificateValid(X509Certificate2 certificate)
         {

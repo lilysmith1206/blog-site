@@ -90,6 +90,8 @@ function getSlugBody(slugBox) {
         return JSON.parse(response);
     })
     .then(data => {
+        console.log(data);
+
         document.getElementById('title').value = data.title;
         document.getElementById('keywords').value = data.keywords;
         document.getElementById('description').value = data.description;
@@ -97,7 +99,6 @@ function getSlugBody(slugBox) {
         document.getElementById('slug').value = data.slug;
         document.getElementById('isDraft').value = data.isDraft == true;
         document.getElementById('isDraftInput').checked = data.isDraft == true;
-        document.getElementById('id').value = data.id;
 
         document.getElementById('html').textContent = beautify.html(data.body, options);
         document.getElementById('rendered').innerHTML = data.body;

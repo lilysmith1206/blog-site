@@ -88,7 +88,6 @@ function getSlugBody(slugBox) {
         document.getElementById('slug').value = data.slug;
         document.getElementById('parentCategoryBox').value = data.parentId;
         document.getElementById('sortingMethods').value = data.postSortingMethod;
-        document.getElementById('id').value = data.id;
 
         document.getElementById('html').textContent = beautify.html(data.body, options);
         document.getElementById('rendered').innerHTML = data.body;

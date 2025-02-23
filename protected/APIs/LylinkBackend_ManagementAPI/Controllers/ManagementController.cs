@@ -55,7 +55,17 @@ namespace LylinkBackend_ManagementAPI.Controllers
         {
             PostInfo post = pageManagementRepository.GetPost(id);
 
-            return Ok(post);
+            return Ok(new PublisherPost()
+            {
+                Body = post.Body,
+                Description = post.Description,
+                IsDraft = post.IsDraft,
+                Keywords = post.Keywords,
+                Name = post.Name,
+                ParentId = post.ParentId,
+                Slug = post.Slug,
+                Title = post.Title
+            });
         }
 
         [HttpGet("/getPostCategoryFromId")]
@@ -63,50 +73,96 @@ namespace LylinkBackend_ManagementAPI.Controllers
         {
             CategoryInfo category = pageManagementRepository.GetCategory(categoryId);
 
-            return Ok(category);
+            return Ok(new CategorizerCategory()
+            {
+                Body = category.Body,
+                Description = category.Description,
+                Keywords = category.Keywords,
+                Name = category.Name,
+                ParentId = category.ParentId,
+                PostSortingMethod = category.PostSortingMethod,
+                Slug = category.Slug,
+                Title = category.Title,
+            });
         }
 
         [HttpPost("/savePost")]
-        public IActionResult SaveDraft([FromForm] PostInfo remotePost)
+        public IActionResult SaveDraft([FromForm] PublisherPost publisherPostInfo)
         {
+            if (publisherPostInfo.Slug == null)
+            {
+                return StatusCode(400, "Slug must be specified.");
+            }
+
             try
             {
-                if (pageManagementRepository.DoesPageWithSlugExist(remotePost.Slug))
+                PostInfo postInfo = new()
                 {
-                    pageManagementRepository.UpdatePost(remotePost);
+
+                    Body = publisherPostInfo.Body ?? throw new NullReferenceException($"{nameof(publisherPostInfo.Body)} is null"),
+                    Description = publisherPostInfo.Description ?? throw new NullReferenceException($"{nameof(publisherPostInfo.Description)} is null"),
+                    Keywords = publisherPostInfo.Keywords ?? throw new NullReferenceException($"{nameof(publisherPostInfo.Keywords)} is null"),
+                    Name = publisherPostInfo.Name ?? throw new NullReferenceException($"{nameof(publisherPostInfo.Name)} is null"),
+                    Title = publisherPostInfo.Title ?? throw new NullReferenceException($"{nameof(publisherPostInfo.Title)} is null"),
+                    IsDraft = publisherPostInfo.IsDraft ?? throw new NullReferenceException($"{nameof(publisherPostInfo.IsDraft)} is null"),
+                    ParentId = publisherPostInfo.ParentId ?? throw new NullReferenceException($"{nameof(publisherPostInfo.ParentId)} is null"),
+                    Slug = publisherPostInfo.Slug
+                };
+
+                if (pageManagementRepository.DoesPageWithSlugExist(postInfo.Slug))
+                {
+                    pageManagementRepository.UpdatePost(postInfo);
                 }
                 else
                 {
-                    pageManagementRepository.CreatePost(remotePost);
+                    pageManagementRepository.CreatePost(postInfo);
                 }
 
                 return RedirectToAction("Publisher", "Management", new { successfulPostSubmit = true });
             }
             catch (Exception)
             {
-                return StatusCode(500, $"Issue adding/updating post {remotePost.Name}");
+                return StatusCode(500, $"Issue adding/updating post {publisherPostInfo.Name}");
             }
         }
 
         [HttpPost("/saveCategory")]
-        public IActionResult SaveCategory([FromForm] CategoryInfo remoteCategory)
+        public IActionResult SaveCategory([FromForm] CategorizerCategory categorizerCategory)
         {
+            if (categorizerCategory.Slug == null)
+            {
+                return StatusCode(400, "Slug must be specified.");
+            }
+
             try
             {
-                if (pageManagementRepository.DoesPageWithSlugExist(remoteCategory.Slug))
+                CategoryInfo categoryInfo = new()
                 {
-                    pageManagementRepository.UpdateCategory(remoteCategory);
+
+                    Body = categorizerCategory.Body ?? throw new NullReferenceException($"{nameof(categorizerCategory.Body)} is null"),
+                    Description = categorizerCategory.Description ?? throw new NullReferenceException($"{nameof(categorizerCategory.Description)} is null"),
+                    Keywords = categorizerCategory.Keywords ?? throw new NullReferenceException($"{nameof(categorizerCategory.Keywords)} is null"),
+                    Name = categorizerCategory.Name ?? throw new NullReferenceException($"{nameof(categorizerCategory.Name)} is null"),
+                    Title = categorizerCategory.Title ?? throw new NullReferenceException($"{nameof(categorizerCategory.Title)} is null"),
+                    PostSortingMethod = categorizerCategory.PostSortingMethod ?? throw new NullReferenceException($"{nameof(categorizerCategory.PostSortingMethod)} is null"),
+                    ParentId = categorizerCategory.ParentId ?? throw new NullReferenceException($"{nameof(categorizerCategory.ParentId)} is null"),
+                    Slug = categorizerCategory.Slug
+                };
+
+                if (pageManagementRepository.DoesPageWithSlugExist(categoryInfo.Slug))
+                {
+                    pageManagementRepository.UpdateCategory(categoryInfo);
                 }
                 else
                 {
-                    pageManagementRepository.CreateCategory(remoteCategory);
+                    pageManagementRepository.CreateCategory(categoryInfo);
                 }
 
                 return RedirectToAction("Categorizer", "Management", new { successfulPostSubmit = true });
             }
             catch (Exception)
             {
-                return StatusCode(500, $"Issue adding/updating post {remoteCategory.Name}");
+                return StatusCode(500, $"Issue adding/updating post {categorizerCategory.Name}");
             }
         }
 
