@@ -272,9 +272,4 @@ img {
 		overflow-wrap: break-word;
 		word-wrap: break-word;
 	}
-
-	body table.mobile {
-		display: table;
-		width: 95%;
-	}
 }

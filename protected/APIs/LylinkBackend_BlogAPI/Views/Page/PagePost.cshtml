@@ -22,7 +22,9 @@
         if (tableTagRegex.IsMatch(Model.Body))
         {
             <link id="tableStyle" rel="stylesheet" href="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/css/table_style.css" onerror="showAdblockPopup()" asp-append-version="true" />
+            <script src="@($"{AssetsOriginOptions.Value.AssetsEndpointHttps}")/js/table.js" defer></script>
         }
+
     }
 
     @if (Model.EditorName != null)
