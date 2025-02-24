@@ -42,84 +42,84 @@
 
 @section Body
 {
-    <div class="tab-container">
-        <main>
+    <main>
+        <div class="tab-container">
             <div class="tab-buttons">
-                <button class="tab-button" onclick="showHtmlView()">HTML View</button>
-                <button class="tab-button" onclick="showRenderedView()">Rendered View</button>
+                <button class="tab-button" id="html-view-button" data-tab="html">HTML View</button>
+                <button class="tab-button" id="rendered-view-button" data-tab="rendered">Rendered View</button>
             </div>
-            <div width="100%"><pre width="100%" id="html" class="tab-content" contenteditable="true" style="display: block;"></pre></div>
+            <div width="100%" id="html" class="tab-content"><pre id="html-text" width="100%" contenteditable="true" style="display: block;"></pre></div>
             <div id="rendered" class="tab-content" style="display: none;" contenteditable="true" data-placeholder=""></div>
-        </main>
-        <aside>
-            <form style="display: inline-block">
-                <label>
-                    Categories
-                    <select onchange="getSlugBody(this)">
-                        <option value="none">Select a category</option>
-                        @foreach (CategoryInfo category in Model.Categories) {
-                            <option value="@category.Id">@category.Name</option>
-                        }
-                    </select>
-                </label>
-            </form>
-            <form action="/saveCategory" method="post" style="display: inline-block">
-                <label>
-                    Title
-                    <input type="text" id="title" name="Title" placeholder="Title" required />
-                </label>
+        </div>
+    </main>
+    <aside>
+        <form style="display: inline-block">
+            <label>
+                Categories
+                <select onchange="getSlugBody(this)">
+                    <option value="none">Select a category</option>
+                    @foreach (CategoryInfo category in Model.Categories) {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </label>
+        </form>
+        <form action="/saveCategory" method="post" style="display: inline-block">
+            <label>
+                Title
+                <input type="text" id="title" name="Title" placeholder="Title" required />
+            </label>
 
-                <label>
-                    Description
-                    <input type="text" id="description" name="Description" placeholder="Description" required />
-                </label>
+            <label>
+                Description
+                <input type="text" id="description" name="Description" placeholder="Description" required />
+            </label>
 
-                <label>
-                    Keywords
-                    <input type="text" id="keywords" name="Keywords" placeholder="Keywords" required />
-                </label>
+            <label>
+                Keywords
+                <input type="text" id="keywords" name="Keywords" placeholder="Keywords" required />
+            </label>
 
-                <label>
-                    Slug
-                    <input type="text" id="slug" name="Slug" placeholder="Slug" required />
-                </label>
+            <label>
+                Slug
+                <input type="text" id="slug" name="Slug" placeholder="Slug" required />
+            </label>
 
-                <label>
-                    Parent Category
-                    <select id="parentCategoryBox" name="ParentId" required>
-                        <option value="">Select a category</option>
-                        <option value="6">Index</option>
-                        @{
-                            foreach (CategoryInfo parentCategory in Model.Categories)
-                            {
-                                <option value="@parentCategory.Id">@parentCategory.Name</option>
-                            }
-                        }
-                    </select>
-                </label>
-
-                <label>
-                    Name
-                    <input type="text" id="name" name="Name" placeholder="Name" required />
-                </label>
-
-                <label>
-                    Post sorting method
-                    <select id="sortingMethods" name="PostSortingMethod">
-                        @foreach (PostSortingMethod sortingMethod in Enum.GetValues(typeof(PostSortingMethod)))
+            <label>
+                Parent Category
+                <select id="parentCategoryBox" name="ParentId" required>
+                    <option value="">Select a category</option>
+                    <option value="6">Index</option>
+                    @{
+                        foreach (CategoryInfo parentCategory in Model.Categories)
                         {
-                            string sortingMethodName = Regex.Replace(sortingMethod.ToString(), @"([A-Z])", " $1").Trim();
-                            int sortingMethodId = (int)sortingMethod;
-
-                            <option value="@sortingMethodId">@sortingMethodName</option>
+                            <option value="@parentCategory.Id">@parentCategory.Name</option>
                         }
-                    </select>
-                </label>
+                    }
+                </select>
+            </label>
 
-                <input type="hidden" id="body" name="Body" />
+            <label>
+                Name
+                <input type="text" id="name" name="Name" placeholder="Name" required />
+            </label>
 
-                <button type="submit">Save Draft</button>
-            </form>
-        </aside>
-    </div>
+            <label>
+                Post sorting method
+                <select id="sortingMethods" name="PostSortingMethod">
+                    @foreach (PostSortingMethod sortingMethod in Enum.GetValues(typeof(PostSortingMethod)))
+                    {
+                        string sortingMethodName = Regex.Replace(sortingMethod.ToString(), @"([A-Z])", " $1").Trim();
+                        int sortingMethodId = (int)sortingMethod;
+
+                        <option value="@sortingMethodId">@sortingMethodName</option>
+                    }
+                </select>
+            </label>
+
+            <input type="hidden" id="body" name="Body" />
+
+            <button type="submit">Save Draft</button>
+        </form>
+    </aside>
 }

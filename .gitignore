@@ -61,3 +61,10 @@ private/mysqldump.sql
 /protected/Test/AspireApp1/AspireApp1.Web/wwwroot/favicon.png
 /protected/Hosted Services/LylinkBackend_EmailService/appsettings.Development.json
 /protected/Hosted Services/LylinkBackend_EmailService/appsettings.Development.json
+/protected/APIs/LylinkBackend_AssetsAPI/LylinkBackend_AssetsAPI.csproj.user
+*.user
+*.pubxml
+/protected/APIs/LylinkBackend_AssetsAPI/.config/dotnet-tools.json
+/protected/APIs/LylinkBackend_ManagementAPI/LylinkBackend_ManagementAPI.csproj.user
+*.json
+/protected/APIs/LylinkBackend_BlogAPI/LylinkBackend_BlogAPI.csproj.user
