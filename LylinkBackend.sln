@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_BlogAPI", "pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LylinkBackend_AssetsAPI", "protected\APIs\LylinkBackend_AssetsAPI\LylinkBackend_AssetsAPI.csproj", "{5BDCEF39-1C75-42AE-A2DA-73C499CE431A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{2A807069-B592-4B07-BE85-8EA1880FFD22}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,10 +67,6 @@ Global
 		{5BDCEF39-1C75-42AE-A2DA-73C499CE431A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BDCEF39-1C75-42AE-A2DA-73C499CE431A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BDCEF39-1C75-42AE-A2DA-73C499CE431A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A807069-B592-4B07-BE85-8EA1880FFD22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A807069-B592-4B07-BE85-8EA1880FFD22}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A807069-B592-4B07-BE85-8EA1880FFD22}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A807069-B592-4B07-BE85-8EA1880FFD22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,7 +83,6 @@ Global
 		{DB2DEA23-B9B1-42DD-BCEA-BB07979AAAAA} = {B0C061C4-AFDB-4063-BF5B-D423FEB3C0CE}
 		{696185FD-C2F0-464D-8665-D899196BAA64} = {5AD64AF8-9D0E-4F27-8A39-CB39398906DA}
 		{5BDCEF39-1C75-42AE-A2DA-73C499CE431A} = {5AD64AF8-9D0E-4F27-8A39-CB39398906DA}
-		{2A807069-B592-4B07-BE85-8EA1880FFD22} = {86A815C9-0276-4BA4-9394-3F66A35D1735}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FC83A25-ED6F-4F75-BF38-62694D52CD98}

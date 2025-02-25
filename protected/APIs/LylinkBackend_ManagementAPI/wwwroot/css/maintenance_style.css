@@ -13,7 +13,7 @@ body aside {
     right: 0;
 }
 
-.tab-content {
+main > .tab-container > .tab-content {
     top: 30%;
     padding: 0px;
     border-width: 0px;
