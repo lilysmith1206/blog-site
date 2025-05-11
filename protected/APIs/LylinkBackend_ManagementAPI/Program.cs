@@ -5,7 +5,6 @@ using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using LylinkBackend_ManagementAPI.Middleware;
 using LylinkBackend_ManagementAPI.Models;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 
 namespace LylinkBackend_ManagementAPI;
@@ -86,7 +85,9 @@ public class Program
         });
 
         app.UseMiddleware<RetrieveStaticAssetMiddleware>();
+#if RELEASE
         app.UseMiddleware<CertificateValidationMiddleware>();
+#endif
 
         app.UseStaticFiles();
 
