@@ -5,12 +5,20 @@
 
 body main {
     width: 70%;
+    transition: width ease-in-out 0.2s;
 }
 
 body aside {
     position: fixed;
     top: 20%;
     right: 0;
+    transition: right ease-in-out 0.2s;
+}
+
+button#asideToggleButton {
+    position: absolute;
+    right: 0.5%;
+    top: 15%;
 }
 
 main > .tab-container > .tab-content {

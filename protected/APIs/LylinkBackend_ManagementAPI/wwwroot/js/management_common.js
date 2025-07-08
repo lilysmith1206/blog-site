@@ -1,17 +1,4 @@
-﻿const editor = new MediumEditor('#rendered', {
-    extensions: { table: new MediumEditorTable() },
-    toolbar: {
-        buttons: ['bold', 'italic', 'underline', 'strikethrough', 'anchor', 'h2', 'h3', 'quote', 'table']
-    },
-    placeholder: false,
-});
-
-const options = {
-    indent_size: 4,
-    max_char: 0
-};
-
-const beautify = SimplyBeautiful();
+﻿
 
 const htmlTextView = document.getElementById('html-text');
 const renderedView = document.getElementById('rendered');
@@ -33,6 +20,30 @@ document.getElementById('rendered-view-button').addEventListener("click", () => 
     isHtmlViewOn = false;
     isRenderedViewOn = true;
 });
+
+const asideToggleButton = document.getElementById('asideToggleButton');
+
+let asideIsHidden = false;
+
+asideToggleButton.addEventListener("click", () => {
+    const asideContainer = document.querySelector("aside");
+    const mainContainer = document.querySelector("main");
+
+    if (asideIsHidden === true) {
+        asideContainer.style.right = "0%";
+        mainContainer.style.width = "70%";
+        asideToggleButton.innerText = ">";
+
+        asideIsHidden = false;
+    }
+    else {
+        asideContainer.style.right = "-30%";
+        mainContainer.style.width = "90%";
+        asideToggleButton.innerText = "<";
+
+        asideIsHidden = true;
+    }
+})
 
 setInterval(() => {
     if (isHtmlViewOn === true) {
