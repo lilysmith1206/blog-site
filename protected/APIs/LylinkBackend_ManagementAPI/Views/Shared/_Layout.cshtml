@@ -39,7 +39,6 @@
 
     <script src="js/medium/medium-editor.min.js"></script>
     <script src="js/medium/medium-editor-tables.min.js"></script>
-    <script src="js/beautify/beautify.js"></script>
     <script src="js/management_common.js" defer></script>
     <link rel="stylesheet" href="css/medium/medium-editor.min.css" asp-append-version="true">
     <link rel="stylesheet" href="css/medium/medium-editor-tables.min.css" asp-append-version="true">
@@ -85,7 +84,19 @@
         </header>
         <div id="content-wrap">
             <div class="container">
-                @RenderSection("Body")
+                <main>
+                    <div class="tab-container">
+                        <div class="tab-buttons">
+                            <button class="tab-button" id="html-view-button" data-tab="html">HTML View</button>
+                            <button class="tab-button" id="rendered-view-button" data-tab="rendered">Rendered View</button>
+                        </div>
+                        <div width="100%" id="html" class="tab-content"><pre id="html-text" width="100%" contenteditable="true" style="display: block;"></pre></div>
+                        <div id="rendered" class="tab-content" style="display: none;" contenteditable="true" data-placeholder=""></div>
+                    </div>
+                </main>
+                <aside>
+                    @RenderSection("AsideContent")
+                </aside>
             </div>
         </div>
         <footer>

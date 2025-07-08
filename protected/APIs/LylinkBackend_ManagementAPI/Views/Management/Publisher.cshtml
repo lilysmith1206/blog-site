@@ -40,83 +40,72 @@
     <script src="js/publisher.js" defer></script>
 }
 
-@section Body
+@section AsideContent
 {
-    <main>
-        <div class="tab-container">
-            <div class="tab-buttons">
-                <button class="tab-button" id="html-view-button" data-tab="html">HTML View</button>
-                <button class="tab-button" id="rendered-view-button" data-tab="rendered">Rendered View</button>
-            </div>
-            <div width="100%" id="html" class="tab-content"><pre id="html-text" width="100%" contenteditable="true" style="display: block;"></pre></div>
-            <div id="rendered" class="tab-content" style="display: none;" contenteditable="true" data-placeholder=""></div>
-        </div>
-    </main>
-    <aside>
-        <form style="display: inline-block">
-            <label>
-                Posts
-                <select onchange="getSlugBody(this)">
-                    <option selected value="">Select a post</option>
-                    @foreach (KeyValuePair<string, IEnumerable<PostInfo>> categoryPosts in Model.CategoryPosts)
-                    {
-                        <optgroup label="@categoryPosts.Key">
-                            @foreach (PostInfo post in categoryPosts.Value)
-                            {
-                                <option value="@post.Id">@post.Name</option>
-                            }
-                        </optgroup>
-                    }
-                </select>
-            </label>
-        </form>
-        <form action="/savePost" method="post" style="display: inline-block">
-            <label>
-                Title
-                <input type="text" id="title" name="Title" placeholder="Title" required />
-            </label>
+   
+    <form style="display: inline-block">
+        <label>
+            Posts
+            <select onchange="getSlugBody(this)">
+                <option selected value="">Select a post</option>
+                @foreach (KeyValuePair<string, IEnumerable<PostInfo>> categoryPosts in Model.CategoryPosts)
+                {
+                    <optgroup label="@categoryPosts.Key">
+                        @foreach (PostInfo post in categoryPosts.Value)
+                        {
+                            <option value="@post.Id">@post.Name</option>
+                        }
+                    </optgroup>
+                }
+            </select>
+        </label>
+    </form>
+    <form action="/savePost" method="post" style="display: inline-block">
+        <label>
+            Title
+            <input type="text" id="title" name="Title" placeholder="Title" required />
+        </label>
 
-            <label>
-                Description
-                <input type="text" id="description" name="Description" placeholder="Description" required />
-            </label>
+        <label>
+            Description
+            <input type="text" id="description" name="Description" placeholder="Description" required />
+        </label>
 
-            <label>
-                Keywords
-                <input type="text" id="keywords" name="Keywords" placeholder="Keywords" required />
-            </label>
+        <label>
+            Keywords
+            <input type="text" id="keywords" name="Keywords" placeholder="Keywords" required />
+        </label>
 
-            <label>
-                Slug
-                <input type="text" id="slug" name="Slug" placeholder="Slug" required />
-            </label>
+        <label>
+            Slug
+            <input type="text" id="slug" name="Slug" placeholder="Slug" required />
+        </label>
 
-            <label>
-                Categories
-                <select id="categoryBox" name="ParentId" required>
-                    <option value="" selected>Select a category</option>
-                    @foreach (CategoryInfo category in Model.Categories)
-                    {
-                        <option value="@category.Id">@category.Name</option>
-                    }
-                </select>
-            </label>
+        <label>
+            Categories
+            <select id="categoryBox" name="ParentId" required>
+                <option value="" selected>Select a category</option>
+                @foreach (CategoryInfo category in Model.Categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+        </label>
 
-            <label>
-                Name
-                <input type="text" id="name" name="Name" placeholder="Name" required />
-            </label>
+        <label>
+            Name
+            <input type="text" id="name" name="Name" placeholder="Name" required />
+        </label>
                 
-            <input type="hidden" id="isDraft" name="IsDraft" value="false" />
+        <input type="hidden" id="isDraft" name="IsDraft" value="false" />
 
-            <label>
-                Post is draft
-                <input type="checkbox" id="isDraftInput" />
-            </label>
+        <label>
+            Post is draft
+            <input type="checkbox" id="isDraftInput" />
+        </label>
 
-            <input type="hidden" id="body" name="Body" />
+        <input type="hidden" id="body" name="Body" />
 
-            <button type="submit">Save Draft</button>
-        </form>
-    </aside>
+        <button type="submit">Save Draft</button>
+    </form>
 }
