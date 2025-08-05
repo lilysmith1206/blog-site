@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Options;
-using Resend;
+﻿using Resend;
 
 namespace LylinkBackend_EmailService.Services
 {
-    public class EmailService(IResend resendClient, IOptions<Models.Email> emailOptions) : IEmailService
+    public class EmailService(IResend resendClient) : IEmailService
     {
-        public async Task SendEmail(string toAddress, string subject, string body, IEnumerable<Models.EmailAttachment>? attachments = null)
+        public async Task<bool> SendEmail(string toAddress, string subject, string body, IEnumerable<Models.EmailAttachment>? attachments = null)
         {
             try
             {
@@ -28,16 +27,20 @@ namespace LylinkBackend_EmailService.Services
                 };
 
                 message.From = fromAddress;
-                message.To.Add(emailOptions.Value.AnalyticsEmailRecipient!);
+                message.To.Add(toAddress);
                 message.Attachments = [.. emailAttachments];
                 message.Subject = subject;
                 message.HtmlBody = body;
 
                 await resendClient.EmailSendAsync(message);
+
+                return true;
             }
             catch (Exception)
             {
                 Console.WriteLine("Failed to send the analytics email.");
+
+                return false;
             }
         }
     }

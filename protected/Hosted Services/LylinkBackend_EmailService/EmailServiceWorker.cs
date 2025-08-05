@@ -60,9 +60,12 @@ namespace LylinkBackend_EmailService
                     FileName = "raw_analytics.csv"
                 };
 
-                await emailService.SendEmail(analyticsEmailRecipient, "Site Visitor Analytics", body, [csvAttachment]);
+                bool successfulEmailSent = await emailService.SendEmail(analyticsEmailRecipient, "Site Visitor Analytics", body, [csvAttachment]);
 
-                visitAnalytics.DropAllVisitorAnalytics();
+                if (successfulEmailSent)
+                {
+                    visitAnalytics.DropAllVisitorAnalytics();
+                }
             }
         }
 
