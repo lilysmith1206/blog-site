@@ -65,7 +65,7 @@ namespace LylinkBackend_API.Controllers
                 Description = post.Description,
                 Keywords = post.Keywords,
                 PageName = post.Name ?? string.Empty,
-                Parents = post.Parents,
+                ParentCategories = post.Parents,
                 Title = post.Title,
                 DateUpdated = post.DateModified
             });

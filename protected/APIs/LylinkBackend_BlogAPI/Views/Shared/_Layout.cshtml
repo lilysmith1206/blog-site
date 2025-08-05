@@ -2,8 +2,11 @@
 @using LylinkBackend_API_Shared.Models;
 @using LylinkBackend_DatabaseAccessLayer.BusinessModels
 @using Microsoft.Extensions.Options
+
 @addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @inject IOptions<AssetsOriginOptions> AssetsOriginOptions;
+
+@model BasePage;
 
 @{
     var assetsEndpoint = AssetsOriginOptions.Value.AssetsEndpointHttps;
@@ -14,7 +17,7 @@
     <head>
         <script src="@($"{assetsEndpoint}")/js/adblocker_popup.js"></script>
 
-        <title>@(ViewData["Title"]?.ToString() ?? string.Empty)</title>
+        <title>@(Model.Title)</title>
 
         <link id="colorStyle" rel="stylesheet" href="@($"{assetsEndpoint}")/css/color.css" onerror="showAdblockPopup()" asp-append-version="true" />
 
@@ -29,8 +32,8 @@
         <script src="@($"{assetsEndpoint}")/js/tabs.js" defer ></script>
 
         <meta charset="UTF-8" />
-        <meta name="keywords" content="@(ViewData["Keywords"]?.ToString() ?? string.Empty)" />
-        <meta name="description" content="@(ViewData["Description"]?.ToString() ?? string.Empty)" />
+        <meta name="keywords" content="@(Model.Keywords)" />
+        <meta name="description" content="@(Model.Description)" />
         <meta name="author" content="Lylink">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -56,23 +59,17 @@
             <header>
                 <div class="breadcrumb">
                     <ul>
-                        @{
-                            IEnumerable<PageLink> parentCategories = (IEnumerable<PageLink>?)ViewData["ParentCategories"] ?? Array.Empty<PageLink>();
-                            
-                            foreach (PageLink parentCategory in parentCategories)
-                            {
-                                <li><a href="@parentCategory.Slug" title="@parentCategory.Description">@parentCategory.Name.ToLower()</a></li>
-                            }
+                    @{
+                        foreach (PageLink parentCategory in Model.ParentCategories)
+                        {
+                            <li><a href="@parentCategory.Slug" title="@parentCategory.Description">@parentCategory.Name.ToLower()</a></li>
                         }
+                    }
                     </ul>
                 </div>
-                @{
-                    string pageName = ViewData["PageName"]?.ToString() ?? string.Empty;
-
-                    <h1 id="website-header">
-                        @pageName
-                    </h1>
-                }
+                <h1 id="website-header">
+                    @(Model.PageName)
+                </h1>
 
                 @RenderSection("ExtraHeader", required: false)
             </header>
