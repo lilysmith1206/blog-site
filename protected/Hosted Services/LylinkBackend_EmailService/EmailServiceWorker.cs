@@ -15,7 +15,6 @@ namespace LylinkBackend_EmailService
         {
             while (stoppingToken.IsCancellationRequested == false)
             {
-
                 TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
                 DateTime currentEastern = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, easternZone);
 

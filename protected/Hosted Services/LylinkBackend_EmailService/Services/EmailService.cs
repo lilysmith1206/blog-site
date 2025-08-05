@@ -1,37 +1,43 @@
-﻿using LylinkBackend_EmailService.Models;
-using Microsoft.Extensions.Options;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+﻿using Microsoft.Extensions.Options;
+using Resend;
 
 namespace LylinkBackend_EmailService.Services
 {
-    public class EmailService(IOptions<Email> emailOptions) : IEmailService
+    public class EmailService(IResend resendClient, IOptions<Models.Email> emailOptions) : IEmailService
     {
-        public async Task SendEmail(string toAddress, string subject, string body, IEnumerable<EmailAttachment>? attachments = null)
+        public async Task SendEmail(string toAddress, string subject, string body, IEnumerable<Models.EmailAttachment>? attachments = null)
         {
-            SendGridClient client = new(emailOptions.Value.SendGridAPIKey);
-
-            EmailAddress fromAddress = new("analytics@lylink.org", "Analytics");
-
-            SendGridMessage message = MailHelper.CreateSingleEmail(fromAddress, new EmailAddress(toAddress), subject, body, body);
-
-            if (attachments != null)
+            try
             {
-                foreach (EmailAttachment attachmentData in attachments)
+                IEnumerable<EmailAttachment> emailAttachments = attachments?
+                    .Select(attachment =>
+                    {
+                        return new EmailAttachment()
+                        {
+                            Content = attachment.AttachmentData,
+                            Filename = attachment.FileName
+                        };
+                    }) ?? [];
+
+                EmailMessage message = new EmailMessage();
+
+                EmailAddress fromAddress = new()
                 {
-                    message.AddAttachment(
-                        filename: attachmentData.FileName,
-                        base64Content: Convert.ToBase64String(attachmentData.AttachmentData),
-                        disposition: "attachment"
-                    );
-                }
+                    DisplayName = "Analytics",
+                    Email = "analytics@lylink.org"
+                };
+
+                message.From = fromAddress;
+                message.To.Add(emailOptions.Value.AnalyticsEmailRecipient!);
+                message.Attachments = [.. emailAttachments];
+                message.Subject = subject;
+                message.HtmlBody = body;
+
+                await resendClient.EmailSendAsync(message);
             }
-
-            Response response = await client.SendEmailAsync(message);
-
-            if ((int)response.StatusCode >= 400)
+            catch (Exception)
             {
-                throw new Exception($"Email sending failed with status: {response.StatusCode}");
+                Console.WriteLine("Failed to send the analytics email.");
             }
         }
     }
