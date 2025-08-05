@@ -7,7 +7,7 @@ using System.Text;
 
 namespace LylinkBackend_EmailService
 {
-    public class EmailServiceWorker(IServiceProvider serviceProvider, IOptions<EmailOptions> emailOptions) : BackgroundService
+    public class EmailServiceWorker(IServiceProvider serviceProvider, IOptions<Email> emailOptions) : BackgroundService
     {
         private readonly TimeSpan targetTime = new(0, 00, 0);
 

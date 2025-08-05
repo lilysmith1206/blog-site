@@ -22,10 +22,10 @@ namespace LylinkBackend_EmailService
             
             builder.Services.AddHostedService<EmailServiceWorker>();
 
-            builder.Services.Configure<EmailOptions>(
-                builder.Configuration.GetSection("EmailOptions"));
+            builder.Services.AddOptions<Email>(nameof(Email));
 
             var host = builder.Build();
+
             host.Run();
         }
     }

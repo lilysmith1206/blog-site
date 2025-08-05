@@ -5,7 +5,7 @@ using SendGrid.Helpers.Mail;
 
 namespace LylinkBackend_EmailService.Services
 {
-    public class EmailService(IOptions<EmailOptions> emailOptions) : IEmailService
+    public class EmailService(IOptions<Email> emailOptions) : IEmailService
     {
         public async Task SendEmail(string toAddress, string subject, string body, IEnumerable<EmailAttachment>? attachments = null)
         {
