@@ -2,11 +2,10 @@
 
 namespace LylinkBackend_API.Models
 {
-    public struct PagePost
+    public class PagePost : BasePage
     {
         public string? EditorName { get; set; }
 
         public DateTime DateUpdated { get; set; }
-
     }
 }
