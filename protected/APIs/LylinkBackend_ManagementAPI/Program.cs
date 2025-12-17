@@ -3,8 +3,9 @@ using LylinkBackend_API_Shared.Middleware;
 using LylinkBackend_API_Shared.Models;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
-using LylinkBackend_ManagementAPI.Middleware;
 using LylinkBackend_ManagementAPI.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 
 namespace LylinkBackend_ManagementAPI;
@@ -38,14 +39,36 @@ public class Program
             });
         });
 
+        var authenticationOptions = builder.Configuration
+            .GetSection(nameof(AuthenticationOptions))
+            .Get<AuthenticationOptions>();
+
+        builder.Services
+            .AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddOpenIdConnect(options =>
+            {
+                options.Authority = "http://localhost:8080/realms/lylink/";
+                options.ClientId = "lylink_management";
+                options.ClientSecret = "gfcPHBarzdo5aq9hHc3XIqwmAEavueOI";
+                options.ResponseType = "code";
+
+                options.SaveTokens = true;
+
+                options.RequireHttpsMetadata = false; // localhost only
+            });
+
+        builder.Services.AddAuthorization();
+
         builder.Services.Configure<AssetsOriginOptions>(
             builder.Configuration.GetSection("AssetsOriginOptions"));
 
         builder.Services.Configure<MainSiteOptions>(
             builder.Configuration.GetSection("MainSiteOptions"));
-
-        builder.Services.Configure<AuthenticationOptions>(
-            builder.Configuration.GetSection("AuthenticationOptions"));
 
         builder.Services.AddDbContext<LylinkdbContext>(options =>
         {
@@ -60,14 +83,16 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseHttpsRedirection();
 
         app.UseCors(AssetsOrigins);
+        app.MapControllers();
+        app.MapRazorPages().RequireAuthorization();
+
+        app.UseMiddleware<RetrieveStaticAssetMiddleware>();
 
         app.Use(async (context, next) =>
         {
@@ -83,19 +108,6 @@ public class Program
 
             await next();
         });
-
-        app.UseMiddleware<RetrieveStaticAssetMiddleware>();
-#if RELEASE
-        app.UseMiddleware<CertificateValidationMiddleware>();
-#endif
-
-        app.UseStaticFiles();
-
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
-        app.MapControllers();
 
         app.Run();
     }

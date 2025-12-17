@@ -1,5 +1,5 @@
-﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
-using LylinkBackend_DatabaseAccessLayer.Models;
+﻿using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkShared.Models;
 
 namespace LylinkBackend_DatabaseAccessLayer.Mappers
 {

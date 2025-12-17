@@ -16,8 +16,8 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 return new LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod
                 {
-                    Id = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedAscending,
-                    SortingName = LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedAscending.ToString(),
+                    Id = (int)LylinkShared.Models.PostSortingMethod.ByDateCreatedAscending,
+                    SortingName = LylinkShared.Models.PostSortingMethod.ByDateCreatedAscending.ToString(),
                 };
             }
         }
@@ -28,8 +28,8 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 return new LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod
                 {
-                    Id = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedDescending,
-                    SortingName = LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateCreatedDescending.ToString(),
+                    Id = (int)LylinkShared.Models.PostSortingMethod.ByDateCreatedDescending,
+                    SortingName = LylinkShared.Models.PostSortingMethod.ByDateCreatedDescending.ToString(),
                 };
             }
         }
@@ -40,8 +40,8 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 return new LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod
                 {
-                    Id = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateModifiedAscending,
-                    SortingName = LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateModifiedAscending.ToString(),
+                    Id = (int)LylinkShared.Models.PostSortingMethod.ByDateModifiedAscending,
+                    SortingName = LylinkShared.Models.PostSortingMethod.ByDateModifiedAscending.ToString(),
                 };
             }
         }
@@ -52,8 +52,8 @@ namespace LylinkBackend_DatabaseAccessLayer_UnitTests
             {
                 return new LylinkBackend_DatabaseAccessLayer.Models.PostSortingMethod
                 {
-                    Id = (int)LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateModifiedDescending,
-                    SortingName = LylinkBackend_DatabaseAccessLayer.BusinessModels.PostSortingMethod.ByDateModifiedDescending.ToString(),
+                    Id = (int)LylinkShared.Models.PostSortingMethod.ByDateModifiedDescending,
+                    SortingName = LylinkShared.Models.PostSortingMethod.ByDateModifiedDescending.ToString(),
                 };
             }
         }

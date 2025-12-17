@@ -1,5 +1,5 @@
-﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
-using LylinkBackend_DatabaseAccessLayer.Models;
+﻿using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkShared.Models;
 
 namespace LylinkBackend_DatabaseAccessLayer.Mappers
 {
@@ -10,7 +10,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Mappers
             IEnumerable<PageLink> posts,
             IEnumerable<PageLink> parents,
             IEnumerable<PageLink> childrenCategories,
-            BusinessModels.PostSortingMethod sortingMethod,
+            LylinkShared.Models.PostSortingMethod sortingMethod,
             out CategoryPage page)
         {
             Page databasePage = category.SlugNavigation;
@@ -30,7 +30,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Mappers
             };
         }
 
-        public static void Map(this PostCategory category, BusinessModels.PostSortingMethod postSortingMethod, out CategoryInfo categoryInfo)
+        public static void Map(this PostCategory category, LylinkShared.Models.PostSortingMethod postSortingMethod, out CategoryInfo categoryInfo)
         {
             categoryInfo = new CategoryInfo()
             {

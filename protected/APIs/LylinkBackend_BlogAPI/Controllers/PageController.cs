@@ -1,8 +1,8 @@
 ﻿using LylinkBackend_API.Caches;
 using LylinkBackend_API.Models;
 using LylinkBackend_API.Services;
-using LylinkBackend_DatabaseAccessLayer.BusinessModels;
 using LylinkBackend_DatabaseAccessLayer.Services;
+using LylinkShared.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LylinkBackend_API.Controllers

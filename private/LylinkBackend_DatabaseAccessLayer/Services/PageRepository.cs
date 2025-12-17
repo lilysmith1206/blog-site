@@ -1,6 +1,6 @@
-﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
-using LylinkBackend_DatabaseAccessLayer.Mappers;
+﻿using LylinkBackend_DatabaseAccessLayer.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkShared.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
@@ -60,14 +60,14 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
             IEnumerable<PageLink> parents = GetParentCategories(databaseCategory.Parent);
 
-            BusinessModels.PostSortingMethod postSortingMethod = databaseCategory.PostSortingMethod!.Map();
+            LylinkShared.Models.PostSortingMethod postSortingMethod = databaseCategory.PostSortingMethod!.Map();
 
             IEnumerable<PageLink> postLinks = (postSortingMethod switch
             {
-                BusinessModels.PostSortingMethod.ByDateCreatedAscending => databaseCategory.Posts.OrderBy(post => post.DateCreated),
-                BusinessModels.PostSortingMethod.ByDateCreatedDescending => databaseCategory.Posts.OrderByDescending(post => post.DateCreated),
-                BusinessModels.PostSortingMethod.ByDateModifiedAscending => databaseCategory.Posts.OrderBy(post => post.DateModified),
-                BusinessModels.PostSortingMethod.ByDateModifiedDescending => databaseCategory.Posts.OrderByDescending(post => post.DateModified),
+                LylinkShared.Models.PostSortingMethod.ByDateCreatedAscending => databaseCategory.Posts.OrderBy(post => post.DateCreated),
+                LylinkShared.Models.PostSortingMethod.ByDateCreatedDescending => databaseCategory.Posts.OrderByDescending(post => post.DateCreated),
+                LylinkShared.Models.PostSortingMethod.ByDateModifiedAscending => databaseCategory.Posts.OrderBy(post => post.DateModified),
+                LylinkShared.Models.PostSortingMethod.ByDateModifiedDescending => databaseCategory.Posts.OrderByDescending(post => post.DateModified),
                 _ => throw new NotSupportedException($"Sorting method")
             }).Select(post => post.Map());
 

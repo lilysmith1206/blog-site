@@ -6,6 +6,8 @@ using LylinkBackend_API_Shared.Middleware;
 using LylinkBackend_API_Shared.Models;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 
 #if RELEASE
@@ -95,7 +97,6 @@ namespace LylinkBackend
             }
 
             app.UseHttpsRedirection();
-            app.UseAuthorization();
 
             app.Use(async (context, next) =>
             {

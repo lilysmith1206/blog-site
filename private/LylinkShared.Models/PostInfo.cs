@@ -1,4 +1,4 @@
-﻿namespace LylinkBackend_DatabaseAccessLayer.BusinessModels
+﻿namespace LylinkShared.Models
 {
     public class PostInfo
     {

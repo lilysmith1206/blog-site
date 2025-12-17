@@ -1,6 +1,6 @@
-﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
-using LylinkBackend_DatabaseAccessLayer.Mappers;
+﻿using LylinkBackend_DatabaseAccessLayer.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Models;
+using LylinkShared.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
@@ -15,7 +15,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
             foreach (PostCategory category in categories)
             {
-                BusinessModels.PostSortingMethod sortingMethod = (category.PostSortingMethod?.Map()) ?? throw new NullReferenceException($"Category {category.SlugNavigation.Name} has no sorting method defined.");
+                LylinkShared.Models.PostSortingMethod sortingMethod = (category.PostSortingMethod?.Map()) ?? throw new NullReferenceException($"Category {category.SlugNavigation.Name} has no sorting method defined.");
                 
                 category.Map(sortingMethod, out CategoryInfo categoryInfo);
                 
@@ -56,7 +56,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 throw new ArgumentOutOfRangeException($"No category with id {id} found.");
             }
 
-            BusinessModels.PostSortingMethod postSortingMethod = category.PostSortingMethod?.Map() ?? throw new NullReferenceException("Post sorting method is null.");
+            LylinkShared.Models.PostSortingMethod postSortingMethod = category.PostSortingMethod?.Map() ?? throw new NullReferenceException("Post sorting method is null.");
 
             category.Map(postSortingMethod, out CategoryInfo categoryInfo);
 

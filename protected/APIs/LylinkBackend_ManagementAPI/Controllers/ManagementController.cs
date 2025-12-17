@@ -1,7 +1,8 @@
 ﻿using LylinkBackend_ManagementAPI.Models;
-using LylinkBackend_DatabaseAccessLayer.BusinessModels;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using LylinkShared.Models;
 
 namespace LylinkBackend_ManagementAPI.Controllers
 {
@@ -9,6 +10,7 @@ namespace LylinkBackend_ManagementAPI.Controllers
     [Route("Management")]
     public class ManagementController(IPageManagementRepository pageManagementRepository) : Controller
     {
+        [Authorize]
         [HttpGet("/")]
         public IActionResult Management()
         {

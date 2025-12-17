@@ -4,11 +4,11 @@ namespace LylinkBackend_DatabaseAccessLayer.Mappers
 {
     public static class PostSortingMethodMapper
     {
-        public static BusinessModels.PostSortingMethod Map(this PostSortingMethod databasePostSortingMethod)
+        public static LylinkShared.Models.PostSortingMethod Map(this PostSortingMethod databasePostSortingMethod)
         {
-            bool successfulParse = Enum.TryParse(typeof(BusinessModels.PostSortingMethod), databasePostSortingMethod.SortingName, out object? parsedSortingMethod);
+            bool successfulParse = Enum.TryParse(typeof(LylinkShared.Models.PostSortingMethod), databasePostSortingMethod.SortingName, out object? parsedSortingMethod);
 
-            if (parsedSortingMethod is BusinessModels.PostSortingMethod postSortingMethod)
+            if (parsedSortingMethod is LylinkShared.Models.PostSortingMethod postSortingMethod)
             {
                 return postSortingMethod;
             }

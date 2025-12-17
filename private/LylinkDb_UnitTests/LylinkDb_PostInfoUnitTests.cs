@@ -1,4 +1,4 @@
-﻿using LylinkBackend_DatabaseAccessLayer.BusinessModels;
+﻿using LylinkShared.Models;
 using LylinkBackend_DatabaseAccessLayer.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
