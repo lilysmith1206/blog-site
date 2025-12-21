@@ -27,6 +27,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\protected\APIs\Shared\LylinkBackend_API_SharedMiddleware\LylinkBackend_API_Shared.csproj" />
 	  <ProjectReference Include="..\..\..\protected\Clients\LylinkBackend.ManagementApiClient\LylinkBackend.ManagementApiClient.csproj" />
+	  <ProjectReference Include="..\..\..\protected\Shared\LylinkBackend.SharedApiCode\LylinkBackend.SharedApiCode.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

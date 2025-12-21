@@ -3,6 +3,9 @@ using LylinkBackend.ManagementApiClient;
 using LylinkBackend_API_Shared.Middleware;
 using LylinkBackend_API_Shared.Models;
 using LylinkFrontend.ManagementSite.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using LylinkBackend.SharedApiCode.Authentication;
 
 namespace LylinkFrontend.ManagementSite;
 
@@ -34,6 +37,15 @@ public class Program
                   .AllowCredentials();
             });
         });
+
+        var authenticationOptions = builder.Configuration
+            .GetSection("InboundAuthentication")
+            .Get<InboundAuthenticationOptions>();
+
+        if (authenticationOptions is null)
+            throw new InvalidOperationException("");
+
+        builder.Services.AddAuthentication(authenticationOptions);
 
         builder.Services.Configure<AssetsOriginOptions>(
             builder.Configuration.GetSection("AssetsOriginOptions"));
