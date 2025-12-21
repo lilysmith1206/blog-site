@@ -33,12 +33,55 @@ public class PostController : Controller
         return Ok(categories);
     }
 
+
+    [HttpGet("/posts/by-category")]
+    public Dictionary<string, List<ReferenceById>> GetPostsByCategoryName()
+    {
+        Dictionary<string, List<ReferenceById>> categoryAndPosts = [];
+
+        IEnumerable<CategoryInfo> categories = _pageManagementRepository.GetAllCategories();
+
+        foreach (CategoryInfo category in categories)
+        {
+            var postReferences = _pageManagementRepository.GetAllPosts(category.Slug)
+                .Select(post => new ReferenceById()
+                {
+                    Id = post.Id,
+                    Name = post.Name
+                }).ToList();
+
+            categoryAndPosts.Add(category.Name, postReferences);
+        }
+
+        return categoryAndPosts;
+    }
+
     [HttpPost("/posts")]
     public ActionResult<int> CreatePost([FromBody] PostInfo post)
     {
-        int postId = _pageManagementRepository.CreatePost(post);
+        if (post.Slug == null)
+        {
+            return StatusCode(400, "Slug must be specified.");
+        }
 
-        return Created($"/posts/{postId}", postId);
+        try
+        {
+            var postId = _pageManagementRepository.CreatePost(post);
+
+            return Created($"/posts/{postId}", postId);
+        }
+        catch (InvalidOperationException)
+        {
+            _logger.LogError("Post with that slug already exists.");
+
+            var existingPost = _pageManagementRepository.GetAllPosts()
+                .First(existingPost => existingPost.Slug == post.Slug);
+
+            return Conflict(new ConflictDetails()
+            {
+                ConflictingId = existingPost.Id
+            });
+        }
     }
 
     [HttpGet("/posts/{id}")]
@@ -69,6 +112,9 @@ public class PostController : Controller
         {
             return StatusCode(400, "Slug must be specified.");
         }
+
+        if (_pageManagementRepository.DoesPageWithSlugExist(post.Slug) == false)
+            return NotFound();
 
         post.Id = id;
 

@@ -7,14 +7,14 @@ namespace LylinkBackend.SharedClientCode.KeycloakTokenHandler;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection RegisterKeycloakTokenHandlerDependencies(this IServiceCollection services)
+    public static IServiceCollection RegisterOAuth2HandlerDependencies(this IServiceCollection services)
     {
         services.AddHttpClient(nameof(OAuth2TokenHandler));
 
-        return services.AddTransient<OAuth2TokenHandler>();
+        return services;
     }
 
-    public static IHttpClientBuilder RegisterKeycloakHandler(this IHttpClientBuilder builder, string name)
+    public static IHttpClientBuilder RegisterOAuth2Handler(this IHttpClientBuilder builder, string name)
     {
         return builder.AddHttpMessageHandler(serviceProvider =>
         {

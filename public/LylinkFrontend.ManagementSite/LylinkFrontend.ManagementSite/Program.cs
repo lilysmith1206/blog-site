@@ -35,12 +35,6 @@ public class Program
             });
         });
 
-        var authenticationOptions = builder.Configuration
-            .GetSection(nameof(AuthenticationOptions))
-            .Get<AuthenticationOptions>();
-
-        builder.Services.AddAuthorization();
-
         builder.Services.Configure<AssetsOriginOptions>(
             builder.Configuration.GetSection("AssetsOriginOptions"));
 
@@ -65,10 +59,11 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseHttpsRedirection();
+        app.UseStaticFiles();
 
         app.UseCors(AssetsOrigins);
         app.MapControllers();
-        app.MapRazorPages().RequireAuthorization();
+        app.MapRazorPages();
 
         app.UseMiddleware<RetrieveStaticAssetMiddleware>();
 

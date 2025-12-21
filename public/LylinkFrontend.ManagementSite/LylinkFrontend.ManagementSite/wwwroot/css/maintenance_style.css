@@ -1,0 +1,40 @@
+﻿body .container {
+    width: 97.5%;
+    margin: 0 auto;
+}
+
+body main {
+    width: 70%;
+    transition: width ease-in-out 0.2s;
+}
+
+body aside {
+    position: fixed;
+    top: 20%;
+    right: 0;
+    transition: right ease-in-out 0.2s;
+}
+
+button#asideToggleButton {
+    position: absolute;
+    right: 0.5%;
+    top: 15%;
+}
+
+main > .tab-container > .tab-content {
+    top: 30%;
+    padding: 0px;
+    border-width: 0px;
+    border-style: none;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.tab-container {
+    max-width: 100%;
+    width: 100%;
+}
+
+pre {
+    white-space: pre-wrap;
+}

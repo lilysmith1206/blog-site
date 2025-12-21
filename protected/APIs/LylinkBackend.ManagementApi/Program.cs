@@ -33,7 +33,7 @@ namespace LylinkBackend.ManagementApi
             builder.Services.AddAuthentication(inboundAuthentication);
             builder.Services.AddAuthorization();
 
-            builder.Services.AddDbContext<LylinkdbContext>(options =>
+            builder.Services.AddPooledDbContextFactory<LylinkdbContext>(options =>
             {
                 options.UseMySql(builder.Configuration.GetConnectionString("MariaDbConnection"), ServerVersion.Parse("11.5.2-mariadb"));
             });

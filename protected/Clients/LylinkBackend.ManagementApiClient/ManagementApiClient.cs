@@ -1,10 +1,11 @@
 ﻿using ErrorOr;
+using LylinkBackend.ManagementShared;
 using LylinkShared.Models;
 using Microsoft.Extensions.Logging;
-using Polly.Retry;
 using Polly;
+using Polly.Retry;
+using System.Net;
 using System.Net.Http.Json;
-using LylinkBackend.ManagementShared;
 
 namespace LylinkBackend.ManagementApiClient;
 
@@ -35,151 +36,183 @@ public class ManagementApiClient : IManagementApiClient
 
     public async Task<ErrorOr<Dictionary<string, List<ReferenceById>>>> GetPostsByCategoryAsync(CancellationToken cancellationToken = default)
     {
-        var postInfoByCategory = await _resiliencePipeline.ExecuteAsync(async token =>
+        var result = await SendAsync<Dictionary<string, List<ReferenceById>>>(client =>
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
+            return client.GetAsync($"/posts/by-category", cancellationToken);
+        }, [], cancellationToken);
 
-            return await client.GetFromJsonAsync<Dictionary<string, List<ReferenceById>>>("/posts/by-category", token);
-        }, cancellationToken);
+        if (result.IsError)
+            return result.FirstError;
 
-        if (postInfoByCategory is null)
-        {
-            _logger.LogError("Post info retrieved is null.");
+        if (result.Value is null)
+            return Error.Unexpected(description: "The request succeded, but was not deserialized correctly.");
 
-            return Error.Unexpected(description: "The post info retrieved is null. This is unexpected.");
-        }
-
-        return postInfoByCategory;
+        return result.Value;
     }
 
     public async Task<ErrorOr<PostInfo>> GetPostById(int id, CancellationToken cancellationToken = default)
     {
-        var post = await _resiliencePipeline.ExecuteAsync(async token =>
+        var result = await SendAsync<PostInfo>(client =>
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
-
-            return await client.GetFromJsonAsync<PostInfo>($"/posts/{id}", token);
+            return client.GetAsync($"/posts/{id}", cancellationToken);
+        }, new()
+        {
+            { HttpStatusCode.NotFound, _ => Error.NotFound(description: "A category was not found with the given ID.") }
         }, cancellationToken);
 
-        if (post is null)
-        {
-            _logger.LogError("Post info retrieved is null.");
+        if (result.IsError)
+            return result.FirstError;
 
-            return Error.Unexpected(description: "The post info retrieved is null. This is unexpected.");
-        }
+        if (result.Value is null)
+            return Error.Unexpected(description: "A category was found, but it was not deserialized correctly.");
 
-        return post;
+        return result.Value;
     }
 
     public async Task<ErrorOr<List<ReferenceById>>> GetCategoriesAsync(CancellationToken cancellationToken = default)
     {
-        var categories = await _resiliencePipeline.ExecuteAsync(async token =>
+        var result = await SendAsync<List<ReferenceById>>(client =>
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
-
-            return await client.GetFromJsonAsync<List<ReferenceById>>("/categories", token);
+            return client.GetAsync($"/categories", cancellationToken);
+        }, new()
+        {
+            { HttpStatusCode.NotFound, _ => Error.NotFound(description: "A post was not found with the given ID.") }
         }, cancellationToken);
 
-        if (categories is null)
-        {
-            _logger.LogError("Category info retrieved is null.");
+        if (result.IsError)
+            return result.FirstError;
 
-            return Error.Unexpected(description: "The category info retrieved is null. This is unexpected.");
-        }
+        if (result.Value is null)
+            return Error.Unexpected(description: "Categories were found, but were not deserialized correctly.");
 
-        return categories;
+        return result.Value;
     }
 
     public async Task<ErrorOr<CategoryInfo>> GetCategoryById(int id, CancellationToken cancellationToken = default)
     {
-        var category = await _resiliencePipeline.ExecuteAsync(async token =>
+        var result = await SendAsync<CategoryInfo>(client =>
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
-
-            return await client.GetFromJsonAsync<CategoryInfo>($"/categories/{id}", token);
+            return client.GetAsync($"/categories/{id}", cancellationToken);
+        }, new()
+        {
+            { HttpStatusCode.NotFound, _ => Error.NotFound(description: "A category was not found with the given ID.") }
         }, cancellationToken);
 
-        if (category is null)
-        {
-            _logger.LogError("Category info retrieved is null.");
+        if (result.IsError)
+            return result.FirstError;
 
-            return Error.Unexpected(description: "The category info retrieved is null. This is unexpected.");
-        }
+        if (result.Value is null)
+            return Error.Unexpected(description: "A category was found, but it was not deserialized correctly.");
 
-        return category;
+        return result.Value;
     }
 
     public async Task<ErrorOr<int>> CreatePost(PostInfo post, CancellationToken cancellationToken = default)
     {
-        var responseContent = await _resiliencePipeline.ExecuteAsync(async token =>
+        var result = await SendAsync<int>(client =>
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
-            var response = await client.PostAsJsonAsync("/posts", post, token);
-
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync(token);
+            return client.PostAsJsonAsync($"/posts", post, cancellationToken);
+        }, new()
+        {
+            { HttpStatusCode.Conflict, HandleConflictError }
         }, cancellationToken);
 
-        if (!int.TryParse(responseContent, out int postId))
-        {
-            _logger.LogError("Post ID given is not a valid integer.");
+        if (result.IsError)
+            return result.FirstError;
 
-            return Error.Unexpected(description: "The post id given is not valid.");
-        }
-
-        return postId;
+        return result.Value;
     }
 
     public async Task<ErrorOr<int>> CreateCategory(CategoryInfo category, CancellationToken cancellationToken = default)
     {
-        var responseContent = await _resiliencePipeline.ExecuteAsync(async token =>
+        var result = await SendAsync<int>(client =>
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
-            var response = await client.PostAsJsonAsync("/categories", category, token);
-
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync(token);
+            return client.PostAsJsonAsync($"/categories", category, cancellationToken);
+        }, new()
+        {
+            { HttpStatusCode.Conflict, HandleConflictError }
         }, cancellationToken);
 
-        if (!int.TryParse(responseContent, out int categoryId))
-        {
-            _logger.LogError("Category ID given is not a valid integer.");
+        if (result.IsError)
+            return result.FirstError;
 
-            return Error.Unexpected(description: "The category id given is not valid.");
-        }
+        return result.Value;
+    }
 
-        return categoryId;
+    private static ErrorOr<int> HandleConflictError(HttpContent content)
+    {
+        var conflictDetailsTask = content.ReadFromJsonAsync<ConflictDetails>();
+        conflictDetailsTask.Wait();
+        var conflictDetails = conflictDetailsTask.Result;
+
+        if (conflictDetails is null)
+            return Error.Unexpected(description: "The conflict details could not be deserialized.");
+
+        return Error.Conflict(description: "A page with the given slug already exists.", metadata: new() { { "conflict", conflictDetails.ConflictingId } });
     }
 
     public async Task<ErrorOr<Success>> UpdatePost(int id, PostInfo post, CancellationToken cancellationToken = default)
     {
-        var responseContent = await _resiliencePipeline.ExecuteAsync(async token =>
+        var result = await SendAsync<string>(client =>
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
-            var response = await client.PutAsJsonAsync($"/posts/{id}", post, token);
-
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync(token);
+            return client.PutAsJsonAsync($"/posts/{id}", post, cancellationToken);
+        }, new() {
+            { HttpStatusCode.NotFound, _ => Error.NotFound(description: "The post to update was not found.") }
         }, cancellationToken);
+
+        if (result.IsError)
+            return result.FirstError;
 
         return new Success();
     }
 
     public async Task<ErrorOr<Success>> UpdateCategory(int id, CategoryInfo category, CancellationToken cancellationToken = default)
     {
-        var responseContent = await _resiliencePipeline.ExecuteAsync(async token =>
+        var result = await SendAsync<string>(client =>
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
-            var response = await client.PutAsJsonAsync($"/categories/{id}", category, token);
-
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync(token);
+            return client.PutAsJsonAsync($"/categories/{id}", category, cancellationToken);
+        }, new() {
+            { HttpStatusCode.NotFound, _ => Error.NotFound(description: "The category to update was not found.") }
         }, cancellationToken);
 
+        if (result.IsError)
+            return result.FirstError;
+
         return new Success();
+    }
+
+    private async Task<ErrorOr<T?>> SendAsync<T>(
+        Func<HttpClient, Task<HttpResponseMessage>> sendFunction,
+        Dictionary<HttpStatusCode, Func<HttpContent, ErrorOr<T?>>> errorCodeMapping,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _resiliencePipeline.ExecuteAsync(async token =>
+        {
+            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
+            var response = await sendFunction(client);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("Request succeeded.");
+
+                return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
+            }
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (errorCodeMapping.TryGetValue(response.StatusCode, out var error))
+            {
+                var mappedError = error(response.Content);
+
+                _logger.LogInformation("Message failed with expected failure state: {code}, {message}", response.StatusCode, mappedError.FirstError.Description);
+
+                return mappedError;
+            }
+            else
+            {
+                return Error.Unexpected();
+            }
+        }, cancellationToken);
     }
 }

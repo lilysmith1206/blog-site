@@ -20,7 +20,6 @@ namespace LylinkFrontend.ManagementSite.Controllers
             _remoteClient = remoteClient;
         }
 
-        [Authorize]
         [HttpGet("/")]
         public IActionResult Management()
         {

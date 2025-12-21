@@ -16,3 +16,4 @@ private/mysqldump.sql
 /protected/APIs/LylinkBackend_BlogAPI/LylinkBackend_BlogAPI.csproj.user
 **.Development.json
 /protected/APIs/LylinkBackend.ManagementApi/appsettings.Development.json
+/public/LylinkFrontend.ManagementSite/LylinkFrontend.ManagementSite/appsettings.Development.json

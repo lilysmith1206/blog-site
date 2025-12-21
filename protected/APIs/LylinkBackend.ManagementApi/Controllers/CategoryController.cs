@@ -1,8 +1,10 @@
 ﻿using LylinkBackend.ManagementShared;
+using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using LylinkShared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace LylinkBackend.ManagementApi.Controllers;
 
@@ -28,7 +30,7 @@ public class CategoryController : Controller
             {
                 Id = category.Id,
                 Name = category.Name
-            });
+            }).ToList();
 
         return Ok(categories);
     }
@@ -36,9 +38,27 @@ public class CategoryController : Controller
     [HttpPost("/categories")]
     public ActionResult<int> CreateCategory([FromBody] CategoryInfo category)
     {
-        int categoryId = _pageManagementRepository.CreateCategory(category);
+        if (category.Slug is null)
+            return BadRequest("Slug must be specified.");
 
-        return Created($"/categories/{categoryId}", categoryId);
+        try
+        {
+            var categoryId = _pageManagementRepository.CreateCategory(category);
+
+            return Created($"/categories/{categoryId}", categoryId);
+        }
+        catch (InvalidOperationException)
+        {
+            _logger.LogError("Post with that slug already exists.");
+
+            var existingCategory = _pageManagementRepository.GetAllCategories()
+                .First(existingCategory => existingCategory.Slug == category.Slug);
+
+            return Conflict(new ConflictDetails()
+            {
+                ConflictingId = existingCategory.Id
+            });
+        }
     }
 
     [HttpGet("/categories/{id}")]
@@ -65,10 +85,11 @@ public class CategoryController : Controller
     [HttpPut("/categories/{id}")]
     public ActionResult UpdateCategory([FromRoute] int id, [FromBody] CategoryInfo category)
     {
-        if (category.Slug == null)
-        {
-            return StatusCode(400, "Slug must be specified.");
-        }
+        if (category.Slug is null)
+            return BadRequest("Slug must be specified.");
+
+        if (_pageManagementRepository.DoesPageWithSlugExist(category.Slug) == false)
+            return NotFound();
 
         category.Id = id;
 
