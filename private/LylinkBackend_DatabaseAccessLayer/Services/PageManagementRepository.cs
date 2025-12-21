@@ -2,49 +2,84 @@
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkShared.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using MySqlConnector;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
-    public class PageManagementRepository(LylinkdbContext context) : IPageManagementRepository
+    public class PageManagementRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IPageManagementRepository
     {
         public IEnumerable<CategoryInfo> GetAllCategories()
         {
-            IEnumerable<PostCategory> categories = context.PostCategories
-                .Include(category => category.SlugNavigation)
-                .Include(category => category.PostSortingMethod);
-
-            foreach (PostCategory category in categories)
+            try
             {
-                LylinkShared.Models.PostSortingMethod sortingMethod = (category.PostSortingMethod?.Map()) ?? throw new NullReferenceException($"Category {category.SlugNavigation.Name} has no sorting method defined.");
-                
-                category.Map(sortingMethod, out CategoryInfo categoryInfo);
-                
-                yield return categoryInfo;
+                using var context = contextFactory.CreateDbContext();
+
+                IEnumerable<PostCategory> categories = context.PostCategories
+                    .Include(category => category.SlugNavigation)
+                    .Include(category => category.PostSortingMethod)
+                    .ToList();
+
+                return categories
+                    .Select(category =>
+                    {
+                        LylinkShared.Models.PostSortingMethod sortingMethod = (category.PostSortingMethod?.Map()) ?? throw new NullReferenceException($"Category {category.SlugNavigation.Name} has no sorting method defined.");
+
+                        category.Map(sortingMethod, out CategoryInfo categoryInfo);
+
+                        return categoryInfo;
+                    });
+            }
+            catch (MySqlException)
+            {
+                return [];
             }
         }
 
         public IEnumerable<PostInfo> GetAllPosts(string? parentSlug = null)
         {
-            IEnumerable<Post> posts = context.Posts
-                .Include(post => post.SlugNavigation)
-                .Where(post => parentSlug == null || (post.Parent != null && post.Parent.Slug == parentSlug))
-                .Include(post => post.Parent);
-
-            foreach (Post post in posts)
+            try
             {
-                post.Map(out PostInfo postInfo);
+                using var context = contextFactory.CreateDbContext();
 
-                yield return postInfo;
+                IEnumerable<Post> posts = context.Posts
+                    .Include(post => post.SlugNavigation)
+                    .Where(post => parentSlug == null || (post.Parent != null && post.Parent.Slug == parentSlug))
+                    .Include(post => post.Parent)
+                    .ToList();
+
+                return posts
+                    .Select(post =>
+                    {
+                        post.Map(out PostInfo postInfo);
+
+                        return postInfo;
+                    });
+            }
+            catch (MySqlException)
+            {
+                return [];
             }
         }
 
         public bool DoesPageWithSlugExist(string slug)
         {
-            return context.Pages.Where(page => page.Slug == slug).Any();
+            try
+            {
+                using var context = contextFactory.CreateDbContext();
+
+                return context.Pages.Where(page => page.Slug == slug).Any();
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
         }
 
         public CategoryInfo GetCategory(int id)
         {
+            using var context = contextFactory.CreateDbContext();
+
             PostCategory? category = context.PostCategories
                 .Where(category => category.CategoryId == id)
                 .Include(category => category.SlugNavigation)
@@ -65,6 +100,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public PostInfo GetPost(int id)
         {
+            using var context = contextFactory.CreateDbContext();
+
             Post? post = context.Posts
                 .Where(post => post.Id == id)
                 .Include(post => post.SlugNavigation)
@@ -82,6 +119,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public int CreatePost(PostInfo post)
         {
+            using var context = contextFactory.CreateDbContext();
+
             Page? existingPage = context.Pages.SingleOrDefault(dbPage => dbPage.Slug == post.Slug);
             Post? existingPost = context.Posts.SingleOrDefault(dbPost => dbPost.Slug == post.Slug);
 
@@ -125,6 +164,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public int UpdatePost(PostInfo post)
         {
+            using var context = contextFactory.CreateDbContext();
+
             Page? existingPage = context.Pages.SingleOrDefault(dbPage => dbPage.Slug == post.Slug);
             Post? existingPost = context.Posts.SingleOrDefault(dbPost => dbPost.Slug == post.Slug);
 
@@ -154,6 +195,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public int CreateCategory(CategoryInfo category)
         {
+            using var context = contextFactory.CreateDbContext();
+
             Page? existingPage = context.Pages.SingleOrDefault(dbPage => dbPage.Slug == category.Slug);
             PostCategory? existingCategory = context.PostCategories.SingleOrDefault(dbCategory => dbCategory.Slug == category.Slug);
 
@@ -195,6 +238,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public int UpdateCategory(CategoryInfo category)
         {
+            using var context = contextFactory.CreateDbContext();
+
             Page? existingPage = context.Pages.SingleOrDefault(page => page.Slug == category.Slug);
             PostCategory? existingCategory = context.PostCategories.SingleOrDefault(dbCategory => dbCategory.Slug == category.Slug);
 

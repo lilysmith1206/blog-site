@@ -1,60 +1,116 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
+using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
-    public class AnnotationsRepository(LylinkdbContext context) : IAnnotationRepository
+    public class AnnotationsRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IAnnotationRepository
     {
         public IEnumerable<Annotation> GetAnnotations(string slug, string editorName)
         {
-            return context.Annotations
-                .Where(annotation => slug == annotation.Slug && annotation.EditorName == editorName)
-                .ToList();
+            try
+            {
+                using var context = contextFactory.CreateDbContext();
+
+                return context.Annotations
+                    .Where(annotation => slug == annotation.Slug && annotation.EditorName == editorName)
+                    .ToList();
+            }
+            catch (MySqlException)
+            {
+                return [];
+            }
         }
 
         public string? CreateAnnotation(Annotation annotation)
         {
-            context.Annotations.Add(annotation);
+            try
+            {
+                using var context = contextFactory.CreateDbContext();
 
-            context.SaveChanges();
+                context.Annotations.Add(annotation);
 
-            return annotation.Id;
+                context.SaveChanges();
+
+                return annotation.Id;
+            }
+            catch (MySqlException)
+            {
+                return null;
+            }
         }
 
         public bool UpdateAnnotation(Annotation annotation)
         {
-            var currentAnnotation = context.Annotations.Single(dbAnnotation => dbAnnotation.Id == annotation.Id);
+            try
+            {
+                using var context = contextFactory.CreateDbContext();
 
-            currentAnnotation.AnnotationContent = annotation.AnnotationContent;
-            currentAnnotation.EditorName = annotation.EditorName;
-            currentAnnotation.Slug = annotation.Slug;
+                var currentAnnotation = context.Annotations.Single(dbAnnotation => dbAnnotation.Id == annotation.Id);
 
-            return context.SaveChanges() == 1;
+                currentAnnotation.AnnotationContent = annotation.AnnotationContent;
+                currentAnnotation.EditorName = annotation.EditorName;
+                currentAnnotation.Slug = annotation.Slug;
+
+                return context.SaveChanges() == 1;
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
         }
 
         public bool DeleteAnnotation(string annotationId)
         {
-            Annotation? annotation = context.Annotations.SingleOrDefault(annotation => annotation.Id == annotationId);
+            try
+            {
+                using var context = contextFactory.CreateDbContext();
 
-            if (annotation == null)
+                Annotation? annotation = context.Annotations.SingleOrDefault(annotation => annotation.Id == annotationId);
+
+                if (annotation == null)
+                {
+                    return false;
+                }
+
+                context.Annotations.Remove(annotation);
+
+                return context.SaveChanges() == 1;
+            }
+            catch (MySqlException)
             {
                 return false;
             }
-
-            context.Annotations.Remove(annotation);
-
-            return context.SaveChanges() == 1;
         }
 
         public bool DeleteAnnotation(Annotation annotation)
         {
-            context.Annotations.Remove(annotation);
+            try
+            {
+                using var context = contextFactory.CreateDbContext();
+                
+                context.Annotations.Remove(annotation);
 
-            return context.SaveChanges() == 1;
+                return context.SaveChanges() == 1;
+            }
+            catch (MySqlException)
+            {
+                return false;
+            }
         }
 
         public Annotation? GetAnnotation(string id)
         {
-            return context.Annotations.SingleOrDefault(annotation => annotation.Id == id);
+            try
+            {
+                using var context = contextFactory.CreateDbContext();
+
+                return context.Annotations.SingleOrDefault(annotation => annotation.Id == id);
+            }
+            catch (MySqlException)
+            {
+                return null;
+            }
         }
 
     }

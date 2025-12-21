@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LylinkBackend_DatabaseAccessLayer.Services
 {
-    public class PageRepository(LylinkdbContext context) : IPageRepository
+    public class PageRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IPageRepository
     {
-        private readonly PostCategory IndexCategory = context.PostCategories.Single(category => category.Slug == "/");
-
         public IEnumerable<PageLink> GetRecentlyUpdatedPostInfos(int amount)
         {
+            using var context = contextFactory.CreateDbContext();
+
             return context.Posts
                 .OrderByDescending(post => post.DateModified)
                 .Where(post => post.IsDraft == false)
@@ -21,6 +21,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public PostPage? GetPost(string slug)
         {
+            using var context = contextFactory.CreateDbContext();
+
             Post? databasePost = context.Posts
                 .Where(post => post.Slug == slug)
                 .Include(post => post.SlugNavigation)
@@ -42,6 +44,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         public CategoryPage? GetCategory(string slug)
         {
+            using var context = contextFactory.CreateDbContext();
+
             PostCategory? databaseCategory = context.PostCategories
                 .Where(category => category.Slug == slug)
                 .Include(category => category.InverseParent)
@@ -80,6 +84,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
 
         private IEnumerable<PageLink> GetParentCategories(PostCategory? parentCategory)
         {
+            using var context = contextFactory.CreateDbContext();
+
             IEnumerable<PageLink> parents;
 
             if (parentCategory is null)
