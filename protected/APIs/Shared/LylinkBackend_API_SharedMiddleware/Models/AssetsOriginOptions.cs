@@ -2,6 +2,6 @@
 {
     public class AssetsOriginOptions
     {
-        public string? AssetsEndpointHttps { get; set; }
+        public required string AssetsEndpointHttps { get; set; }
   }
 }
