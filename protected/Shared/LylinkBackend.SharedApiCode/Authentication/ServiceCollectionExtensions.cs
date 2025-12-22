@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LylinkBackend.SharedApiCode.Authentication;
@@ -59,6 +61,17 @@ public static class ServiceCollectionExtensions
     {
         if (openIdOptions.ExpectedAuthority is null)
                 throw new InvalidOperationException("Expected authority cannot be null for OpenID Connect authentication.");
+
+#if RELEASE
+        services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders =
+                ForwardedHeaders.XForwardedProto |
+                ForwardedHeaders.XForwardedHost;
+            options.KnownNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
+#endif
 
         Uri openIdAuthority = new Uri(openIdOptions.ExpectedAuthority, UriKind.Absolute);
 

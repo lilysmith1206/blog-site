@@ -68,6 +68,7 @@ public class Program
         var app = builder.Build();
 
         app.UseRouting();
+        app.UseForwardedHeaders();
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseHttpsRedirection();

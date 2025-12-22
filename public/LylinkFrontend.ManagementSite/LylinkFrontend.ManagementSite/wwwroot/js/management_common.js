@@ -8,7 +8,7 @@ let isHtmlViewOn = true;
 let isRenderedViewOn = false;
 
 document.getElementById('html-view-button').addEventListener("click", () => {
-    htmlTextView.innerText = beautify.html(renderedView.innerHTML, options);
+    htmlTextView.innerText = renderedView.innerHTML;
 
     isHtmlViewOn = true;
     isRenderedViewOn = false;

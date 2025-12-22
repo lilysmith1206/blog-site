@@ -13,10 +13,6 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
         app.UseStaticFiles(new StaticFileOptions()
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),

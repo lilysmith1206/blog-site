@@ -4,6 +4,7 @@ using LylinkBackend_API.Services;
 using LylinkBackend_DatabaseAccessLayer.Services;
 using LylinkShared.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace LylinkBackend_API.Controllers
 {
@@ -91,13 +92,14 @@ namespace LylinkBackend_API.Controllers
         private ViewResult CreateIndexView()
         {
             CategoryPage category = pageRepository.GetCategory("/") ?? throw new NullReferenceException($"Index category not found for some reason?");
+            var mostRecentPosts = pageRepository.GetRecentlyUpdatedPostInfos(10);
 
             return View(nameof(IndexPage), new IndexPage()
             {
                 Body = category.Body,
                 Description = category.Description,
                 Keywords = category.Keywords,
-                MostRecentPosts = pageRepository.GetRecentlyUpdatedPostInfos(10),
+                MostRecentPosts = mostRecentPosts,
                 PageName = category.Name,
                 ParentCategories = [new PageLink { Description = "", Name = "index", Slug = "/" }],
                 Posts = category.Posts,

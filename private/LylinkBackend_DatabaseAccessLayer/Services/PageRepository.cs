@@ -16,7 +16,8 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                 .Where(post => post.IsDraft == false)
                 .Take(amount)
                 .Include(post => post.SlugNavigation)
-                .Select(post => new PageLink { Description = post.SlugNavigation.Description, Name = post.SlugNavigation.Name, Slug = post.Slug });
+                .Select(post => new PageLink { Description = post.SlugNavigation.Description, Name = post.SlugNavigation.Name, Slug = post.Slug })
+                .ToList();
         }
 
         public PostPage? GetPost(string slug)
@@ -122,7 +123,7 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
                     break;
                 }
 
-                categoryParents.Add(currentParent.Map());
+                categoryParents.Add(parentPage.Map());
 
                 currentParent = possibleParentCategories.SingleOrDefault(category => category.CategoryId == currentParent.ParentId);
             }

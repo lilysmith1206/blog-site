@@ -9,14 +9,14 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
         {
             using var context = contextFactory.CreateDbContext();
 
-            return context.Posts.Select(post => post.Slug);
+            return context.Posts.Select(post => post.Slug).ToList();
         }
 
         public IEnumerable<string> GetCategorySlugs()
         {
             using var context = contextFactory.CreateDbContext();
 
-            return context.PostCategories.Select(category => category.Slug);
+            return context.PostCategories.Select(category => category.Slug).ToList();
         }
     }
 }
