@@ -1,4 +1,4 @@
-﻿@page "/{slug:nonfile?}"
+﻿@page "/404"
 
 @using ErrorOr
 @using LylinkBackend.BlogShared.Page
@@ -10,7 +10,6 @@
 
 @inject IBlogApiClient BlogApiClient
 @inject ILogger<Index> Logger
-@inject NavigationManager NavigationManager
 
 @layout MainLayout
 
@@ -32,32 +31,6 @@
                            Loading="Loading">
                 <RenderedComponentOnLoad>
                     @((MarkupString)(Page?.HtmlContent ?? string.Empty))
-
-                    @if (Page?.Children?.Any() == true)
-                    {
-                        <h3>Sub-categories</h3>
-                        <ul>
-                            @foreach (PageLink postCategory in Page.Children)
-                            {
-                                <li>
-                                    <a href="@postCategory.Slug" title="@postCategory.Description">@postCategory.Name</a>
-                                </li>
-                            }
-                        </ul>
-                    }
-
-                    @if (Page?.Posts?.Any() == true)
-                    {
-                        <h3>Posts</h3>
-                        <ul>
-                            @foreach (var post in Page.Posts)
-                            {
-                                <li>
-                                    <a href="@post.Slug" title="@post.Description">@post.Name</a>
-                                </li>
-                            }
-                        </ul>
-                    }
                 </RenderedComponentOnLoad>
             </LoadingFacade>
         </main>
@@ -65,9 +38,6 @@
 </div>
 
 @code {
-    [Parameter]
-    public string Slug { get; set; } = string.Empty;
-
     private bool Loading = true;
     private Page? Page = null;
 
@@ -78,20 +48,13 @@
 
         await InvokeAsync(StateHasChanged);
 
-        var page = await BlogApiClient.GetPageFromSlug(Slug);
+        var page = await BlogApiClient.GetNotFoundPage();
 
         page.Switch(page => Page = page, errors =>
         {
             var error = errors.First();
 
             Logger.LogError("An error occurred when fetching the page: {error}", error);
-
-            if (error.Type == ErrorType.NotFound)
-            {
-                Logger.LogInformation("Redirecting to not found page.");
-
-                NavigationManager.NavigateTo("/404");
-            }
         });
 
         Loading = false;
