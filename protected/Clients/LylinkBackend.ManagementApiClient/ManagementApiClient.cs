@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using LylinkBackend.ManagementShared;
+using LylinkBackend.SharedClientCode.BaseClient;
 using LylinkShared.Models;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -9,29 +10,15 @@ using System.Net.Http.Json;
 
 namespace LylinkBackend.ManagementApiClient;
 
-public class ManagementApiClient : IManagementApiClient
+public class ManagementApiClient : BaseClient, IManagementApiClient
 {
     private readonly ILogger<ManagementApiClient> _logger;
     private readonly IHttpClientFactory _clientFactory;
-    private readonly ResiliencePipeline _resiliencePipeline;
 
-    public ManagementApiClient(ILogger<ManagementApiClient> logger, IHttpClientFactory clientFactory)
+    public ManagementApiClient(ILogger<ManagementApiClient> logger, IHttpClientFactory clientFactory) : base(logger)
     {
         _logger = logger;
         _clientFactory = clientFactory;
-
-        var retryOptions = new RetryStrategyOptions()
-        {
-            Delay = TimeSpan.FromSeconds(1),
-            MaxRetryAttempts = 3,
-            ShouldHandle = new PredicateBuilder()
-                .Handle<HttpRequestException>()
-        };
-
-        _resiliencePipeline = new ResiliencePipelineBuilder()
-            .AddRetry(retryOptions)
-            .AddTimeout(TimeSpan.FromSeconds(60))
-            .Build();
     }
 
     public async Task<ErrorOr<Dictionary<string, List<ReferenceById>>>> GetPostsByCategoryAsync(CancellationToken cancellationToken = default)
@@ -181,38 +168,24 @@ public class ManagementApiClient : IManagementApiClient
         return new Success();
     }
 
-    private async Task<ErrorOr<T?>> SendAsync<T>(
-        Func<HttpClient, Task<HttpResponseMessage>> sendFunction,
-        Dictionary<HttpStatusCode, Func<HttpContent, ErrorOr<T?>>> errorCodeMapping,
-        CancellationToken cancellationToken = default
-    )
+    protected override ResiliencePipeline GetResiliencePipeline()
     {
-        return await _resiliencePipeline.ExecuteAsync(async token =>
+        var retryOptions = new RetryStrategyOptions()
         {
-            var client = _clientFactory.CreateClient(nameof(ManagementApiClient));
-            var response = await sendFunction(client);
+            Delay = TimeSpan.FromSeconds(1),
+            MaxRetryAttempts = 3,
+            ShouldHandle = new PredicateBuilder()
+                .Handle<HttpRequestException>()
+        };
 
-            if (response.IsSuccessStatusCode)
-            {
-                _logger.LogInformation("Request succeeded.");
+        return new ResiliencePipelineBuilder()
+            .AddRetry(retryOptions)
+            .AddTimeout(TimeSpan.FromSeconds(60))
+            .Build();
+    }
 
-                return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
-            }
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-
-            if (errorCodeMapping.TryGetValue(response.StatusCode, out var error))
-            {
-                var mappedError = error(response.Content);
-
-                _logger.LogInformation("Message failed with expected failure state: {code}, {message}", response.StatusCode, mappedError.FirstError.Description);
-
-                return mappedError;
-            }
-            else
-            {
-                return Error.Unexpected();
-            }
-        }, cancellationToken);
+    protected override HttpClient GetHttpClient()
+    {
+        return _clientFactory.CreateClient(nameof(ManagementApiClient));
     }
 }
