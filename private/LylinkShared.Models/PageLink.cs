@@ -2,10 +2,10 @@
 {
     public struct PageLink
     {
-        public string Slug;
+        public string Slug { get; set; }
 
-        public string Name;
+        public string Name { get; set; }
 
-        public string Description;
+        public string Description { get; set; }
     }
 }

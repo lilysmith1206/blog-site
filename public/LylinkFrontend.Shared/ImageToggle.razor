@@ -1,0 +1,38 @@
+﻿<div class="img-toggle" title="Click to switch" @onclick="ToggleAsync">
+    <div class="slot sizer @GetClass(Selection.First)">
+        @First
+    </div>
+
+    <div class="slot overlay @GetClass(Selection.Second)">
+        @Second
+    </div>
+</div>
+
+@code
+{
+    public enum Selection { First, Second }
+
+    [Parameter, EditorRequired] public RenderFragment First { get; set; } = default!;
+    [Parameter, EditorRequired] public RenderFragment Second { get; set; } = default!;
+
+    // Default selection
+    [Parameter] public Selection Selected { get; set; } = Selection.Second;
+
+    [Parameter] public EventCallback<Selection> SelectedChanged { get; set; }
+
+    public Task ToggleAsync()
+        => SetSelectedAsync(Selected == Selection.First ? Selection.Second : Selection.First);
+
+    public async Task SetSelectedAsync(Selection value)
+    {
+        if (Selected == value) return;
+
+        Selected = value;
+
+        if (SelectedChanged.HasDelegate)
+            await SelectedChanged.InvokeAsync(value);
+    }
+
+    private string GetClass(Selection which)
+        => which == Selected ? "slot shown" : "slot hidden";
+} 

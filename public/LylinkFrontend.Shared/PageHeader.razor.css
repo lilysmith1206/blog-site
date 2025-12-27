@@ -1,0 +1,49 @@
+﻿header {
+	margin: 0;
+	width: 100%;
+	padding: 0.25em 10%;
+	box-sizing: border-box;
+	background-color: var(--header-bg-color);
+	border-bottom-width: 7px;
+	border-bottom-style: inset;
+	border-bottom-color: var(--header-border-color);
+	z-index: 0;
+}
+
+#website-header {
+	font-variant: small-caps;
+}
+
+.breadcrumb {
+	box-sizing: border-box;
+	overflow-x: visible;
+	border-width: 0px;
+	border-bottom: 2px solid;
+	border-style: solid;
+	display: inline-block;
+	white-space: nowrap;
+	border-bottom-color: var(--breadcrumb-border-color);
+}
+
+.breadcrumb ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: nowrap;
+}
+
+.breadcrumb ul > li > a {
+	display: inline-block;
+	font-size: 1.17em;
+	margin-top: 0.5em;
+	margin-left: 0;
+	margin-right: 0;
+	font-weight: bold;
+}
+
+.breadcrumb li::after {
+	margin-left: 10px;
+	margin-right: 5px;
+	content: "→";
+}

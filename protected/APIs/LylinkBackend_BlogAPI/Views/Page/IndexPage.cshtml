@@ -8,46 +8,4 @@
 }
 
 @section Body {
-    <main>
-        @Html.Raw(Model.Body)
-
-        @if (Model.SubCategories.Any())
-        {
-            <h3>Sub-categories</h3>
-            <ul>
-                @foreach (PageLink postCategory in Model.SubCategories)
-                {
-                    <li>
-                        <a href="@postCategory.Slug" title="@postCategory.Description">@postCategory.Name</a>
-                    </li>
-                }
-            </ul>
-        }
-
-        @if (Model.Posts.Any())
-        {
-            <h3>Posts</h3>
-            <ul>
-                @foreach (var post in Model.Posts)
-                {
-                    <li>
-                        <a href="@post.Slug" title="@post.Description">@post.Name</a>
-                    </li>
-                }
-            </ul>
-        }
-
-        @if (Model.MostRecentPosts.Any())
-        {
-            <h3>Most recently updated posts</h3>
-            <ul>
-                @foreach (var post in Model.MostRecentPosts)
-                {
-                    <li>
-                        <a href="@post.Slug" title="@post.Description">@post.Name</a>
-                    </li>
-                }
-            </ul>
-        }
-    </main>
 }

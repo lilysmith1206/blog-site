@@ -1,26 +1,4 @@
-﻿@keyframes showImage {
-    0% {
-        filter: blur(2px) opacity(0.3) contrast(0.9);
-        transform: scale(0.9) translateZ(-10px) translateY(-10px);
-    }
-
-    100% {
-        filter: opacity(1) drop-shadow(0 0 10px var(--color-toggle-image-shadow-color));
-        transform: scale(1) translateZ(0) translateY(0px);
-    }
-}
-
-@keyframes hideImage {
-    0% {
-        filter: opacity(1) drop-shadow(0 0 10px var(--color-toggle-image-shadow-color));
-        transform: scale(1) translateZ(0) translateY(0px);
-    }
-
-    100% {
-        filter: blur(2px) opacity(0.3) contrast(0.9);
-        transform: scale(0.9) translateZ(-10px) translateY(-10px);
-    }
-}
+﻿
 
 :root {
     --background-color: #fdefff;

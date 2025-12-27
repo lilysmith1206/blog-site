@@ -1,0 +1,90 @@
+﻿@page "/{slug:nonfile?}"
+
+@using LylinkBackend.BlogShared.Page
+@using LylinkBackend.BlogApiClient
+@using LylinkFrontend.BlogSite.Components.Layout
+@using LylinkFrontend.Shared
+@using LylinkShared.Models
+@using Microsoft.AspNetCore.Components.Sections
+
+@inject IBlogApiClient BlogApiClient
+@inject ILogger<Index> Logger
+
+@layout MainLayout
+
+<PageTitle>@Page?.Metadata?.Title</PageTitle>
+
+<SectionContent SectionName="HeadContent">
+    <meta name="keywords" content="@Page?.Metadata?.Keywords" />
+    <meta name="description" content="@Page?.Metadata?.Description" />
+</SectionContent>
+
+<PageHeader PageName="@Page?.Name"
+            Parents="@(Page?.Parents ?? [])" />
+
+
+<div id="content-wrap">
+    <div class="container">
+        <main>
+            <LoadingFacade FacadeHeight="70vh"
+                           Loading="Loading">
+                <RenderedComponentOnLoad>
+                    @((MarkupString)(Page?.HtmlContent ?? string.Empty))
+
+                    @if (Page?.Children?.Any() == true)
+                    {
+                        <h3>Sub-categories</h3>
+                        <ul>
+                            @foreach (PageLink postCategory in Page.Children)
+                            {
+                                <li>
+                                    <a href="@postCategory.Slug" title="@postCategory.Description">@postCategory.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+
+                    @if (Page?.Posts?.Any() == true)
+                    {
+                        <h3>Posts</h3>
+                        <ul>
+                            @foreach (var post in Page.Posts)
+                            {
+                                <li>
+                                    <a href="@post.Slug" title="@post.Description">@post.Name</a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </RenderedComponentOnLoad>
+            </LoadingFacade>
+        </main>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Slug { get; set; } = string.Empty;
+
+    private bool Loading = true;
+    private Page? Page = null;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Loading = true;
+        Page = null;
+
+        await InvokeAsync(StateHasChanged);
+
+        var page = await BlogApiClient.GetPageFromSlug(Slug);
+
+        page.Switch(page => Page = page, error =>
+        {
+            Logger.LogError("An error occurred when fetching the page: {error}", error);
+        });
+
+        Loading = false;
+
+        await InvokeAsync(StateHasChanged);
+    }
+}

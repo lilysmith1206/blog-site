@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\LylinkBackend.BlogApiClient\LylinkBackend.BlogApiClient.csproj" />
+    <ProjectReference Include="..\..\..\..\private\LylinkShared.Models\LylinkShared.Models.csproj" />
+    <ProjectReference Include="..\..\..\..\protected\APIs\Shared\LylinkBackend_API_SharedMiddleware\LylinkBackend_API_Shared.csproj" />
+    <ProjectReference Include="..\..\..\LylinkFrontend.Shared\LylinkFrontend.Shared.csproj" />
+    <ProjectReference Include="..\LylinkFrontend.BlogSite.Client\LylinkFrontend.BlogSite.Client.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.6" />
+  </ItemGroup>
+
+</Project>

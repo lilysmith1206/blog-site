@@ -1,0 +1,16 @@
+﻿div#color-toggle {
+    position: absolute;
+    right: 2.5%;
+    top: 2.5vh;
+    width: 75px;
+    height: 75px;
+}
+
+div#color-toggle .slot {
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    top: 0;
+}

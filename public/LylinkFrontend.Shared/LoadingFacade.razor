@@ -1,0 +1,22 @@
+﻿@if (Loading)
+{
+    <div class="facade-container" style="height:@(FacadeHeight);">
+        <div class="facade-scanner" />
+    </div>
+}
+else
+{
+    @RenderedComponentOnLoad
+}
+
+
+@code {
+    [Parameter, EditorRequired]
+    public bool Loading { get; set; } = default!;
+
+    [Parameter]
+    public string FacadeHeight { get; set; } = "600px";
+
+    [Parameter, EditorRequired]
+    public RenderFragment RenderedComponentOnLoad { get; set; } = default!;
+}

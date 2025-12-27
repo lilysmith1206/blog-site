@@ -1,0 +1,60 @@
+﻿@keyframes showImage {
+    0% {
+        filter: blur(2px) opacity(0.3) contrast(0.9);
+        transform: scale(0.9) translateZ(-10px) translateY(-10px);
+    }
+
+    100% {
+        filter: opacity(1) drop-shadow(0 0 10px var(--color-toggle-image-shadow-color));
+        transform: scale(1) translateZ(0) translateY(0px);
+    }
+}
+
+@keyframes hideImage {
+    0% {
+        filter: opacity(1) drop-shadow(0 0 10px var(--color-toggle-image-shadow-color));
+        transform: scale(1) translateZ(0) translateY(0px);
+    }
+
+    100% {
+        filter: blur(2px) opacity(0.3) contrast(0.9);
+        transform: scale(0.9) translateZ(-10px) translateY(-10px);
+    }
+}
+.img-toggle {
+    display: inline-grid; /* gives an intrinsic sizing context */
+    cursor: pointer;
+}
+
+/* both slots occupy the same grid cell */
+.img-toggle .slot {
+    grid-area: 1 / 1;
+}
+
+/* sizer participates in layout so container gets size */
+.img-toggle .slot.sizer {
+    position: relative;
+}
+
+/* overlay doesn't affect size, just stacks */
+.img-toggle .slot.overlay {
+    position: relative;
+}
+
+/* Your existing animations moved to slot */
+.img-toggle .slot.hidden {
+    pointer-events: none;
+    animation: hideImage 0.5s ease forwards;
+    z-index: 1;
+}
+
+.img-toggle .slot.shown {
+    animation: showImage 0.5s ease forwards;
+    z-index: 2;
+}
+
+/* make images behave */
+.img-toggle img {
+    display: block;
+}
+
