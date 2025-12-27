@@ -12,10 +12,8 @@ private/mysqldump.sql
 *.pubxml
 /protected/APIs/LylinkBackend_AssetsAPI/.config/dotnet-tools.json
 /protected/APIs/LylinkBackend_ManagementAPI/LylinkBackend_ManagementAPI.csproj.user
-*.json
 /protected/APIs/LylinkBackend_BlogAPI/LylinkBackend_BlogAPI.csproj.user
 **.Development.json
-/protected/APIs/LylinkBackend.ManagementApi/appsettings.Development.json
-/public/LylinkFrontend.ManagementSite/LylinkFrontend.ManagementSite/appsettings.Development.json
-/public/LylinkFrontend.BlogSite/LylinkFrontend.BlogSite/LylinkFrontend.BlogSite/appsettings.Development.json
-/protected/APIs/LylinkBackend.BlogApi/appsettings.Development.json
+*launchSettings.json
+*dotnet-tools.json
+*appsettings.Development.json
