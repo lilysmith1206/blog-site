@@ -7,13 +7,14 @@ namespace LylinkBackend_DatabaseAccessLayer.Services
     public class VisitAnalyticsRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IVisitAnalyticsRepository
     {
 
-        public bool CreateVisitorAnalytic(VisitAnalytic analytic)
+        public int CreateVisitorAnalytic(VisitAnalytic analytic)
         {
             using var context = contextFactory.CreateDbContext();
 
             context.Add(analytic);
+            context.SaveChanges();
 
-            return context.SaveChanges() == 1;
+            return analytic.Id;
         }
 
         public IEnumerable<VisitAnalytic> GetAllVisitorAnalytics()

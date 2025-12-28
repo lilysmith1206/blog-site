@@ -61,6 +61,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkBackend.BlogApiClient
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkBackend.BlogShared", "protected\Blog\LylinkBackend.BlogShared\LylinkBackend.BlogShared.csproj", "{A51AA789-DC36-4E78-894D-EEA055965E74}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Analytics", "Analytics", "{61EE9CD9-4EF6-46EB-BA3B-4648B9CA0621}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkBackend.AnalyticsApi", "protected\Analytics\LylinkBackend.AnalyticsApi\LylinkBackend.AnalyticsApi.csproj", "{E7BD102E-43A7-4B52-B3D4-2E7C3144CB20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkBackend.AnalyticsShared", "protected\Analytics\LylinkBackend.AnalyticsShared\LylinkBackend.AnalyticsShared.csproj", "{779B2E58-4D25-4D71-8691-568DDA5D1956}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkBackend.Analytics.Client", "protected\Analytics\LylinkBackend.Analytics.Client\LylinkBackend.Analytics.Client.csproj", "{28F7954B-EE06-4A58-AF49-996F77598245}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +155,18 @@ Global
 		{A51AA789-DC36-4E78-894D-EEA055965E74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A51AA789-DC36-4E78-894D-EEA055965E74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A51AA789-DC36-4E78-894D-EEA055965E74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7BD102E-43A7-4B52-B3D4-2E7C3144CB20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7BD102E-43A7-4B52-B3D4-2E7C3144CB20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7BD102E-43A7-4B52-B3D4-2E7C3144CB20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7BD102E-43A7-4B52-B3D4-2E7C3144CB20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{779B2E58-4D25-4D71-8691-568DDA5D1956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{779B2E58-4D25-4D71-8691-568DDA5D1956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{779B2E58-4D25-4D71-8691-568DDA5D1956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{779B2E58-4D25-4D71-8691-568DDA5D1956}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28F7954B-EE06-4A58-AF49-996F77598245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28F7954B-EE06-4A58-AF49-996F77598245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28F7954B-EE06-4A58-AF49-996F77598245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28F7954B-EE06-4A58-AF49-996F77598245}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,6 +198,10 @@ Global
 		{2EAB4B60-CDD9-42E1-9BE2-A8C31F04258A} = {86A815C9-0276-4BA4-9394-3F66A35D1735}
 		{B7B348D5-8BC3-4BBA-A5D6-128432AA1EEB} = {2EAB4B60-CDD9-42E1-9BE2-A8C31F04258A}
 		{A51AA789-DC36-4E78-894D-EEA055965E74} = {2EAB4B60-CDD9-42E1-9BE2-A8C31F04258A}
+		{61EE9CD9-4EF6-46EB-BA3B-4648B9CA0621} = {86A815C9-0276-4BA4-9394-3F66A35D1735}
+		{E7BD102E-43A7-4B52-B3D4-2E7C3144CB20} = {61EE9CD9-4EF6-46EB-BA3B-4648B9CA0621}
+		{779B2E58-4D25-4D71-8691-568DDA5D1956} = {61EE9CD9-4EF6-46EB-BA3B-4648B9CA0621}
+		{28F7954B-EE06-4A58-AF49-996F77598245} = {61EE9CD9-4EF6-46EB-BA3B-4648B9CA0621}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FC83A25-ED6F-4F75-BF38-62694D52CD98}

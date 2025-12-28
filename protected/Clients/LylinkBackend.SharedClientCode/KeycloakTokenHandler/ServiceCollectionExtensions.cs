@@ -10,6 +10,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection RegisterOAuth2HandlerDependencies(this IServiceCollection services)
     {
         services.AddHttpClient(nameof(OAuth2TokenHandler));
+        services.AddMemoryCache();
 
         return services;
     }

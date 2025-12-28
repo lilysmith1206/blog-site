@@ -1,3 +1,4 @@
+using LylinkBackend.Analytics.Client;
 using LylinkBackend.BlogApiClient;
 using LylinkBackend_API_Shared.Models;
 using LylinkFrontend.BlogSite.Components;
@@ -18,13 +19,21 @@ public class Program
         builder.Services.AddOptions<AssetsOriginOptions>()
             .BindConfiguration("AssetsOriginOptions");
 
-        var options = builder.Configuration.GetSection("BlogApiClient")
+        var blogOptions = builder.Configuration.GetSection("BlogApiClient")
             .Get<BlogApiClientOptions>();
 
-        if (options is null)
-            throw new NullReferenceException("Management API client settings must be present.");
+        if (blogOptions is null)
+            throw new NullReferenceException("Blog API client settings must be present.");
 
-        builder.Services.RegisterBlogApiClient(options);
+        builder.Services.RegisterBlogApiClient(blogOptions);
+
+        var analyticsOptions = builder.Configuration.GetSection("AnalyticsApiClient")
+            .Get<AnalyticsApiClientOptions>();
+
+        if (analyticsOptions is null)
+            throw new NullReferenceException("Analytics API client settings must be present.");
+
+        builder.Services.RegisterAnalyticsApiClient(analyticsOptions);
 
         var app = builder.Build();
 

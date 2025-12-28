@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\private\LylinkBackend_DatabaseAccessLayer\LylinkBackend_DatabaseAccessLayer.csproj" />
+    <ProjectReference Include="..\..\Shared\LylinkBackend.SharedApiCode\LylinkBackend.SharedApiCode.csproj" />
+    <ProjectReference Include="..\LylinkBackend.AnalyticsShared\LylinkBackend.AnalyticsShared.csproj" />
+  </ItemGroup>
+
+</Project>

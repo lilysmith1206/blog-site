@@ -1,6 +1,8 @@
 ﻿@page "/{slug:nonfile?}"
 
 @using ErrorOr
+@using LylinkBackend.Analytics.Client
+@using LylinkBackend.AnalyticsShared
 @using LylinkBackend.BlogShared.Page
 @using LylinkBackend.BlogApiClient
 @using LylinkFrontend.BlogSite.Components.Layout
@@ -9,6 +11,7 @@
 @using Microsoft.AspNetCore.Components.Sections
 
 @inject IBlogApiClient BlogApiClient
+@inject IAnalyticsApiClient AnalyticsApiClient
 @inject ILogger<Index> Logger
 @inject NavigationManager NavigationManager
 
@@ -80,7 +83,18 @@
 
         var page = await BlogApiClient.GetPageFromSlug(Slug);
 
-        page.Switch(page => Page = page, errors =>
+
+        page.Switch(page =>
+        {
+            Page = page;
+
+            Task.Run(() => AnalyticsApiClient.CreateVisitorAnalytic(new()
+            {
+                VisitTarget = Slug,
+                VisitResult = Slug,
+                Date = DateTime.UtcNow
+            }));
+        }, errors =>
         {
             var error = errors.First();
 
@@ -89,6 +103,13 @@
             if (error.Type == ErrorType.NotFound)
             {
                 Logger.LogInformation("Redirecting to not found page.");
+
+                Task.Run(() => AnalyticsApiClient.CreateVisitorAnalytic(new()
+                {
+                    VisitTarget = Slug,
+                    VisitResult = "404",
+                    Date = DateTime.UtcNow
+                }));
 
                 NavigationManager.NavigateTo("/404");
             }

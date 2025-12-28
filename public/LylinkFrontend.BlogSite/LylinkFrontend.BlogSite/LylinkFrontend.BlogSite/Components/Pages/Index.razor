@@ -1,6 +1,7 @@
 ﻿@rendermode InteractiveServer
 
 @page "/"
+@using LylinkBackend.Analytics.Client
 @using LylinkBackend.BlogShared.Page
 @using LylinkBackend.BlogApiClient
 @using LylinkFrontend.BlogSite.Components.Layout
@@ -9,6 +10,7 @@
 @using Microsoft.AspNetCore.Components.Sections
 
 @inject IBlogApiClient BlogApiClient
+@inject IAnalyticsApiClient AnalyticsApiClient
 @inject ILogger<Index> Logger
 @inject NavigationManager Navigation
 
@@ -79,6 +81,13 @@
         {
             Logger.LogError("An error occurred when fetching the most recent pages: {error}", error);
         });
+
+        _ = Task.Run(() => AnalyticsApiClient.CreateVisitorAnalytic(new()
+        {
+            VisitTarget = "/",
+            VisitResult = "/",
+            Date = DateTime.UtcNow
+        }));
 
         Loading = false;
 
