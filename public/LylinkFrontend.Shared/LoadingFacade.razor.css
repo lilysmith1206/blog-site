@@ -7,6 +7,16 @@
     }
 }
 
+@keyframes fadeInOpacity {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .facade-container {
     position: relative;
     width: 100%;
@@ -22,4 +32,12 @@
     background-color: #00000022;
     border-radius: 3px;
     filter: blur(2px)
+}
+
+.content-container {
+    opacity: 1;
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 0.125s;
 }
