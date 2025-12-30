@@ -10,10 +10,7 @@
   <ItemGroup>
     <PackageReference Include="FluentMigrator" Version="7.2.0" />
     <PackageReference Include="FluentMigrator.Runner" Version="7.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\LylinkBackend_DatabaseAccessLayer\LylinkBackend_DatabaseAccessLayer.csproj" />
+	<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using FluentMigrator.Runner;
-using LylinkBackend_DatabaseAccessLayer.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace LylinkDatabase.MigrationScripts;
 
@@ -21,10 +19,6 @@ internal class Program
     private static ServiceProvider CreateServices()
     {
         return new ServiceCollection()
-            .AddDbContext<LylinkdbContext>(options =>
-            {
-                options.UseMySql(ConnectionString, ServerVersion.Parse("11.5.2-mariadb"));
-            })
             // Add common FluentMigrator services
             .AddFluentMigratorCore()
             .ConfigureRunner(rb => rb

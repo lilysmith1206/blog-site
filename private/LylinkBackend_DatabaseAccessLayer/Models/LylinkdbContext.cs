@@ -1,12 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace LylinkBackend_DatabaseAccessLayer.Models;
 
 public partial class LylinkdbContext : DbContext
 {
-    public virtual DbSet<Annotation> Annotations { get; set; }
+    public LylinkdbContext()
+    {
+    }
 
-    public virtual DbSet<DatabaseVersion> DatabaseVersions { get; set; }
+    public LylinkdbContext(DbContextOptions<LylinkdbContext> options)
+        : base(options)
+    {
+    }
 
     public virtual DbSet<Page> Pages { get; set; }
 
@@ -16,6 +24,8 @@ public partial class LylinkdbContext : DbContext
 
     public virtual DbSet<PostSortingMethod> PostSortingMethods { get; set; }
 
+    public virtual DbSet<Versioninfo> Versioninfos { get; set; }
+
     public virtual DbSet<VisitAnalytic> VisitAnalytics { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,43 +33,6 @@ public partial class LylinkdbContext : DbContext
         modelBuilder
             .UseCollation("latin1_swedish_ci")
             .HasCharSet("latin1");
-
-        modelBuilder.Entity<Annotation>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("annotations");
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(40)
-                .HasColumnName("id");
-            entity.Property(e => e.AnnotationContent)
-                .HasMaxLength(10000)
-                .HasColumnName("annotation_content");
-            entity.Property(e => e.EditorName)
-                .HasMaxLength(80)
-                .HasColumnName("editor_name");
-            entity.Property(e => e.Slug)
-                .HasMaxLength(40)
-                .HasColumnName("slug");
-        });
-
-        modelBuilder.Entity<DatabaseVersion>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("database_version")
-                .HasCharSet("utf8mb4")
-                .UseCollation("utf8mb4_general_ci");
-
-            entity.Property(e => e.UpdatedOn)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_on");
-            entity.Property(e => e.Version)
-                .HasMaxLength(3)
-                .IsFixedLength()
-                .HasColumnName("version");
-        });
 
         modelBuilder.Entity<Page>(entity =>
         {
@@ -186,6 +159,19 @@ public partial class LylinkdbContext : DbContext
                 .HasMaxLength(80)
                 .IsFixedLength()
                 .HasColumnName("sorting_name");
+        });
+
+        modelBuilder.Entity<Versioninfo>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("versioninfo");
+
+            entity.HasIndex(e => e.Version, "UC_Version").IsUnique();
+
+            entity.Property(e => e.AppliedOn).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(1024);
+            entity.Property(e => e.Version).HasColumnType("bigint(20)");
         });
 
         modelBuilder.Entity<VisitAnalytic>(entity =>
