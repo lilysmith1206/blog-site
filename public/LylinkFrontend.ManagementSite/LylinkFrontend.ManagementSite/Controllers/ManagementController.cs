@@ -8,6 +8,7 @@ using ErrorOr;
 namespace LylinkFrontend.ManagementSite.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("Management")]
     public class ManagementController : Controller
     {
@@ -20,7 +21,6 @@ namespace LylinkFrontend.ManagementSite.Controllers
             _remoteClient = remoteClient;
         }
 
-        [Authorize]
         [HttpGet("/")]
         public IActionResult Management()
         {
