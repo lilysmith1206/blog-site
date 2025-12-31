@@ -2,6 +2,7 @@ using LylinkBackend.Analytics.Client;
 using LylinkBackend.BlogApiClient;
 using LylinkBackend_API_Shared.Models;
 using LylinkFrontend.BlogSite.Components;
+using LylinkFrontend.Shared.Services;
 
 namespace LylinkFrontend.BlogSite;
 
@@ -34,6 +35,7 @@ public class Program
             throw new NullReferenceException("Analytics API client settings must be present.");
 
         builder.Services.RegisterAnalyticsApiClient(analyticsOptions);
+        builder.Services.AddScoped<ISessionService, SessionService>();
 
         var app = builder.Build();
 

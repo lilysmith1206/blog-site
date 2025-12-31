@@ -6,11 +6,13 @@
 @using LylinkBackend.BlogApiClient
 @using LylinkFrontend.BlogSite.Components.Layout
 @using LylinkFrontend.Shared
+@using LylinkFrontend.Shared.Services
 @using LylinkShared.Models
 @using Microsoft.AspNetCore.Components.Sections
 
 @inject IBlogApiClient BlogApiClient
 @inject IAnalyticsApiClient AnalyticsApiClient
+@inject ISessionService SessionService
 @inject ILogger<Index> Logger
 @inject NavigationManager Navigation
 
@@ -85,7 +87,7 @@
         _ = Task.Run(() => AnalyticsApiClient.CreateSuccessVisitAnalytic(new()
         {
             Visited = "/",
-            SessionId = string.Empty,
+            SessionId = SessionService.SessionId,
             Date = DateTime.UtcNow
         }));
 
