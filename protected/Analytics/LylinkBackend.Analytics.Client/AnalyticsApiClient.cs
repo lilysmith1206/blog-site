@@ -19,11 +19,24 @@ public class AnalyticsApiClient : BaseClient, IAnalyticsApiClient
         _clientFactory = clientFactory;
     }
 
-    public async Task<ErrorOr<int>> CreateVisitorAnalytic(NewVisitorAnalytic visitorAnalytic, CancellationToken cancellationToken = default)
+    public async Task<ErrorOr<int>> CreateSuccessVisitAnalytic(NewSuccessVisitAnalytic visitorAnalytic, CancellationToken cancellationToken = default)
     {
         var result = await SendAsync<int>(client =>
         {
-            return client.PostAsJsonAsync($"/analytics/visitor", visitorAnalytic, cancellationToken);
+            return client.PostAsJsonAsync($"/analytics/visit/success", visitorAnalytic, cancellationToken);
+        }, [], cancellationToken);
+
+        if (result.IsError)
+            return result.FirstError;
+
+        return result.Value;
+    }
+
+    public async Task<ErrorOr<int>> CreateFailureVisitAnalytic(NewFailureVisitAnalytic visitorAnalytic, CancellationToken cancellationToken = default)
+    {
+        var result = await SendAsync<int>(client =>
+        {
+            return client.PostAsJsonAsync($"/analytics/visit/failure", visitorAnalytic, cancellationToken);
         }, [], cancellationToken);
 
         if (result.IsError)

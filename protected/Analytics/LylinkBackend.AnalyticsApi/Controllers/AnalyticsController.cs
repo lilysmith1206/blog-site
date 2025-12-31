@@ -17,18 +17,12 @@ public class AnalyticsController : Controller
     }
 
     [Authorize(Policy = "create_analytics")]
-    [HttpPost("/analytics/visitor")]
-    public ActionResult<int> CreateAnalytics([FromBody] NewVisitorAnalytic analytic)
+    [HttpPost("/analytics/visit/success")]
+    public ActionResult<int> CreateSuccessAnalytic([FromBody] NewSuccessVisitAnalytic analytic)
     {
         try
         {
-            var analyticId = _repository.CreateVisitorAnalytic(new()
-            {
-                SlugGiven = analytic.VisitTarget,
-                SlugVisited = analytic.VisitResult,
-                VisitedOn = analytic.Date,
-                VisitorId = string.Empty // To deal with an out-of-date visitor analytics structure
-            });
+            var analyticId = _repository.CreateSuccessVisitAnalytic(analytic.SessionId, analytic.Visited, analytic.Date);
 
             _logger.LogInformation("Analytic created: {id}", analyticId);
 
@@ -40,6 +34,26 @@ public class AnalyticsController : Controller
 
             return StatusCode(500);
         }
+    }
 
+
+    [Authorize(Policy = "create_analytics")]
+    [HttpPost("/analytics/visit/failure")]
+    public ActionResult<int> CreateFailureAnalytic([FromBody] NewFailureVisitAnalytic analytic)
+    {
+        try
+        {
+            var analyticId = _repository.CreateFailedVisitAnalytic(analytic.SessionId, analytic.Attempted, analytic.RedirectedTo, analytic.Date);
+
+            _logger.LogInformation("Analytic created: {id}", analyticId);
+
+            return Created((string?)null, analyticId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Exception on adding visitor analytics.");
+
+            return StatusCode(500);
+        }
     }
 }

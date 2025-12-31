@@ -82,10 +82,10 @@
             Logger.LogError("An error occurred when fetching the most recent pages: {error}", error);
         });
 
-        _ = Task.Run(() => AnalyticsApiClient.CreateVisitorAnalytic(new()
+        _ = Task.Run(() => AnalyticsApiClient.CreateSuccessVisitAnalytic(new()
         {
-            VisitTarget = "/",
-            VisitResult = "/",
+            Visited = "/",
+            SessionId = string.Empty,
             Date = DateTime.UtcNow
         }));
 

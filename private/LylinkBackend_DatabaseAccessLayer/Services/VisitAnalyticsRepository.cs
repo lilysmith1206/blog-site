@@ -1,38 +1,58 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
-namespace LylinkBackend_DatabaseAccessLayer.Services
+namespace LylinkBackend_DatabaseAccessLayer.Services;
+
+public class VisitAnalyticsRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IVisitAnalyticsRepository
 {
-    public class VisitAnalyticsRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IVisitAnalyticsRepository
+    public int CreateSuccessVisitAnalytic(string sessionId, string visitedSlug, DateTime visitDate)
     {
-
-        public int CreateVisitorAnalytic(VisitAnalytic analytic)
+        using var context = contextFactory.CreateDbContext();
+        var analytic = new VisitAnalytic()
         {
-            using var context = contextFactory.CreateDbContext();
+            DateCreated = visitDate,
+            SessionId = sessionId,
+            VisitedSlug = visitedSlug,
+        };
 
-            context.Add(analytic);
-            context.SaveChanges();
+        context.Add(analytic);
+        context.SaveChanges();
 
-            return analytic.Id;
-        }
+        return analytic.Id;
+    }
 
-        public IEnumerable<VisitAnalytic> GetAllVisitorAnalytics()
+    public int CreateFailedVisitAnalytic(string sessionId, string attemptedSlug, string redirectedSlug, DateTime visitDate)
+    {
+        using var context = contextFactory.CreateDbContext();
+        var failedAnalytic = new FailedVisitAnalytic()
         {
-            using var context = contextFactory.CreateDbContext();
+            DateCreated = visitDate,
+            SessionId = sessionId,
+            AttemptedSlug = attemptedSlug,
+            RedirectedSlug = redirectedSlug
+        };
 
-            return context.VisitAnalytics.ToList();
-        }
+        context.Add(failedAnalytic);
+        context.SaveChanges();
 
-        public bool DropAllVisitorAnalytics()
-        {
-            using var context = contextFactory.CreateDbContext();
+        return failedAnalytic.Id;
+    }
 
-            int visitAnalyticsCount = context.VisitAnalytics.Count();
+    public IEnumerable<VisitAnalytic> GetAllVisitorAnalytics()
+    {
+        using var context = contextFactory.CreateDbContext();
 
-            context.VisitAnalytics.RemoveRange(context.VisitAnalytics);
+        return context.VisitAnalytics.ToList();
+    }
 
-            return context.SaveChanges() == visitAnalyticsCount;
-        }
+    public bool DropAllVisitorAnalytics()
+    {
+        using var context = contextFactory.CreateDbContext();
+
+        int visitAnalyticsCount = context.VisitAnalytics.Count();
+
+        context.VisitAnalytics.RemoveRange(context.VisitAnalytics);
+
+        return context.SaveChanges() == visitAnalyticsCount;
     }
 }

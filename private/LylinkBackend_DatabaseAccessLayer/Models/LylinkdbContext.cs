@@ -16,6 +16,8 @@ public partial class LylinkdbContext : DbContext
     {
     }
 
+    public virtual DbSet<FailedVisitAnalytic> FailedVisitAnalytics { get; set; }
+
     public virtual DbSet<Page> Pages { get; set; }
 
     public virtual DbSet<Post> Posts { get; set; }
@@ -33,6 +35,30 @@ public partial class LylinkdbContext : DbContext
         modelBuilder
             .UseCollation("latin1_swedish_ci")
             .HasCharSet("latin1");
+
+        modelBuilder.Entity<FailedVisitAnalytic>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("failed_visit_analytics");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.AttemptedSlug)
+                .HasMaxLength(255)
+                .HasColumnName("attempted_slug");
+            entity.Property(e => e.DateCreated)
+                .HasColumnType("datetime")
+                .HasColumnName("date_created");
+            entity.Property(e => e.RedirectedSlug)
+                .HasMaxLength(255)
+                .HasColumnName("redirected_slug");
+            entity.Property(e => e.SessionId)
+                .HasMaxLength(128)
+                .IsFixedLength()
+                .HasColumnName("session_id");
+        });
 
         modelBuilder.Entity<Page>(entity =>
         {
@@ -186,20 +212,16 @@ public partial class LylinkdbContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
-            entity.Property(e => e.SlugGiven)
-                .HasMaxLength(40)
-                .IsFixedLength()
-                .HasColumnName("slug_given");
-            entity.Property(e => e.SlugVisited)
-                .HasColumnType("text")
-                .HasColumnName("slug_visited");
-            entity.Property(e => e.VisitedOn)
+            entity.Property(e => e.DateCreated)
                 .HasColumnType("datetime")
-                .HasColumnName("visited_on");
-            entity.Property(e => e.VisitorId)
+                .HasColumnName("date_created");
+            entity.Property(e => e.SessionId)
                 .HasMaxLength(128)
                 .IsFixedLength()
-                .HasColumnName("visitor_id");
+                .HasColumnName("session_id");
+            entity.Property(e => e.VisitedSlug)
+                .HasColumnType("text")
+                .HasColumnName("visited_slug");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,13 +1,14 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 
-namespace LylinkBackend_DatabaseAccessLayer.Services
+namespace LylinkBackend_DatabaseAccessLayer.Services;
+
+public interface IVisitAnalyticsRepository
 {
-    public interface IVisitAnalyticsRepository
-    {
-        public int CreateVisitorAnalytic(VisitAnalytic analytic);
+    public int CreateSuccessVisitAnalytic(string sessionId, string visitedSlug, DateTime visitedOn);
 
-        public IEnumerable<VisitAnalytic> GetAllVisitorAnalytics();
+    public int CreateFailedVisitAnalytic(string sessionId, string visitedSlug, string redirectedSlug, DateTime visitedOn);
 
-        public bool DropAllVisitorAnalytics();
-    }
+    public IEnumerable<VisitAnalytic> GetAllVisitorAnalytics();
+
+    public bool DropAllVisitorAnalytics();
 }

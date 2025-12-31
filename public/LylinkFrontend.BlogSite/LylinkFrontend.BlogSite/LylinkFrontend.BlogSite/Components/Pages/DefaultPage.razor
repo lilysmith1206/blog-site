@@ -83,16 +83,15 @@
 
         var page = await BlogApiClient.GetPageFromSlug(Slug);
 
-
         page.Switch(page =>
         {
             Page = page;
 
-            Task.Run(() => AnalyticsApiClient.CreateVisitorAnalytic(new()
+            Task.Run(() => AnalyticsApiClient.CreateSuccessVisitAnalytic(new()
             {
-                VisitTarget = Slug,
-                VisitResult = Slug,
-                Date = DateTime.UtcNow
+                Visited = Slug,
+                SessionId = string.Empty,
+                Date = DateTime.UtcNow,
             }));
         }, errors =>
         {
@@ -104,10 +103,11 @@
             {
                 Logger.LogInformation("Redirecting to not found page.");
 
-                Task.Run(() => AnalyticsApiClient.CreateVisitorAnalytic(new()
+                Task.Run(() => AnalyticsApiClient.CreateFailureVisitAnalytic(new()
                 {
-                    VisitTarget = Slug,
-                    VisitResult = "404",
+                    Attempted = Slug,
+                    RedirectedTo = "404",
+                    SessionId = string.Empty,
                     Date = DateTime.UtcNow
                 }));
 
