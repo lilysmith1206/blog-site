@@ -5,18 +5,28 @@ namespace LylinkDatabase.MigrationScripts;
 
 internal class Program
 {
-    private const string ConnectionString = "server=localhost;port=3306;database=test_lylinkdb;user=root;password=root";
-
-    static void Main(string[] args)
+    static int Main(string[] args)
     {
-        using var serviceProvider = CreateServices();
+        if (args.Length == 0 || string.IsNullOrWhiteSpace(args[0]))
+        {
+            Console.Error.WriteLine("Connection string must be provided as the first argument.");
+            return 1;
+        }
+
+        var connectionString = args[0];
+
+        Console.WriteLine("Connection String: {0}", connectionString);
+
+        using var serviceProvider = CreateServices(connectionString);
         using var scope = serviceProvider.CreateScope();
 
         // Run migrations
         UpdateDatabase(scope.ServiceProvider);
+
+        return 0;
     }
 
-    private static ServiceProvider CreateServices()
+    private static ServiceProvider CreateServices(string connectionString)
     {
         return new ServiceCollection()
             // Add common FluentMigrator services
@@ -24,7 +34,7 @@ internal class Program
             .ConfigureRunner(rb => rb
                 // Add database support (choose your provider)
                 .AddMySql()
-                .WithGlobalConnectionString(ConnectionString)
+                .WithGlobalConnectionString(connectionString)
                 // Define the assembly containing the migrations
                 .ScanIn(typeof(Program).Assembly).For.All())
             .AddLogging(lb => lb.AddFluentMigratorConsole())
