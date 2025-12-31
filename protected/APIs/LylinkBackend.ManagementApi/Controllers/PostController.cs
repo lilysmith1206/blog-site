@@ -1,5 +1,5 @@
 ﻿using LylinkBackend.ManagementShared;
-using LylinkBackend_DatabaseAccessLayer.Services;
+using LylinkBackend.Repositories.Management;
 using LylinkShared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

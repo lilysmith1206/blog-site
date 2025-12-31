@@ -1,5 +1,5 @@
 ﻿using LylinkBackend.BlogShared.Page;
-using LylinkBackend_DatabaseAccessLayer.Services;
+using LylinkBackend.Repositories.Pages;
 using LylinkShared.Models;
 using Microsoft.AspNetCore.Mvc;
 

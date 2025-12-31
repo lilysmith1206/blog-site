@@ -1,5 +1,6 @@
+using LylinkBackend.Repositories.Analytics;
+using LylinkBackend.Repositories.Models;
 using LylinkBackend_DatabaseAccessLayer.Models;
-using LylinkBackend_DatabaseAccessLayer.Services;
 using LylinkBackend_EmailService.Models;
 using LylinkBackend_EmailService.Services;
 using Microsoft.Extensions.Options;
@@ -50,13 +51,13 @@ namespace LylinkBackend_EmailService
 
                 IVisitAnalyticsRepository visitAnalytics = scope.ServiceProvider.GetRequiredService<IVisitAnalyticsRepository>();
 
-                IEnumerable<VisitAnalytic> analytics = visitAnalytics.GetAllVisitorAnalytics();
+                var analytics = visitAnalytics.GetAllVisitorAnalytics();
 
                 string body = GenerateEmailBody(analytics);
 
                 EmailAttachment csvAttachment = new EmailAttachment
                 {
-                    AttachmentData = Encoding.ASCII.GetBytes(CreateCsvForVisitors(analytics)),
+                    AttachmentData = Encoding.ASCII.GetBytes(CreateCsvForVisitors(analytics.SuccessVisits)),
                     FileName = "raw_analytics.csv"
                 };
 
@@ -69,22 +70,22 @@ namespace LylinkBackend_EmailService
             }
         }
 
-        private static string GenerateEmailBody(IEnumerable<VisitAnalytic> analytics)
+        private static string GenerateEmailBody(Analytics analytics)
         {
-            var pageVisits = analytics
-                .GroupBy(a => a.SlugVisited)
+            var pageVisits = analytics.SuccessVisits
+                .GroupBy(a => a.VisitedSlug)
                 .Where(g => g.Key != null)
                 .Select(g => new { Page = g.Key, VisitCount = g.Count() })
                 .OrderByDescending(x => x.VisitCount);
 
-            var visitorVisits = analytics
-                .GroupBy(a => a.VisitorId)
+            var visitorVisits = analytics.SuccessVisits
+                .GroupBy(a => a.VisitedSlug)
                 .Where(g => g.Key != null)
                 .Select(g => new
                 {
                     Visitor = g.Key,
                     VisitCount = g.Count(),
-                    MostVisitedPages = g.GroupBy(v => v.SlugVisited)
+                    MostVisitedPages = g.GroupBy(v => v.VisitedSlug)
                                         .Where(vg => vg.Key != null)
                                         .Select(vg => new { Page = vg.Key, VisitCount = vg.Count() })
                                         .OrderByDescending(v => v.VisitCount)
@@ -137,7 +138,7 @@ namespace LylinkBackend_EmailService
 
             foreach (VisitAnalytic analytic in analytics)
             {
-                csv.Add($"{analytic.Id},{analytic.VisitorId},{analytic.SlugVisited},{analytic.SlugGiven},{analytic.VisitedOn}");
+                csv.Add($"{analytic.Id},{analytic.SessionId},{analytic.VisitedSlug},{analytic.DateCreated}");
             }
 
             return string.Join("\n", csv);

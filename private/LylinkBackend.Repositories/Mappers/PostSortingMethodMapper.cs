@@ -1,6 +1,6 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 
-namespace LylinkBackend_DatabaseAccessLayer.Mappers
+namespace LylinkBackend.Repositories.Mappers
 {
     public static class PostSortingMethodMapper
     {

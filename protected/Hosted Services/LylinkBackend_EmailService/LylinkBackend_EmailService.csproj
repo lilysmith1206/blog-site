@@ -14,6 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\private\LylinkBackend_DatabaseAccessLayer\LylinkBackend_DatabaseAccessLayer.csproj" />
+    <ProjectReference Include="..\..\..\private\LylinkBackend.Repositories\LylinkBackend.Repositories.csproj" />
   </ItemGroup>
 </Project>

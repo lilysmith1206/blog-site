@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\private\LylinkBackend_DatabaseAccessLayer\LylinkBackend_DatabaseAccessLayer.csproj" />
+    <ProjectReference Include="..\..\..\private\LylinkBackend.Repositories\LylinkBackend.Repositories.csproj" />
     <ProjectReference Include="..\..\Clients\LylinkBackend.SharedClientCode\LylinkBackend.SharedClientCode.csproj" />
     <ProjectReference Include="..\..\Management\LylinkBackend.ManagementShared\LylinkBackend.ManagementShared.csproj" />
     <ProjectReference Include="..\..\Shared\LylinkBackend.SharedApiCode\LylinkBackend.SharedApiCode.csproj" />

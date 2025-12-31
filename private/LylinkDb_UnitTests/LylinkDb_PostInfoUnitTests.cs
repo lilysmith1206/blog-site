@@ -1,5 +1,5 @@
 ﻿using LylinkShared.Models;
-using LylinkBackend_DatabaseAccessLayer.Mappers;
+using LylinkBackend.Repositories.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkBackend_DatabaseAccessLayer.Services;
 

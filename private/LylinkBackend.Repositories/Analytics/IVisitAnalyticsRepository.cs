@@ -1,6 +1,4 @@
-﻿using LylinkBackend_DatabaseAccessLayer.Models;
-
-namespace LylinkBackend_DatabaseAccessLayer.Services;
+﻿namespace LylinkBackend.Repositories.Analytics;
 
 public interface IVisitAnalyticsRepository
 {
@@ -8,7 +6,7 @@ public interface IVisitAnalyticsRepository
 
     public int CreateFailedVisitAnalytic(string sessionId, string visitedSlug, string redirectedSlug, DateTime visitedOn);
 
-    public IEnumerable<VisitAnalytic> GetAllVisitorAnalytics();
+    public Models.Analytics GetAllVisitorAnalytics();
 
     public bool DropAllVisitorAnalytics();
 }

@@ -1,7 +1,7 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LylinkBackend_DatabaseAccessLayer.Services;
+namespace LylinkBackend.Repositories.Analytics;
 
 public class VisitAnalyticsRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IVisitAnalyticsRepository
 {
@@ -38,11 +38,17 @@ public class VisitAnalyticsRepository(IDbContextFactory<LylinkdbContext> context
         return failedAnalytic.Id;
     }
 
-    public IEnumerable<VisitAnalytic> GetAllVisitorAnalytics()
+    public Models.Analytics GetAllVisitorAnalytics()
     {
         using var context = contextFactory.CreateDbContext();
 
-        return context.VisitAnalytics.ToList();
+        var analytics = new Models.Analytics()
+        {
+            SuccessVisits = context.VisitAnalytics.ToList(),
+            FailedVisit = context.FailedVisitAnalytics.ToList(),
+        };
+
+        return analytics;
     }
 
     public bool DropAllVisitorAnalytics()

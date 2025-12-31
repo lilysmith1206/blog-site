@@ -1,7 +1,7 @@
 ﻿using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkShared.Models;
 
-namespace LylinkBackend_DatabaseAccessLayer.Mappers
+namespace LylinkBackend.Repositories.Mappers
 {
     public static class PostMapper
     {

@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkBackend.Analytics.Cli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkDatabase.MigrationScripts", "private\LylinkDatabase.MigrationScripts\LylinkDatabase.MigrationScripts.csproj", "{BB4A770E-C968-4AB7-9C7B-655FBC363A09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LylinkBackend.Repositories", "private\LylinkBackend.Repositories\LylinkBackend.Repositories.csproj", "{D6AD26F8-2053-4BBE-99E6-61F77E229960}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,10 @@ Global
 		{BB4A770E-C968-4AB7-9C7B-655FBC363A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB4A770E-C968-4AB7-9C7B-655FBC363A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB4A770E-C968-4AB7-9C7B-655FBC363A09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6AD26F8-2053-4BBE-99E6-61F77E229960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6AD26F8-2053-4BBE-99E6-61F77E229960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6AD26F8-2053-4BBE-99E6-61F77E229960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6AD26F8-2053-4BBE-99E6-61F77E229960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -195,6 +201,7 @@ Global
 		{779B2E58-4D25-4D71-8691-568DDA5D1956} = {61EE9CD9-4EF6-46EB-BA3B-4648B9CA0621}
 		{28F7954B-EE06-4A58-AF49-996F77598245} = {61EE9CD9-4EF6-46EB-BA3B-4648B9CA0621}
 		{BB4A770E-C968-4AB7-9C7B-655FBC363A09} = {AA03FEFF-7BD9-4E95-AD45-5B7835F1F465}
+		{D6AD26F8-2053-4BBE-99E6-61F77E229960} = {AA03FEFF-7BD9-4E95-AD45-5B7835F1F465}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FC83A25-ED6F-4F75-BF38-62694D52CD98}

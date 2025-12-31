@@ -1,9 +1,9 @@
-﻿using LylinkBackend_DatabaseAccessLayer.Mappers;
+﻿using LylinkBackend.Repositories.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkShared.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LylinkBackend_DatabaseAccessLayer.Services
+namespace LylinkBackend.Repositories.Pages
 {
     public class PageRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IPageRepository
     {

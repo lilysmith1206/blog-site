@@ -1,6 +1,6 @@
 ﻿using LylinkShared.Models;
 
-namespace LylinkBackend_DatabaseAccessLayer.Services
+namespace LylinkBackend.Repositories.Management
 {
     public interface IPageManagementRepository
     {

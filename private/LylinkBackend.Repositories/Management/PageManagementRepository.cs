@@ -1,11 +1,10 @@
-﻿using LylinkBackend_DatabaseAccessLayer.Mappers;
+﻿using LylinkBackend.Repositories.Mappers;
 using LylinkBackend_DatabaseAccessLayer.Models;
 using LylinkShared.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using MySqlConnector;
 
-namespace LylinkBackend_DatabaseAccessLayer.Services
+namespace LylinkBackend.Repositories.Management
 {
     public class PageManagementRepository(IDbContextFactory<LylinkdbContext> contextFactory) : IPageManagementRepository
     {
