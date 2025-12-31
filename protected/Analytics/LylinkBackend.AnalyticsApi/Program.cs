@@ -1,7 +1,7 @@
 
+using LylinkBackend.Repositories.Analytics;
 using LylinkBackend.SharedApiCode.Authentication;
 using LylinkBackend_DatabaseAccessLayer.Models;
-using LylinkBackend_DatabaseAccessLayer.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
