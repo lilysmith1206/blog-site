@@ -3,6 +3,7 @@
 @using LylinkShared.Models
 @using Microsoft.AspNetCore.Components.Sections
 @using Microsoft.Extensions.Options
+@using Microsoft.JSInterop
 @inherits LayoutComponentBase
 @inject IOptions<AssetsOriginOptions> AssetsServerOptions
 
@@ -38,7 +39,12 @@
             </Second>
         </ImageToggle>
     </div>
-    @Body
+    <SectionOutlet SectionName="Header" @rendermode="RenderMode.InteractiveServer" />
+    <div id="content-wrap">
+        <div class="container">
+            @Body
+        </div>
+    </div>
     <footer>
         <p><a href="/privacy">Privacy Policy</a> - Copyright 2025, All Rights Reserved</p>
     </footer>

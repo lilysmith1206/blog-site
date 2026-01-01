@@ -3,7 +3,6 @@
 @using ErrorOr
 @using LylinkBackend.BlogShared.Page
 @using LylinkBackend.BlogApiClient
-@using LylinkFrontend.BlogSite.Components.Layout
 @using LylinkFrontend.Shared
 @using LylinkShared.Models
 @using Microsoft.AspNetCore.Components.Sections
@@ -20,22 +19,19 @@
     <meta name="description" content="@Page?.Metadata?.Description" />
 </SectionContent>
 
-<PageHeader PageName="@Page?.Name"
-            Parents="@(Page?.Parents ?? [])" />
+<SectionContent SectionName="Header">
+    <PageHeader PageName="@Page?.Name"
+                Parents="@(Page?.Parents ?? [])" />
+</SectionContent>
 
-
-<div id="content-wrap">
-    <div class="container">
-        <main>
-            <LoadingFacade FacadeHeight="60vh"
-                           Loading="Loading">
-                <RenderedComponentOnLoad>
-                    @((MarkupString)(Page?.HtmlContent ?? string.Empty))
-                </RenderedComponentOnLoad>
-            </LoadingFacade>
-        </main>
-    </div>
-</div>
+<main>
+    <LoadingFacade FacadeHeight="60vh"
+                   Loading="Loading">
+        <RenderedComponentOnLoad>
+            @((MarkupString)(Page?.HtmlContent ?? string.Empty))
+        </RenderedComponentOnLoad>
+    </LoadingFacade>
+</main>
 
 @code {
     private bool Loading = true;

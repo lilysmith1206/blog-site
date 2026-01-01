@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\private\LylinkShared.Models\LylinkShared.Models.csproj" />
+    <ProjectReference Include="..\..\protected\APIs\Shared\LylinkBackend_API_SharedMiddleware\LylinkBackend_API_Shared.csproj" />
   </ItemGroup>
 
 </Project>

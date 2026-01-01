@@ -1,9 +1,10 @@
 ﻿@namespace LylinkFrontend.BlogSite.Components
 @using LylinkFrontend.BlogSite.Components.Pages
+@using LylinkFrontend.Shared
 
 <Router AppAssembly="typeof(Program).Assembly" AdditionalAssemblies="new[] { typeof(Client._Imports).Assembly }">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
+        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 

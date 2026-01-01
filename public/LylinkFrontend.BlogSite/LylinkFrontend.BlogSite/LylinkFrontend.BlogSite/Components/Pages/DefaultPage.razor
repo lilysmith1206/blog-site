@@ -5,7 +5,6 @@
 @using LylinkBackend.AnalyticsShared
 @using LylinkBackend.BlogShared.Page
 @using LylinkBackend.BlogApiClient
-@using LylinkFrontend.BlogSite.Components.Layout
 @using LylinkFrontend.Shared
 @using LylinkFrontend.Shared.Services
 @using LylinkShared.Models
@@ -26,48 +25,45 @@
     <meta name="description" content="@Page?.Metadata?.Description" />
 </SectionContent>
 
-<PageHeader PageName="@Page?.Name"
-            Parents="@(Page?.Parents ?? [])" />
+<SectionContent SectionName="Header">
+    <PageHeader PageName="@Page?.Name"
+                Parents="@(Page?.Parents ?? [])" />
+</SectionContent>
 
+<main>
+    <LoadingFacade FacadeHeight="60vh"
+                   Loading="Loading">
+        <RenderedComponentOnLoad>
+            @((MarkupString)(Page?.HtmlContent ?? string.Empty))
 
-<div id="content-wrap">
-    <div class="container">
-        <main>
-            <LoadingFacade FacadeHeight="60vh"
-                           Loading="Loading">
-                <RenderedComponentOnLoad>
-                    @((MarkupString)(Page?.HtmlContent ?? string.Empty))
-
-                    @if (Page?.Children?.Any() == true)
+            @if (Page?.Children?.Any() == true)
+            {
+                <h3>Sub-categories</h3>
+                <ul>
+                    @foreach (PageLink postCategory in Page.Children)
                     {
-                        <h3>Sub-categories</h3>
-                        <ul>
-                            @foreach (PageLink postCategory in Page.Children)
-                            {
-                                <li>
-                                    <a href="@postCategory.Slug" title="@postCategory.Description">@postCategory.Name</a>
-                                </li>
-                            }
-                        </ul>
+                        <li>
+                            <a href="@postCategory.Slug" title="@postCategory.Description">@postCategory.Name</a>
+                        </li>
                     }
+                </ul>
+            }
 
-                    @if (Page?.Posts?.Any() == true)
+            @if (Page?.Posts?.Any() == true)
+            {
+                <h3>Posts</h3>
+                <ul>
+                    @foreach (var post in Page.Posts)
                     {
-                        <h3>Posts</h3>
-                        <ul>
-                            @foreach (var post in Page.Posts)
-                            {
-                                <li>
-                                    <a href="@post.Slug" title="@post.Description">@post.Name</a>
-                                </li>
-                            }
-                        </ul>
+                        <li>
+                            <a href="@post.Slug" title="@post.Description">@post.Name</a>
+                        </li>
                     }
-                </RenderedComponentOnLoad>
-            </LoadingFacade>
-        </main>
-    </div>
-</div>
+                </ul>
+            }
+        </RenderedComponentOnLoad>
+    </LoadingFacade>
+</main>
 
 @code {
     [Parameter]

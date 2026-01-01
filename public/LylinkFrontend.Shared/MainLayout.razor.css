@@ -1,0 +1,65 @@
+﻿html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-color) var(--header-border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+body {
+    margin: 0;
+    font-family: 'MonospaceTypewriter' !important;
+}
+
+body > #page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+    body > #page-container > #content-wrap {
+        padding-bottom: 2.5rem;
+        /* Footer height */
+    }
+
+body .container {
+    width: 90%;
+    margin: 2.5% 0%;
+    margin-top: 1%;
+    margin-left: 1.5%;
+    margin-bottom: 2.5%;
+    z-index: 0;
+}
+
+body main,
+body aside {
+    border-width: 3px;
+    border-style: outset;
+    padding: 0.5% 1%;
+    background-color: var(--main-aside-bg-color);
+    border-color: var(--main-aside-border-color);
+    z-index: 0;
+}
+
+body main {
+    margin: 3% 0%;
+}
+
+body aside {
+    width: 23%;
+}
+
+div#color-toggle {
+    position: absolute;
+    right: 2.5%;
+    top: 2.5vh;
+    width: 75px;
+    height: 75px;
+}
+
+div#color-toggle .slot {
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    top: 0;
+}

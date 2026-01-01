@@ -4,7 +4,6 @@
 @using LylinkBackend.Analytics.Client
 @using LylinkBackend.BlogShared.Page
 @using LylinkBackend.BlogApiClient
-@using LylinkFrontend.BlogSite.Components.Layout
 @using LylinkFrontend.Shared
 @using LylinkFrontend.Shared.Services
 @using LylinkShared.Models
@@ -25,39 +24,37 @@
     <meta name="description" content="@Page?.Metadata?.Description" />
 </SectionContent>
 
-<PageHeader PageName="@Page?.Name"
-            Parents="@(Page?.Parents ?? [])" />
+<SectionContent SectionName="Header">
+    <PageHeader PageName="@Page?.Name"
+                Parents="@(Page?.Parents ?? [])" />
+</SectionContent>
 
-<div id="content-wrap">
-    <div class="container">
-        <main>
-            <LoadingFacade FacadeHeight="60vh"
-                           Loading="Loading">
-                <RenderedComponentOnLoad>
-                    @((MarkupString?)(Page?.HtmlContent ?? string.Empty))
+<main>
+    <LoadingFacade FacadeHeight="60vh"
+                   Loading="Loading">
+        <RenderedComponentOnLoad>
+            @((MarkupString?)(Page?.HtmlContent ?? string.Empty))
 
-                    @if (Page?.Children?.Any() == true)
-                    {
-                        <h3>Sub-categories</h3>
-                        <PageLinkList PageLinks="Page.Children" />
-                    }
+            @if (Page?.Children?.Any() == true)
+            {
+                <h3>Sub-categories</h3>
+                <PageLinkList PageLinks="Page.Children" />
+            }
 
-                    @if (Page?.Posts?.Any() == true)
-                    {
-                        <h3>Posts</h3>
-                        <PageLinkList PageLinks="Page.Posts" />
-                    }
+            @if (Page?.Posts?.Any() == true)
+            {
+                <h3>Posts</h3>
+                <PageLinkList PageLinks="Page.Posts" />
+            }
 
-                    @if (MostRecentPosts.Any())
-                    {
-                        <h3>Most recently updated posts</h3>
-                        <PageLinkList PageLinks="MostRecentPosts" />
-                    }
-                </RenderedComponentOnLoad>
-            </LoadingFacade>
-        </main>
-    </div>
-</div>
+            @if (MostRecentPosts.Any())
+            {
+                <h3>Most recently updated posts</h3>
+                <PageLinkList PageLinks="MostRecentPosts" />
+            }
+        </RenderedComponentOnLoad>
+    </LoadingFacade>
+</main>
 
 @code {
     private bool Loading = true;
