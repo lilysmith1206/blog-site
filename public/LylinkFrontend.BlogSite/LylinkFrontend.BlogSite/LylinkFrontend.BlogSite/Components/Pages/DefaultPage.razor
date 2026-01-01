@@ -27,7 +27,8 @@
 
 <SectionContent SectionName="Header">
     <PageHeader PageName="@Page?.Name"
-                Parents="@(Page?.Parents ?? [])" />
+                Parents="@(Page?.Parents ?? [])"
+                DateModified="Page?.Metadata?.DateModified"/>
 </SectionContent>
 
 <main>

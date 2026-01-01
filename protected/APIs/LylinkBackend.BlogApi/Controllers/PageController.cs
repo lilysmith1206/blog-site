@@ -64,6 +64,7 @@ namespace LylinkBackend.BlogApi.Controllers
                     Description = post.Description,
                     Keywords = post.Keywords,
                     Title = post.Title,
+                    DateModified = post.DateModified
                 },
                 Name = post.Name,
                 Parents = post.Parents.ToList(),

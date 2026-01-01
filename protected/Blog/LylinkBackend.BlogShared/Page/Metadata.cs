@@ -7,4 +7,6 @@ public class Metadata
     public string? Description { get; set; }
 
     public string? Title { get; set; }
+
+    public DateTime? DateModified { get; set; }
 }
