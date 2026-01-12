@@ -1,9 +1,8 @@
+using LylinkBackend.Repositories.Analytics;
 using LylinkBackend_DatabaseAccessLayer.Models;
-using LylinkBackend_DatabaseAccessLayer.Services;
 using LylinkBackend_EmailService.Models;
 using LylinkBackend_EmailService.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Http;
 using Resend;
 
 namespace LylinkBackend_EmailService
@@ -14,12 +13,12 @@ namespace LylinkBackend_EmailService
         {
             var builder = Host.CreateApplicationBuilder(args);
 
-            builder.Services.AddDbContext<LylinkdbContext>(options =>
+            builder.Services.AddDbContextFactory<LylinkdbContext>(options =>
             {
                 options.UseMySql(builder.Configuration.GetConnectionString("MariaDbConnection"), ServerVersion.Parse("11.5.2-mariadb"));
             });
 
-            Email? emailConfiguration = builder.Configuration.GetSection("Email").Get<Email>();
+            EmailOptions? emailConfiguration = builder.Configuration.GetSection("Email").Get<EmailOptions>();
 
             if (emailConfiguration == null)
             {
@@ -33,7 +32,7 @@ namespace LylinkBackend_EmailService
 
             builder.Services.AddHostedService<EmailServiceWorker>();
 
-            builder.Services.AddOptions<Email>()
+            builder.Services.AddOptions<EmailOptions>()
                 .Bind(builder.Configuration.GetSection("Email"));
 
             var host = builder.Build();
@@ -41,7 +40,7 @@ namespace LylinkBackend_EmailService
             host.Run();
         }
 
-        private static void ConfigureEmailProvider(HostApplicationBuilder builder, Email emailConfiguration)
+        private static void ConfigureEmailProvider(HostApplicationBuilder builder, EmailOptions emailConfiguration)
         {
             builder.Services.AddHttpClient<ResendClient>();
             builder.Services.Configure<ResendClientOptions>(options =>

@@ -23,7 +23,7 @@ namespace LylinkBackend_EmailService.Services
                 EmailAddress fromAddress = new()
                 {
                     DisplayName = "Analytics",
-                    Email = "analytics@lylink.org"
+                    Email = "daily@analytics.lylink.org"
                 };
 
                 message.From = fromAddress;
@@ -36,9 +36,9 @@ namespace LylinkBackend_EmailService.Services
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("Failed to send the analytics email.");
+                Console.WriteLine("Failed to send the analytics email: {0}", ex);
 
                 return false;
             }

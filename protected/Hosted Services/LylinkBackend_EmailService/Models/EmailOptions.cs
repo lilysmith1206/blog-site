@@ -1,8 +1,10 @@
 ﻿namespace LylinkBackend_EmailService.Models
 {
-    public class Email
+    public class EmailOptions
     {
         public string? AnalyticsEmailRecipient { get; set; }
+
+        public TimeOnly? EasternTimeSent { get; set; }
 
         public string? ApiKey { get; set; }
     }
