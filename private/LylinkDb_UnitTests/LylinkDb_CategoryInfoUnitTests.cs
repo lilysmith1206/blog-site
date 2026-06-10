@@ -1,6 +1,6 @@
 ﻿using LylinkShared.Models;
 using LylinkBackend.Repositories.Mappers;
-using LylinkBackend_DatabaseAccessLayer.Services;
+using LylinkBackend.Repositories.Management;
 
 namespace LylinkBackend_DatabaseAccessLayer_UnitTests
 {

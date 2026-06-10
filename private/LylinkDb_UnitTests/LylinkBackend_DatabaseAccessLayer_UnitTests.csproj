@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LylinkBackend.Repositories\LylinkBackend.Repositories.csproj" />
     <ProjectReference Include="..\LylinkBackend_DatabaseAccessLayer\LylinkBackend_DatabaseAccessLayer.csproj" />
   </ItemGroup>
 
