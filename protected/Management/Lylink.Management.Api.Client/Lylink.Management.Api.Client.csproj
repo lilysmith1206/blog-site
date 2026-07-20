@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ErrorOr" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
+    <PackageReference Include="Polly" Version="8.6.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Lylink.Shared.Api.Client\Lylink.Shared.Api.Client.csproj" />
+    <ProjectReference Include="..\..\..\private\Lylink.Shared.Models\Lylink.Shared.Models.csproj" />
+    <ProjectReference Include="..\Lylink.Management.Shared\Lylink.Management.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

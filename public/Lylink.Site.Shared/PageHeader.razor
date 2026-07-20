@@ -1,0 +1,55 @@
+﻿@using Lylink.Shared.Models
+
+<header>
+    <div class="breadcrumb">
+        <ul>
+            @if (PageName is null)
+            {
+                <PageLinkList PageLinks="FacadeParents" />
+            }
+            else
+            {
+                <PageLinkList PageLinks="Parents" />
+            }
+        </ul>
+    </div>
+    <h1 id="website-header">
+        @if (PageName is null)
+        {
+            <span>Loading...</span>
+        }
+        else
+        {
+            @PageName
+        }
+    </h1>
+
+    @if(DateModified is not null)
+    {
+        var dateModified = DateModified.Value;
+        var updateTime = $"{dateModified.Hour}:{dateModified.Minute:D2}";
+        var updateDate = $"{dateModified.Month}/{dateModified.Day}/{dateModified.Year}";
+
+        <h5>Updated @updateTime on @updateDate</h5>
+    }
+</header>
+
+@code {
+    [Parameter, EditorRequired] public string? PageName { get; set; } = default!;
+    [Parameter, EditorRequired] public IEnumerable<PageLink> Parents { get; set; }
+    [Parameter] public DateTime? DateModified { get; set; }
+    
+    private IEnumerable<PageLink> _parents = [];
+
+    private List<PageLink> FacadeParents { get; set; } = [ new() { Slug = "/", Description = "Index", Name = "index" }];
+
+    protected override void OnParametersSet()
+    {
+        Parents = Parents.Select(parent =>
+        {
+            parent.Name = parent.Name.ToLower();
+
+            return parent;
+        });
+    }
+}
