@@ -1,0 +1,41 @@
+services:
+  mariadb:
+    image: mariadb:10.6
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MariaDB__Root__Password} 
+      MARIADB_DATABASE: lylinkdb
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  analytics-api:
+    build:
+      context: .
+      dockerfile: protected/Analytics/LylinkBackend.AnalyticsApi/Dockerfile
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "9090:5000"
+
+  migration:
+    build:
+      context: .
+      dockerfile: private/LylinkDatabase.MigrationScripts/Dockerfile
+    command: ["server=mariadb;port=3306;database=lylinkdb;user=root;password=${MariaDB__ROOT__PASSWORD}"]
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    profiles:
+      - migrate
+
+volumes:
+  mariadb_data:
