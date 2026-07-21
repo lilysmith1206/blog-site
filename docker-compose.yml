@@ -84,5 +84,18 @@ services:
     ports:
       - "9092:8080"
 
+  blog-site:
+    build:
+      context: .
+      dockerfile: public/Lylink.Site.Blog/Lylink.Site.Blog/Dockerfile
+    depends_on:
+      - blog-api
+      - analytics-api
+      - assets-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "10000:8080"
+
 volumes:
   mariadb_data:

@@ -40,6 +40,6 @@
     <Project Path="public/Lylink.Site.Blog/Lylink.Site.Blog.Client/Lylink.Site.Blog.Client.csproj" />
   </Folder>
   <Folder Name="/public/Lylink.Site.Blog/Lylink.Site.Blog/">
-    <Project Path="public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Blog.Site.csproj" />
+    <Project Path="public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.csproj" />
   </Folder>
 </Solution>
