@@ -49,5 +49,19 @@ services:
     ports:
       - "9090:8080"
 
+  blog-api:
+    build:
+      context: .
+      dockerfile: protected/Blog/Lylink.Blog.Api/Dockerfile
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__MariaDbConnection=server=mariadb;port=3306;database=lylinkdb;user=root;password=${MariaDB__Root__Password}
+    ports:
+      - "9091:8080"
+
+
 volumes:
   mariadb_data:
