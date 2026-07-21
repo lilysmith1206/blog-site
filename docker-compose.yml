@@ -27,6 +27,15 @@ services:
     profiles:
       - migrate
 
+  email-worker:
+    build:
+      context: .
+      dockerfile: protected/Workers/Lylink.Workers.Email/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Email__APIKey=${EmailProvider_ApiKey}
+      - ConnectionStrings__MariaDbConnection=server=mariadb;port=3306;database=lylinkdb;user=root;password=${MariaDB__Root__Password}
+
   assets-api:
     build:
       context: .
