@@ -11,9 +11,9 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAuthentication(this IServiceCollection serviceCollection, InboundAuthenticationOptions options)
     {
-        if (options.BearerTokenValidation is not null)
+        if (options.BearerToken is not null)
         {
-            return serviceCollection.SetUpJwtBearerAuthentication(options.BearerTokenValidation);
+            return serviceCollection.SetUpJwtBearerAuthentication(options.BearerToken);
         }
         else if (options.OpenIdConnect is not null)
         {

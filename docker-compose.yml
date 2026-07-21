@@ -16,16 +16,6 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
 
-  analytics-api:
-    build:
-      context: .
-      dockerfile: protected/Analytics/LylinkBackend.AnalyticsApi/Dockerfile
-    depends_on:
-      mariadb:
-        condition: service_healthy
-    ports:
-      - "9090:5000"
-
   migration:
     build:
       context: .
@@ -36,6 +26,19 @@ services:
         condition: service_healthy
     profiles:
       - migrate
+
+  analytics-api:
+    build:
+      context: .
+      dockerfile: protected/Analytics/Lylink.Analytics.Api/Dockerfile
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__MariaDbConnection=server=mariadb;port=3306;database=lylinkdb;user=root;password=${MariaDB__Root__Password}
+    ports:
+      - "9090:8080"
 
 volumes:
   mariadb_data:

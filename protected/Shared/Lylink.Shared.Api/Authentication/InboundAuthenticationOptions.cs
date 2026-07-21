@@ -2,7 +2,7 @@
 
 public class InboundAuthenticationOptions
 {
-    public BearerTokenValidationOptions? BearerTokenValidation { get; init; }
+    public BearerTokenValidationOptions? BearerToken { get; init; }
 
     public OpenIdConnectOptions? OpenIdConnect { get; init; }
 }
