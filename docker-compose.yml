@@ -27,6 +27,15 @@ services:
     profiles:
       - migrate
 
+  assets-api:
+    build:
+      context: .
+      dockerfile: protected/Assets/Lylink.Assets.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "9089:8080"
+
   analytics-api:
     build:
       context: .
