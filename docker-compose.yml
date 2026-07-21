@@ -97,5 +97,17 @@ services:
     ports:
       - "10000:8080"
 
+  management-site:
+    build:
+      context: .
+      dockerfile: public/Lylink.Site.Management/Dockerfile
+    depends_on:
+      - management-api
+      - assets-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "10001:8080"
+
 volumes:
   mariadb_data:
