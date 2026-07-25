@@ -32,7 +32,7 @@ public class AnalyticsController : Controller
         {
             _logger.LogError(ex, "Exception on adding visitor analytics.");
 
-            return StatusCode(500);
+            return StatusCode(500, $"{ex.Message}\n{ex.StackTrace}");
         }
     }
 

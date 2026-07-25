@@ -30,7 +30,7 @@ public static class ServiceCollectionExtensions
         if (bearerOptions.ExpectedAuthority is null)
             throw new InvalidOperationException("Expected authority cannot be null for JWT bearer authentication.");
 
-        if (bearerOptions.ValidateAudience == true && bearerOptions.ValidateAudience is null)
+        if (bearerOptions.ValidateAudience == true && bearerOptions.ExpectedAudience is null)
             throw new InvalidOperationException("Expected audience cannot be null when validating audience for JWT bearer authentication.");
 
         Uri bearerAuthority = new Uri(bearerOptions.ExpectedAuthority, UriKind.Absolute);

@@ -15,6 +15,23 @@ services:
       - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KC_HOSTNAME: http://localhost:7080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: "true"
+      KC_LOG_LEVEL: info
+    command: ["start-dev", "--http-port", "7080", "--https-port", "7443"]
+    ports:
+      - "7080:7080"
+      - "7443:7443"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
 
   migration:
     build:
@@ -94,6 +111,7 @@ services:
       - assets-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - AnalyticsApiClient__ClientSecret=${BlogSite__ClientSecret}
     ports:
       - "10000:8080"
 
@@ -106,8 +124,11 @@ services:
       - assets-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - InboundAuthentication__OpenIdConnect__ClientSecret=${ManagementSite__ClientSecret}
+      - ManagementApiClient__ClientSecret=${ManagementSite__ClientSecret}
     ports:
       - "10001:8080"
 
 volumes:
   mariadb_data:
+  keycloak_data:
