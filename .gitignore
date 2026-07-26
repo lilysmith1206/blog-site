@@ -17,3 +17,4 @@ private/mysqldump.sql
 *launchSettings.json
 *dotnet-tools.json
 *appsettings.Development.json
+*.env*

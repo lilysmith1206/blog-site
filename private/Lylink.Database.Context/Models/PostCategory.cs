@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Lylink.Database.Context.Models;
+
+public partial class PostCategory
+{
+    public int CategoryId { get; set; }
+
+    public int? ParentId { get; set; }
+
+    public string Slug { get; set; } = null!;
+
+    public int? PostSortingMethodId { get; set; }
+
+    public virtual ICollection<PostCategory> InverseParent { get; set; } = new List<PostCategory>();
+
+    public virtual PostCategory? Parent { get; set; }
+
+    public virtual PostSortingMethod? PostSortingMethod { get; set; }
+
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+
+    public virtual Page SlugNavigation { get; set; } = null!;
+}

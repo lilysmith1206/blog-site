@@ -1,0 +1,45 @@
+<Solution>
+  <Folder Name="/private/">
+    <Project Path="private/Lylink.Database.Context/Lylink.Database.Context.csproj" />
+    <Project Path="private/Lylink.Database.Migration/Lylink.Database.Migration.csproj" />
+    <Project Path="private/Lylink.Database.Repositories.Tests/Lylink.Database.Repositories.Tests.csproj" />
+    <Project Path="private/Lylink.Database.Repositories/Lylink.Database.Repositories.csproj" />
+    <Project Path="private/Lylink.Shared.Models/Lylink.Shared.Models.csproj" />
+  </Folder>
+  <Folder Name="/protected/" />
+  <Folder Name="/protected/Analytics/">
+    <Project Path="protected/Analytics/Lylink.Analytics.Api.Client/Lylink.Analytics.Api.Client.csproj" />
+    <Project Path="protected/Analytics/Lylink.Analytics.Api/Lylink.Analytics.Api.csproj" />
+    <Project Path="protected/Analytics/Lylink.Analytics.Models/Lylink.Analytics.Models.csproj" />
+  </Folder>
+  <Folder Name="/protected/Assets/">
+    <Project Path="protected/Assets/Lylink.Assets.Api/Lylink.Assets.Api.csproj" />
+  </Folder>
+  <Folder Name="/protected/Blog/">
+    <Project Path="protected/Blog/Lylink.Blog.Api.Client/Lylink.Blog.Api.Client.csproj" />
+    <Project Path="protected/Blog/Lylink.Blog.Api/Lylink.Blog.Api.csproj" />
+    <Project Path="protected/Blog/Lylink.Blog.Shared/Lylink.Blog.Shared.csproj" />
+  </Folder>
+  <Folder Name="/protected/Management/">
+    <Project Path="protected/Management/Lylink.Management.Api.Client/Lylink.Management.Api.Client.csproj" />
+    <Project Path="protected/Management/Lylink.Management.Api/Lylink.Management.Api.csproj" />
+    <Project Path="protected/Management/Lylink.Management.Shared/Lylink.Management.Shared.csproj" />
+  </Folder>
+  <Folder Name="/protected/Shared/">
+    <Project Path="protected/Shared/Lylink.Shared.Api.Client/Lylink.Shared.Api.Client.csproj" />
+    <Project Path="protected/Shared/Lylink.Shared.Api/Lylink.Shared.Api.csproj" />
+  </Folder>
+  <Folder Name="/protected/Workers/">
+    <Project Path="protected/Workers/Lylink.Workers.Email/Lylink.Workers.Email.csproj" />
+  </Folder>
+  <Folder Name="/public/">
+    <Project Path="public/Lylink.Site.Management/Lylink.Site.Management.csproj" />
+    <Project Path="public/Lylink.Site.Shared/Lylink.Site.Shared.csproj" />
+  </Folder>
+  <Folder Name="/public/Lylink.Site.Blog/">
+    <Project Path="public/Lylink.Site.Blog/Lylink.Site.Blog.Client/Lylink.Site.Blog.Client.csproj" />
+  </Folder>
+  <Folder Name="/public/Lylink.Site.Blog/Lylink.Site.Blog/">
+    <Project Path="public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.csproj" />
+  </Folder>
+</Solution>
