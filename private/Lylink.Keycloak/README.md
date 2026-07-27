@@ -11,7 +11,7 @@ This is a folder containing configuration files to set up a Keycloak instance fo
     - The expected root URL of the management site as `MANAGEMENT_SITE_ROOT_URL`.
     - The expected admin URL of the management site as `MANAGEMENT_SITE_ADMIN_URL`.
     - The secret to be used for the management site application to authenticate with Keycloak as `MANAGEMENT_SITE_CLIENT_SECRET`.
-    - The secret to be used for the blog site applicawtion to authenticate with Keycloak as `BLOG_SITE_CLIENT_SECRET`.
+    - The secret to be used for the blog site application to authenticate with Keycloak as `BLOG_SITE_CLIENT_SECRET`.
     - The expected password for Keycloak to read/write to the Postgres database.
     - The expected password for the bootstrapped Keycloak admin account.
 
