@@ -11,7 +11,7 @@ RUN dotnet publish protected/Assets/Lylink.Assets.Api/Lylink.Assets.Api.csproj -
     rm /app/out/appsettings.json && \
     rm /app/out/appsettings.Development.json
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out .
 RUN mv appsettings.Docker.json appsettings.json

@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.Client/bin/Debug/net8.0/Lylink.Site.Blog.Client.dll",
+            "program": "${workspaceFolder}/public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.Client/bin/Debug/net10.0/Lylink.Site.Blog.Client.dll",
             "args": [],
             "cwd": "${workspaceFolder}/public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.Client",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
