@@ -45,9 +45,11 @@ public class Program
         });
 
         builder.Services.AddScoped<IVisitAnalyticsRepository, VisitAnalyticsRepository>();
+        builder.Services.AddHttpClient();
 
         builder.Services.AddHealthChecks()
-            .AddLylinkDatabaseHealthCheck();
+            .AddLylinkDatabaseHealthCheck()
+            .AddInboundKeycloakConnectivityHealthCheck();
             
         var app = builder.Build();
 

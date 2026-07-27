@@ -3,6 +3,8 @@ using Lylink.Shared.Api.Middleware;
 using Lylink.Shared.Api.Authentication;
 using Lylink.Shared.Api.Models;
 using Lylink.Site.Management.Models;
+using Lylink.Shared.Api.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Lylink.Site.Management;
 
@@ -62,6 +64,11 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddRazorComponents();
 
+        builder.Services.AddHttpClient();
+        
+        builder.Services.AddHealthChecks()
+            .AddInboundKeycloakConnectivityHealthCheck(healthStatus: HealthStatus.Unhealthy);
+
         var app = builder.Build();
 
         app.UseRouting();
@@ -72,6 +79,7 @@ public class Program
         app.UseStaticFiles();
 
         app.UseCors(AssetsOrigins);
+        app.MapHealthChecks("/health");
         app.MapControllers();
         app.MapRazorPages();
 

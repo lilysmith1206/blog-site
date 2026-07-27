@@ -37,9 +37,11 @@ public class Program
         });
 
         builder.Services.AddTransient<IPageManagementRepository, PageManagementRepository>();
+        builder.Services.AddHttpClient();
 
         builder.Services.AddHealthChecks()
-            .AddLylinkDatabaseHealthCheck();
+            .AddLylinkDatabaseHealthCheck()
+            .AddInboundKeycloakConnectivityHealthCheck();
 
         var app = builder.Build();
 
