@@ -1,6 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /app
 
+COPY /Directory.Packages.props ./Directory.Packages.props
+
 COPY protected/Workers/Lylink.Workers.Email/Lylink.Workers.Email.csproj ./protected/Workers/Lylink.Workers.Email/
 COPY private/Lylink.Database.Repositories/Lylink.Database.Repositories.csproj ./private/Lylink.Database.Repositories/
 COPY private/Lylink.Database.Context/Lylink.Database.Context.csproj ./private/Lylink.Database.Context/

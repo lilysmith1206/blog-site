@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -13,6 +13,6 @@
     <ProjectReference Include="..\..\..\protected\Blog\Lylink.Blog.Api.Client\Lylink.Blog.Api.Client.csproj" />
     <ProjectReference Include="..\..\Lylink.Site.Shared\Lylink.Site.Shared.csproj" />
     <ProjectReference Include="..\Lylink.Site.Blog.Client\Lylink.Site.Blog.Client.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
   </ItemGroup>
 </Project>

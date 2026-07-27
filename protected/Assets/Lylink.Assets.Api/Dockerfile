@@ -1,6 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /app
 
+COPY /Directory.Packages.props ./Directory.Packages.props
+
 COPY protected/Assets/Lylink.Assets.Api/Lylink.Assets.Api.csproj ./protected/Assets/Lylink.Assets.Api/
 
 RUN dotnet restore protected/Assets/Lylink.Assets.Api/Lylink.Assets.Api.csproj
