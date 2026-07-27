@@ -2,6 +2,8 @@
 using Lylink.Database.Repositories.Pages;
 using Lylink.Database.Context.Models;
 using Microsoft.EntityFrameworkCore;
+using Lylink.Shared.Api.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Lylink.Blog.Api;
 
@@ -24,6 +26,9 @@ public class Program
         });
         builder.Services.AddTransient<IPageRepository, PageRepository>();
 
+        builder.Services.AddHealthChecks()
+            .AddLylinkDatabaseHealthCheck();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -32,12 +37,13 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
+        
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
-
+        app.MapHealthChecks("/health");
         app.MapControllers();
 
         app.Run();
