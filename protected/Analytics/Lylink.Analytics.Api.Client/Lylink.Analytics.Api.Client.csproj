@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Lylink.Shared\Lylink.Shared.csproj" />
     <ProjectReference Include="..\Lylink.Analytics.Models\Lylink.Analytics.Models.csproj" />
     <ProjectReference Include="..\..\Shared\Lylink.Shared.Api.Client\Lylink.Shared.Api.Client.csproj" />
   </ItemGroup>

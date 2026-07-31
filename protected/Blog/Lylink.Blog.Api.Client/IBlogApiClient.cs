@@ -1,10 +1,11 @@
 ﻿using ErrorOr;
 using Lylink.Blog.Shared.Page;
+using Lylink.Shared.Api.Client.Base;
 using Lylink.Shared.Models;
 
 namespace Lylink.Blog.Api.Client;
 
-public interface IBlogApiClient
+public interface IBlogApiClient : IHealthClient
 {
     Task<ErrorOr<Page>> GetIndexPage(CancellationToken cancellationToken = default);
 
@@ -13,6 +14,4 @@ public interface IBlogApiClient
     Task<ErrorOr<List<PageLink>>> GetMostRecentPosts(int limit, CancellationToken cancellationToken = default);
 
     Task<ErrorOr<Page>> GetPageFromSlug(string slug, CancellationToken cancellationToken = default);
-
-    Task<ErrorOr<Success>> GetHealth(CancellationToken cancellationToken = default);
 }

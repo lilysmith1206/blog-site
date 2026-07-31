@@ -28,6 +28,7 @@
   <Folder Name="/protected/Shared/">
     <Project Path="protected/Shared/Lylink.Shared.Api.Client/Lylink.Shared.Api.Client.csproj" />
     <Project Path="protected/Shared/Lylink.Shared.Api/Lylink.Shared.Api.csproj" />
+    <Project Path="protected/Shared/Lylink.Shared/Lylink.Shared.csproj" />
   </Folder>
   <Folder Name="/protected/Workers/">
     <Project Path="protected/Workers/Lylink.Workers.Email/Lylink.Workers.Email.csproj" />

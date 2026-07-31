@@ -1,6 +1,8 @@
 ﻿using Lylink.Shared.Api.Client.HealthChecks;
 using Lylink.Shared.Api.Client.KeycloakTokenHandler;
+using Lylink.Shared.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Lylink.Management.Api.Client;
 
@@ -28,8 +30,8 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient();
 
         services.AddHealthChecks()
-            .AddCheck<ClientConnectivityHealthCheck<ManagementApiClient>>("management-api-connectivity")
-            .AddTypeActivatedCheck<TokenIssuerConnectivityHealthCheck>("management-api-token-issuer-connectivity", [options]);
+            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IManagementApiClient>>("management-api-connectivity")
+            .AddTimeLimitedTypeActivatedHealthCheck<TokenIssuerConnectivityHealthCheck>("management-api-token-issuer-connectivity", [options]);
 
         return services.AddScoped<IManagementApiClient, ManagementApiClient>();
     }

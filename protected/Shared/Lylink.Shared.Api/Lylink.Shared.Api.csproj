@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\private\Lylink.Shared.Models\Lylink.Shared.Models.csproj" />
     <ProjectReference Include="..\..\..\private\Lylink.Database.Context\Lylink.Database.Context.csproj" />
+    <ProjectReference Include="..\Lylink.Shared\Lylink.Shared.csproj" />
   </ItemGroup>
 
 </Project>

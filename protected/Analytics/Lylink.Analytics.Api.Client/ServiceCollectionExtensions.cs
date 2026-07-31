@@ -1,5 +1,7 @@
-﻿using Lylink.Shared.Api.Client.HealthChecks;
+﻿using Lylink.Shared.Api.Client.Base;
+using Lylink.Shared.Api.Client.HealthChecks;
 using Lylink.Shared.Api.Client.KeycloakTokenHandler;
+using Lylink.Shared.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -32,8 +34,8 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient();
 
         services.AddHealthChecks()
-            .AddCheck<ClientConnectivityHealthCheck<AnalyticsApiClient>>("analytics-api-connectivity")
-            .AddTypeActivatedCheck<TokenIssuerConnectivityHealthCheck>("analytics-api-token-issuer-connectivity", [options]);
+            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IAnalyticsApiClient>>("analytics-api-connectivity")
+            .AddTimeLimitedTypeActivatedHealthCheck<TokenIssuerConnectivityHealthCheck>("analytics-api-token-issuer-connectivity", [options]);
 
         return services.AddScoped<IAnalyticsApiClient, AnalyticsApiClient>();
     }

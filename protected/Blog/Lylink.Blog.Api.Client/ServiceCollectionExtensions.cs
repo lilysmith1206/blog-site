@@ -1,4 +1,5 @@
 ﻿using Lylink.Shared.Api.Client.HealthChecks;
+using Lylink.Shared.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lylink.Blog.Api.Client;
@@ -16,7 +17,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddHealthChecks()
-            .AddCheck<ClientConnectivityHealthCheck<BlogApiClient>>("blog-api-connectivity");
+            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IBlogApiClient>>("blog-api-connectivity");
 
         return services.AddScoped<IBlogApiClient, BlogApiClient>();
     }

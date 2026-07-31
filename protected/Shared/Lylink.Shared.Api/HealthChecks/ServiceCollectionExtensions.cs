@@ -1,3 +1,4 @@
+using Lylink.Shared.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -13,7 +14,7 @@ public static class ServiceCollectionExtensions
         /// <param name="name">The name to use for the health check.</param>
         /// <returns>The <see cref="IHealthChecksBuilder"/> for further calls.</returns>
         public IHealthChecksBuilder AddLylinkDatabaseHealthCheck(string name = "lylink-database-connectivity")
-            => builder.AddCheck<LylinkDatabaseHealthCheck>(name);
+            => builder.AddTimeLimitedHealthCheck<LylinkDatabaseHealthCheck>(name);
 
         /// <summary>
         /// Adds the <see cref="InboundKeycloakConnectivityHealthCheck"/> to the builder.
@@ -25,6 +26,6 @@ public static class ServiceCollectionExtensions
         /// <param name="healthStatus">The health status for this to be, if the check finds it is unhealthy.</param>
         /// <returns>The <see cref="IHealthChecksBuilder"/> for further calls.</returns>
         public IHealthChecksBuilder AddInboundKeycloakConnectivityHealthCheck(HealthStatus healthStatus = HealthStatus.Unhealthy, string name = "oauth2-connectivity")
-            => builder.AddCheck<InboundKeycloakConnectivityHealthCheck>(name, healthStatus);
+            => builder.AddTimeLimitedHealthCheck<InboundKeycloakConnectivityHealthCheck>(name, healthStatus);
     }
 }
