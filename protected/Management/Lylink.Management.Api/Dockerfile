@@ -1,6 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /app
 
+COPY /Directory.Packages.props ./Directory.Packages.props
+
 COPY protected/Management/Lylink.Management.Api/Lylink.Management.Api.csproj ./protected/Management/Lylink.Management.Api/
 COPY protected/Management/Lylink.Management.Shared/Lylink.Management.Shared.csproj ./protected/Management/Lylink.Management.Shared/
 COPY protected/Shared/Lylink.Shared.Api/Lylink.Shared.Api.csproj ./protected/Shared/Lylink.Shared.Api/

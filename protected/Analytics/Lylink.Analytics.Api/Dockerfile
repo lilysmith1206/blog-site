@@ -1,6 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /app
 
+COPY /Directory.Packages.props ./Directory.Packages.props
+
 COPY protected/Analytics/Lylink.Analytics.Api/Lylink.Analytics.Api.csproj ./protected/Analytics/Lylink.Analytics.Api/
 COPY protected/Analytics/Lylink.Analytics.Models/Lylink.Analytics.Models.csproj ./protected/Analytics/Lylink.Analytics.Models/
 COPY protected/Shared/Lylink.Shared.Api/Lylink.Shared.Api.csproj ./protected/Shared/Lylink.Shared.Api/

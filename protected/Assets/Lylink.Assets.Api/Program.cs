@@ -1,4 +1,3 @@
-
 using Microsoft.Extensions.FileProviders;
 
 namespace Lylink.Assets.Api;
