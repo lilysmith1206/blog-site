@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 using Lylink.Blog.Shared.Page;
-using Lylink.Shared.Api.Client.BaseClient;
+using Lylink.Shared.Api.Client.Base;
 using Lylink.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -86,23 +86,7 @@ public class BlogApiClient : BaseClient, IBlogApiClient
 
         return result.Value;
     }
-
-    public async Task<ErrorOr<Success>> GetHealth(CancellationToken cancellationToken = default)
-    {
-        var result = await SendAsync(client =>
-        {
-            return client.GetAsync($"/health", cancellationToken);
-        }, new() {
-            { HttpStatusCode.NotFound, _ => Error.NotFound("Health endpoint was not found." )},
-            { HttpStatusCode.ServiceUnavailable, _ => Error.Failure("Service is unhealthy." )}
-        }, cancellationToken);
-
-        if (result.IsError)
-            return result.FirstError;
-
-        return new Success();
-    }
-
+    
     protected override ResiliencePipeline GetResiliencePipeline()
     {
         var retryOptions = new RetryStrategyOptions()

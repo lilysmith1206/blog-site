@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient();
 
         services.AddHealthChecks()
-            .AddCheck<AnalyticsApiConnectivityHealthCheck>("analytics-api-connectivity")
+            .AddCheck<ClientConnectivityHealthCheck<AnalyticsApiClient>>("analytics-api-connectivity")
             .AddTypeActivatedCheck<TokenIssuerConnectivityHealthCheck>("analytics-api-token-issuer-connectivity", [options]);
 
         return services.AddScoped<IAnalyticsApiClient, AnalyticsApiClient>();

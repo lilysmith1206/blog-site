@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 using Lylink.Management.Shared;
-using Lylink.Shared.Api.Client.BaseClient;
+using Lylink.Shared.Api.Client.Base;
 using Lylink.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -160,22 +160,6 @@ public class ManagementApiClient : BaseClient, IManagementApiClient
             return client.PutAsJsonAsync($"/categories/{id}", category, cancellationToken);
         }, new() {
             { HttpStatusCode.NotFound, _ => Error.NotFound(description: "The category to update was not found.") }
-        }, cancellationToken);
-
-        if (result.IsError)
-            return result.FirstError;
-
-        return new Success();
-    }
-
-    public async Task<ErrorOr<Success>> GetHealth(CancellationToken cancellationToken = default)
-    {
-        var result = await SendAsync(client =>
-        {
-            return client.GetAsync($"/health", cancellationToken);
-        }, new() {
-            { HttpStatusCode.NotFound, _ => Error.NotFound("Health endpoint was not found." )},
-            { HttpStatusCode.ServiceUnavailable, _ => Error.Failure("Service is unhealthy." )}
         }, cancellationToken);
 
         if (result.IsError)

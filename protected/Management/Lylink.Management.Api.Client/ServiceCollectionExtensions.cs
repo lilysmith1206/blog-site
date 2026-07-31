@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient();
 
         services.AddHealthChecks()
-            .AddCheck<ManagementApiConnectivityHealthCheck>("management-api-connectivity")
+            .AddCheck<ClientConnectivityHealthCheck<ManagementApiClient>>("management-api-connectivity")
             .AddTypeActivatedCheck<TokenIssuerConnectivityHealthCheck>("management-api-token-issuer-connectivity", [options]);
 
         return services.AddScoped<IManagementApiClient, ManagementApiClient>();

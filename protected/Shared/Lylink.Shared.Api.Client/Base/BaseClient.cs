@@ -4,9 +4,9 @@ using ErrorOr;
 using Microsoft.Extensions.Logging;
 using Polly;
 
-namespace Lylink.Shared.Api.Client.BaseClient;
+namespace Lylink.Shared.Api.Client.Base;
 
-public abstract class BaseClient
+public abstract class BaseClient : IHealthClient
 {
     private readonly ILogger _logger;
     private readonly ResiliencePipeline _resiliencePipeline;
@@ -15,6 +15,22 @@ public abstract class BaseClient
     {
         _logger = logger;
         _resiliencePipeline = GetResiliencePipeline();
+    }
+
+    public async Task<ErrorOr<Success>> GetHealth(CancellationToken cancellationToken = default)
+    {
+        var result = await SendAsync(client =>
+        {
+            return client.GetAsync($"/health", cancellationToken);
+        }, new() {
+            { HttpStatusCode.NotFound, _ => Error.NotFound("Health endpoint was not found." )},
+            { HttpStatusCode.ServiceUnavailable, _ => Error.Failure("Service is unhealthy." )}
+        }, cancellationToken);
+
+        if (result.IsError)
+            return result.FirstError;
+
+        return new Success();
     }
 
     protected async Task<ErrorOr<T?>> SendAsync<T>(
