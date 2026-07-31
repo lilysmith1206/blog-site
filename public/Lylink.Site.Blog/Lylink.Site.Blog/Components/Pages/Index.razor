@@ -63,12 +63,9 @@
 
     private Page? Page = null;
     private List<PageLink> MostRecentPosts = [];
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    
+    protected override async Task OnParametersSetAsync()
     {
-        if (!firstRender)
-            return;
-
         var page = await BlogApiClient.GetIndexPage();
 
         page.Switch(page => Page = page, error =>
