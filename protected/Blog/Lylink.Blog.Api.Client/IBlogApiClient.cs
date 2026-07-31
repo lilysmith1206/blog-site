@@ -13,4 +13,6 @@ public interface IBlogApiClient
     Task<ErrorOr<List<PageLink>>> GetMostRecentPosts(int limit, CancellationToken cancellationToken = default);
 
     Task<ErrorOr<Page>> GetPageFromSlug(string slug, CancellationToken cancellationToken = default);
+
+    Task<ErrorOr<Success>> GetHealth(CancellationToken cancellationToken = default);
 }

@@ -14,6 +14,9 @@ public static class ServiceCollectionExtensions
             client.BaseAddress = new Uri(options.Endpoint);
         });
 
+        services.AddHealthChecks()
+            .AddCheck<BlogApiConnectivityHealthCheck>("blog-api-connectivity");
+
         return services.AddScoped<IBlogApiClient, BlogApiClient>();
     }
 }

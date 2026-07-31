@@ -168,6 +168,22 @@ public class ManagementApiClient : BaseClient, IManagementApiClient
         return new Success();
     }
 
+    public async Task<ErrorOr<Success>> GetHealth(CancellationToken cancellationToken = default)
+    {
+        var result = await SendAsync(client =>
+        {
+            return client.GetAsync($"/health", cancellationToken);
+        }, new() {
+            { HttpStatusCode.NotFound, _ => Error.NotFound("Health endpoint was not found." )},
+            { HttpStatusCode.ServiceUnavailable, _ => Error.Failure("Service is unhealthy." )}
+        }, cancellationToken);
+
+        if (result.IsError)
+            return result.FirstError;
+
+        return new Success();
+    }
+
     protected override ResiliencePipeline GetResiliencePipeline()
     {
         var retryOptions = new RetryStrategyOptions()

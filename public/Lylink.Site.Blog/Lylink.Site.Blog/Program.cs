@@ -3,6 +3,7 @@ using Lylink.Blog.Api.Client;
 using Lylink.Site.Blog.Components;
 using Lylink.Shared.Api.Models;
 using Lylink.Site.Shared.Services;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Lylink.Site.Blog;
 
@@ -26,15 +27,15 @@ public class Program
         if (blogOptions is null)
             throw new NullReferenceException("Blog API client settings must be present.");
 
-        builder.Services.RegisterBlogApiClient(blogOptions);
-
         var analyticsOptions = builder.Configuration.GetSection("AnalyticsApiClient")
             .Get<AnalyticsApiClientOptions>();
 
         if (analyticsOptions is null)
             throw new NullReferenceException("Analytics API client settings must be present.");
 
-        builder.Services.RegisterAnalyticsApiClient(analyticsOptions);
+        builder.Services.RegisterAnalyticsApiClient(analyticsOptions)
+                        .RegisterBlogApiClient(blogOptions);
+                        
         builder.Services.AddScoped<ISessionService, SessionService>();
 
         var app = builder.Build();
@@ -60,6 +61,8 @@ public class Program
             .AddInteractiveServerRenderMode()
             .AddInteractiveWebAssemblyRenderMode()
             .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
+
+        app.MapHealthChecks("/api/health");
         
         app.UseStatusCodePagesWithRedirects("/404");
         app.Run();

@@ -5,6 +5,7 @@ using Lylink.Analytics.Models;
 using Polly;
 using Polly.Retry;
 using System.Net.Http.Json;
+using System.Net;
 
 namespace Lylink.Analytics.Api.Client;
 
@@ -43,6 +44,22 @@ public class AnalyticsApiClient : BaseClient, IAnalyticsApiClient
             return result.FirstError;
 
         return result.Value;
+    }
+
+    public async Task<ErrorOr<Success>> GetHealth(CancellationToken cancellationToken = default)
+    {
+        var result = await SendAsync(client =>
+        {
+            return client.GetAsync($"/health", cancellationToken);
+        }, new() {
+            { HttpStatusCode.NotFound, _ => Error.NotFound("Health endpoint was not found." )},
+            { HttpStatusCode.ServiceUnavailable, _ => Error.Failure("Service is unhealthy." )}
+        }, cancellationToken);
+
+        if (result.IsError)
+            return result.FirstError;
+
+        return new Success();
     }
 
     protected override ResiliencePipeline GetResiliencePipeline()

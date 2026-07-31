@@ -1,4 +1,5 @@
-﻿using Lylink.Shared.Api.Client.KeycloakTokenHandler;
+﻿using Lylink.Shared.Api.Client.HealthChecks;
+using Lylink.Shared.Api.Client.KeycloakTokenHandler;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lylink.Management.Api.Client;
@@ -23,6 +24,12 @@ public static class ServiceCollectionExtensions
         {
             client.BaseAddress = new Uri(options.Endpoint);
         }).RegisterOAuth2Handler(nameof(ManagementApiClient));
+
+        services.AddHttpClient();
+
+        services.AddHealthChecks()
+            .AddCheck<ManagementApiConnectivityHealthCheck>("management-api-connectivity")
+            .AddTypeActivatedCheck<TokenIssuerConnectivityHealthCheck>("management-api-token-issuer-connectivity", [options]);
 
         return services.AddScoped<IManagementApiClient, ManagementApiClient>();
     }
