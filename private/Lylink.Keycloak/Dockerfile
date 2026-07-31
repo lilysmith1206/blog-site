@@ -14,7 +14,7 @@ ENV KC_DB=postgres
 # Copies all of realm configuration files for use to import on docker run.
 COPY realm.lylink.json /opt/keycloak/data/import/realm.lylink.json
 
-RUN /opt/keycloak/bin/kc.sh build
+RUN /opt/keycloak/bin/kc.sh build --health-enabled=true
 
 FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/

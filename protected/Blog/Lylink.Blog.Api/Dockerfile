@@ -9,6 +9,7 @@ COPY protected/Shared/Lylink.Shared.Api/Lylink.Shared.Api.csproj ./protected/Sha
 COPY private/Lylink.Database.Repositories/Lylink.Database.Repositories.csproj ./private/Lylink.Database.Repositories/
 COPY private/Lylink.Database.Context/Lylink.Database.Context.csproj ./private/Lylink.Database.Context/
 COPY private/Lylink.Shared.Models/Lylink.Shared.Models.csproj ./private/Lylink.Shared.Models/
+COPY protected/Shared/Lylink.Shared/Lylink.Shared.csproj ./protected/Shared/Lylink.Shared/
 
 RUN dotnet restore protected/Blog/Lylink.Blog.Api/Lylink.Blog.Api.csproj
 
@@ -18,6 +19,7 @@ COPY protected/Shared/Lylink.Shared.Api/ ./protected/Shared/Lylink.Shared.Api/
 COPY private/Lylink.Database.Repositories/ ./private/Lylink.Database.Repositories/
 COPY private/Lylink.Database.Context/ ./private/Lylink.Database.Context/
 COPY private/Lylink.Shared.Models/ ./private/Lylink.Shared.Models/
+COPY protected/Shared/Lylink.Shared/ ./protected/Shared/Lylink.Shared/
 
 RUN dotnet publish protected/Blog/Lylink.Blog.Api/Lylink.Blog.Api.csproj --no-restore -o out && \
     rm /app/out/appsettings.json && \

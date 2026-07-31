@@ -1,10 +1,11 @@
 ﻿using ErrorOr;
 using Lylink.Management.Shared;
+using Lylink.Shared.Api.Client.Base;
 using Lylink.Shared.Models;
 
 namespace Lylink.Management.Api.Client;
 
-public interface IManagementApiClient
+public interface IManagementApiClient : IHealthClient
 {
     Task<ErrorOr<Dictionary<string, List<ReferenceById>>>> GetPostsByCategoryAsync(CancellationToken cancellationToken = default);
 

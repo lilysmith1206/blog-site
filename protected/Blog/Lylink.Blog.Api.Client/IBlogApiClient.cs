@@ -1,10 +1,11 @@
 ﻿using ErrorOr;
 using Lylink.Blog.Shared.Page;
+using Lylink.Shared.Api.Client.Base;
 using Lylink.Shared.Models;
 
 namespace Lylink.Blog.Api.Client;
 
-public interface IBlogApiClient
+public interface IBlogApiClient : IHealthClient
 {
     Task<ErrorOr<Page>> GetIndexPage(CancellationToken cancellationToken = default);
 

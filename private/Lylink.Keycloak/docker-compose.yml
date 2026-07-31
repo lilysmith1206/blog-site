@@ -23,6 +23,7 @@ services:
       - postgres
     ports:
       - "7080:7080"
+      - "9000:9000"
 
 volumes:
   keycloak_postgres:

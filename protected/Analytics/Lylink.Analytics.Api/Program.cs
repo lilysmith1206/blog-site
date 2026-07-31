@@ -3,6 +3,7 @@ using Lylink.Database.Repositories.Analytics;
 using Lylink.Shared.Api.Authentication;
 using Lylink.Database.Context.Models;
 using Microsoft.EntityFrameworkCore;
+using Lylink.Shared.Api.HealthChecks;
 
 namespace Lylink.Analytics.Api;
 
@@ -44,22 +45,20 @@ public class Program
         });
 
         builder.Services.AddScoped<IVisitAnalyticsRepository, VisitAnalyticsRepository>();
+        builder.Services.AddHttpClient();
 
+        builder.Services.AddHealthChecks()
+            .AddLylinkDatabaseHealthCheck()
+            .AddInboundKeycloakConnectivityHealthCheck();
+            
         var app = builder.Build();
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
+        
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
         app.UseAuthorization();
 
-
+        app.MapHealthChecks("/health");
         app.MapControllers();
 
         app.Run();

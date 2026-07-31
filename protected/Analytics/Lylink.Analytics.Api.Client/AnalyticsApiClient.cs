@@ -1,10 +1,11 @@
 ﻿using ErrorOr;
 using Microsoft.Extensions.Logging;
-using Lylink.Shared.Api.Client.BaseClient;
+using Lylink.Shared.Api.Client.Base;
 using Lylink.Analytics.Models;
 using Polly;
 using Polly.Retry;
 using System.Net.Http.Json;
+using System.Net;
 
 namespace Lylink.Analytics.Api.Client;
 

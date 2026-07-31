@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 using Lylink.Blog.Shared.Page;
-using Lylink.Shared.Api.Client.BaseClient;
+using Lylink.Shared.Api.Client.Base;
 using Lylink.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -86,7 +86,7 @@ public class BlogApiClient : BaseClient, IBlogApiClient
 
         return result.Value;
     }
-
+    
     protected override ResiliencePipeline GetResiliencePipeline()
     {
         var retryOptions = new RetryStrategyOptions()

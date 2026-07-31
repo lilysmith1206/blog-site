@@ -13,6 +13,8 @@ COPY protected/Blog/Lylink.Blog.Shared/Lylink.Blog.Shared.csproj ./protected/Blo
 COPY protected/Shared/Lylink.Shared.Api/Lylink.Shared.Api.csproj ./protected/Shared/Lylink.Shared.Api/
 COPY protected/Shared/Lylink.Shared.Api.Client/Lylink.Shared.Api.Client.csproj ./protected/Shared/Lylink.Shared.Api.Client/
 COPY private/Lylink.Shared.Models/Lylink.Shared.Models.csproj ./private/Lylink.Shared.Models/
+COPY private/Lylink.Database.Context/Lylink.Database.Context.csproj ./private/Lylink.Database.Context/
+COPY protected/Shared/Lylink.Shared/Lylink.Shared.csproj ./protected/Shared/Lylink.Shared/
 
 RUN dotnet restore public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.csproj
 
@@ -26,6 +28,8 @@ COPY protected/Blog/Lylink.Blog.Shared/ ./protected/Blog/Lylink.Blog.Shared/
 COPY protected/Shared/Lylink.Shared.Api/ ./protected/Shared/Lylink.Shared.Api/
 COPY protected/Shared/Lylink.Shared.Api.Client/ ./protected/Shared/Lylink.Shared.Api.Client/
 COPY private/Lylink.Shared.Models/ ./private/Lylink.Shared.Models/
+COPY private/Lylink.Database.Context/ ./private/Lylink.Database.Context/
+COPY protected/Shared/Lylink.Shared/ ./protected/Shared/Lylink.Shared/
 
 RUN dotnet publish public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.csproj --no-restore -o out && \
     rm /app/out/appsettings.json && \

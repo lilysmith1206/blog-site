@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="ErrorOr" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Polly" />
   </ItemGroup>
@@ -16,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Lylink.Shared.Api.Client\Lylink.Shared.Api.Client.csproj" />
     <ProjectReference Include="..\..\..\private\Lylink.Shared.Models\Lylink.Shared.Models.csproj" />
+    <ProjectReference Include="..\..\Shared\Lylink.Shared\Lylink.Shared.csproj" />
     <ProjectReference Include="..\Lylink.Management.Shared\Lylink.Management.Shared.csproj" />
   </ItemGroup>
 

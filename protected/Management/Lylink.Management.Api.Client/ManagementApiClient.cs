@@ -1,6 +1,6 @@
 ﻿using ErrorOr;
 using Lylink.Management.Shared;
-using Lylink.Shared.Api.Client.BaseClient;
+using Lylink.Shared.Api.Client.Base;
 using Lylink.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Polly;
