@@ -35,7 +35,38 @@ public abstract class BaseClient
                 return await response.Content.ReadFromJsonAsync<T>(cancellationToken);
             }
 
-            var responseContent = await response.Content.ReadAsStringAsync();
+            if (errorCodeMapping.TryGetValue(response.StatusCode, out var error))
+            {
+                var mappedError = error(response.Content);
+
+                _logger.LogInformation("Message failed with expected failure state: {code}, {message}", response.StatusCode, mappedError.FirstError.Description);
+
+                return mappedError;
+            }
+            else
+            {
+                return Error.Unexpected();
+            }
+        }, cancellationToken);
+    }
+
+    protected async Task<ErrorOr<Success>> SendAsync(
+        Func<HttpClient, Task<HttpResponseMessage>> sendFunction,
+        Dictionary<HttpStatusCode, Func<HttpContent, ErrorOr<Success>>> errorCodeMapping,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await _resiliencePipeline.ExecuteAsync(async token =>
+        {
+            var client = GetHttpClient();
+            var response = await sendFunction(client);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("Request succeeded.");
+
+                return new Success();
+            }
 
             if (errorCodeMapping.TryGetValue(response.StatusCode, out var error))
             {
