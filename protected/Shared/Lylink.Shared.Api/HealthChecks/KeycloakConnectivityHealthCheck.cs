@@ -59,35 +59,35 @@ public class InboundKeycloakConnectivityHealthCheck : IHealthCheck
             httpClient.BaseAddress = _authority;
 
             _logger.LogTrace("Client created.");
-            _logger.LogDebug("Checking if the well-known realm information address is reachable from the authority URL.");
+            _logger.LogDebug("Checking if the health information is reachable.");
 
             var response = await httpClient.GetAsync("health", cancellationToken);
 
             if (response.IsSuccessStatusCode)
             {
-                _logger.LogTrace("The authority's well-known configuration endpoint is reachable. Considered healthy.");
+                _logger.LogTrace("Keycloak is reachable and healthy. Considered healthy.");
 
                 return HealthCheckResult.Healthy(description: "The authority is reachable and healthy.");
             }
             else
             {
-                _logger.LogTrace("The authority's well-known configuration endpoint returned an error. Considered unhealthy.");
+                _logger.LogTrace("Keycloak returned an error from its health endpoint. Considered unhealthy.");
 
                 return HealthCheckResult.Unhealthy(description: "The authority is reachable but unhealthy.'");
             }
         }
         catch (HttpRequestException ex) when (ex.HttpRequestError == HttpRequestError.ConnectionError)
         {
-            _logger.LogTrace("A connection could be made to the authority endpoint. Considered unhealthy.");
+            _logger.LogTrace("A connection could not be made to Keycloak. Considered unhealthy.");
 
             return new(HealthStatus.Unhealthy, description: "The authority is unreachable.", exception: ex);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An exception occurred while trying to determine if the authority is reachable. of the Lylink database.");
+            _logger.LogError(ex, "An exception occurred while trying to determine if Keycloak is reachable.");
             _logger.LogDebug("Returning an unhealthy status.");
 
-            return new(HealthStatus.Unhealthy, description: "An exception occurred while checking the Lylink database connectivity.", exception: ex);
+            return new(HealthStatus.Unhealthy, description: "An exception occurred while checking Keycloak connectivity.", exception: ex);
         }
     }
 }
