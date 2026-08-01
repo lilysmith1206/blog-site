@@ -31,6 +31,9 @@ services:
     build:
       context: .
       dockerfile: protected/Workers/Lylink.Workers.Email/Dockerfile
+    depends_on:
+      mariadb:
+        condition: service_healthy
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Email__APIKey=${EmailProvider_ApiKey}
@@ -89,9 +92,12 @@ services:
       context: .
       dockerfile: public/Lylink.Site.Blog/Lylink.Site.Blog/Dockerfile
     depends_on:
-      - blog-api
-      - analytics-api
-      - assets-api
+      blog-api:
+        condition: service_healthy
+      analytics-api:
+        condition: service_healthy
+      assets-api:
+        condition: service_started
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - AnalyticsApiClient__ClientSecret=${BlogSite__ClientSecret}
@@ -103,8 +109,10 @@ services:
       context: .
       dockerfile: public/Lylink.Site.Management/Dockerfile
     depends_on:
-      - management-api
-      - assets-api
+      management-api:
+        condition: service_healthy
+      assets-api:
+        condition: service_started
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - InboundAuthentication__OpenIdConnect__ClientSecret=${ManagementSite__ClientSecret}
