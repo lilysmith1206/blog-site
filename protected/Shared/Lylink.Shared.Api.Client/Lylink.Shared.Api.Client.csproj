@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="ErrorOr" />
+	  <PackageReference Include="ErrorOr" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" />
@@ -15,6 +15,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Options" />
     <PackageReference Include="Polly" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\private\Lylink.Shared.Models\Lylink.Shared.Models.csproj" />
   </ItemGroup>
 
 </Project>

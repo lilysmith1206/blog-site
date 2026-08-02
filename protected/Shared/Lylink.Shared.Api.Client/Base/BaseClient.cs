@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using ErrorOr;
+using Lylink.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Polly;
 
@@ -24,7 +26,7 @@ public abstract class BaseClient : IHealthClient
             return client.GetAsync($"/health", cancellationToken);
         }, new() {
             { HttpStatusCode.NotFound, _ => Error.NotFound("Health endpoint was not found." )},
-            { HttpStatusCode.ServiceUnavailable, _ => Error.Failure("Service is unhealthy." )}
+            { HttpStatusCode.ServiceUnavailable, _ => Error.NotAvailable([])}
         }, cancellationToken);
 
         if (result.IsError)
@@ -39,6 +41,9 @@ public abstract class BaseClient : IHealthClient
         CancellationToken cancellationToken = default
     )
     {
+        if (!errorCodeMapping.ContainsKey(HttpStatusCode.ServiceUnavailable))
+            errorCodeMapping.Add(HttpStatusCode.ServiceUnavailable, HandleServiceUnavailable<T>);
+
         return await _resiliencePipeline.ExecuteAsync(async token =>
         {
             var client = GetHttpClient();
@@ -73,6 +78,9 @@ public abstract class BaseClient : IHealthClient
         CancellationToken cancellationToken = default
     )
     {
+        if (!errorCodeMapping.ContainsKey(HttpStatusCode.ServiceUnavailable))
+            errorCodeMapping.Add(HttpStatusCode.ServiceUnavailable, HandleServiceUnavailable<Success>);
+
         return await _resiliencePipeline.ExecuteAsync(async token =>
         {
             var client = GetHttpClient();
@@ -104,4 +112,11 @@ public abstract class BaseClient : IHealthClient
     protected abstract ResiliencePipeline GetResiliencePipeline();
 
     protected abstract HttpClient GetHttpClient();
+
+    private static ErrorOr<T?> HandleServiceUnavailable<T>(string content)
+    {
+        var repsonse = JsonSerializer.Deserialize<ServiceUnavailableResponse>(content);
+
+        return Error.NotAvailable(repsonse?.FailedChecks ?? []);
+    }
 }
