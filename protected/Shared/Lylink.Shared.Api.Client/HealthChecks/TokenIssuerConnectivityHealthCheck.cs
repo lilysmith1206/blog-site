@@ -6,6 +6,8 @@ namespace Lylink.Shared.Api.Client.HealthChecks;
 
 public class TokenIssuerConnectivityHealthCheck : IHealthCheck
 {
+    public const string NameKey = "token-issuer-connectivity";
+
     private readonly ILogger<TokenIssuerConnectivityHealthCheck> _logger;
     private readonly IHttpClientFactory _clientFactory;
     private readonly Uri _tokenIssuerEndpoint;

@@ -8,6 +8,11 @@ namespace Lylink.Management.Api.Client;
 
 public static class ServiceCollectionExtensions
 {
+    extension(ClientConnectivityHealthCheck<IManagementApiClient>)
+    {
+        public static string NameKey => "management-api-connectivity";
+    }
+
     public static IServiceCollection RegisterManagementApiClient(this IServiceCollection services, ManagementApiClientOptions options)
     {
         if (options.Endpoint is null)
@@ -30,8 +35,9 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient();
 
         services.AddHealthChecks()
-            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IManagementApiClient>>("management-api-connectivity")
-            .AddTimeLimitedTypeActivatedHealthCheck<TokenIssuerConnectivityHealthCheck>("management-api-token-issuer-connectivity", [options]);
+            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IManagementApiClient>>(
+                ClientConnectivityHealthCheck<IManagementApiClient>.NameKey
+            ).AddTimeLimitedTypeActivatedHealthCheck<TokenIssuerConnectivityHealthCheck>(TokenIssuerConnectivityHealthCheck.NameKey, [options]);
 
         return services.AddScoped<IManagementApiClient, ManagementApiClient>();
     }

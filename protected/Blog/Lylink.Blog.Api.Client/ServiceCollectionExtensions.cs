@@ -6,6 +6,11 @@ namespace Lylink.Blog.Api.Client;
 
 public static class ServiceCollectionExtensions
 {
+    extension(ClientConnectivityHealthCheck<IBlogApiClient>)
+    {
+        public static string NameKey => "blog-api-connectivity";
+    }
+
     public static IServiceCollection RegisterBlogApiClient(this IServiceCollection services, BlogApiClientOptions options)
     {
         if (options.Endpoint is null)
@@ -17,7 +22,9 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddHealthChecks()
-            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IBlogApiClient>>("blog-api-connectivity");
+            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IBlogApiClient>>(
+                ClientConnectivityHealthCheck<IBlogApiClient>.NameKey
+            );
 
         return services.AddScoped<IBlogApiClient, BlogApiClient>();
     }
