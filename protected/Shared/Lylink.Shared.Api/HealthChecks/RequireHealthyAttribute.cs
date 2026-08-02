@@ -1,3 +1,4 @@
+using Lylink.Shared.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -15,10 +16,17 @@ public class RequireHealthyAttribute(params string[] checkNames) : Attribute, IA
         var unhealthy = checkNames.Where(wrapper.IsCheckUnhealthy);
 
         if (unhealthy.Any())
-            context.Result = new ObjectResult(new { failedChecks = unhealthy })
+        {
+            var response = new ServiceUnavailableResponse
+            {
+                FailedChecks = [.. unhealthy]
+            };
+
+            context.Result = new ObjectResult(response)
             {
                 StatusCode = StatusCodes.Status503ServiceUnavailable
             };
+        }
         else
             await next();
     }
