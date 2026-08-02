@@ -35,7 +35,7 @@ public abstract class BaseClient : IHealthClient
 
     protected async Task<ErrorOr<T?>> SendAsync<T>(
         Func<HttpClient, Task<HttpResponseMessage>> sendFunction,
-        Dictionary<HttpStatusCode, Func<HttpContent, ErrorOr<T?>>> errorCodeMapping,
+        Dictionary<HttpStatusCode, Func<string, ErrorOr<T?>>> errorCodeMapping,
         CancellationToken cancellationToken = default
     )
     {
@@ -53,7 +53,8 @@ public abstract class BaseClient : IHealthClient
 
             if (errorCodeMapping.TryGetValue(response.StatusCode, out var error))
             {
-                var mappedError = error(response.Content);
+                var responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+                var mappedError = error(responseString);
 
                 _logger.LogInformation("Message failed with expected failure state: {code}, {message}", response.StatusCode, mappedError.FirstError.Description);
 
@@ -68,7 +69,7 @@ public abstract class BaseClient : IHealthClient
 
     protected async Task<ErrorOr<Success>> SendAsync(
         Func<HttpClient, Task<HttpResponseMessage>> sendFunction,
-        Dictionary<HttpStatusCode, Func<HttpContent, ErrorOr<Success>>> errorCodeMapping,
+        Dictionary<HttpStatusCode, Func<string, ErrorOr<Success>>> errorCodeMapping,
         CancellationToken cancellationToken = default
     )
     {
@@ -86,7 +87,8 @@ public abstract class BaseClient : IHealthClient
 
             if (errorCodeMapping.TryGetValue(response.StatusCode, out var error))
             {
-                var mappedError = error(response.Content);
+                var responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+                var mappedError = error(responseString);
 
                 _logger.LogInformation("Message failed with expected failure state: {code}, {message}", response.StatusCode, mappedError.FirstError.Description);
 

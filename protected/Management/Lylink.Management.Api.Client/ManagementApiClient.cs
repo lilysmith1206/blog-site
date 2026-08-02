@@ -7,6 +7,7 @@ using Polly;
 using Polly.Retry;
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Lylink.Management.Api.Client;
 
@@ -126,11 +127,9 @@ public class ManagementApiClient : BaseClient, IManagementApiClient
         return result.Value;
     }
 
-    private static ErrorOr<int> HandleConflictError(HttpContent content)
+    private static ErrorOr<int> HandleConflictError(string content)
     {
-        var conflictDetailsTask = content.ReadFromJsonAsync<ConflictDetails>();
-        conflictDetailsTask.Wait();
-        var conflictDetails = conflictDetailsTask.Result;
+        var conflictDetails = JsonSerializer.Deserialize<ConflictDetails>(content);
 
         if (conflictDetails is null)
             return Error.Unexpected(description: "The conflict details could not be deserialized.");
