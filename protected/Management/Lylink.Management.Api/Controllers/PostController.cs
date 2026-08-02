@@ -1,5 +1,6 @@
 ﻿using Lylink.Database.Repositories.Management;
 using Lylink.Management.Shared;
+using Lylink.Shared.Api.HealthChecks;
 using Lylink.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ public class PostController : Controller
     }
 
     [HttpGet("/posts")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<IEnumerable<ReferenceById>> GetPosts()
     {
         IEnumerable<ReferenceById> categories = _pageManagementRepository.GetAllCategories()
@@ -35,6 +37,7 @@ public class PostController : Controller
 
 
     [HttpGet("/posts/by-category")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public Dictionary<string, List<ReferenceById>> GetPostsByCategoryName()
     {
         Dictionary<string, List<ReferenceById>> categoryAndPosts = [];
@@ -57,6 +60,7 @@ public class PostController : Controller
     }
 
     [HttpPost("/posts")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<int> CreatePost([FromBody] PostInfo post)
     {
         if (post.Slug == null)
@@ -85,6 +89,7 @@ public class PostController : Controller
     }
 
     [HttpGet("/posts/{id}")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<PostInfo> GetPost(int id)
     {
         using var _ = _logger.BeginScope(new { PostId = id });
@@ -106,6 +111,7 @@ public class PostController : Controller
     }
 
     [HttpPut("/posts/{id}")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<CategoryInfo> UpdatePost([FromRoute] int id, [FromBody] PostInfo post)
     {
         if (post.Slug == null)

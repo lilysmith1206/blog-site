@@ -2,6 +2,7 @@
 using Lylink.Analytics.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Lylink.Shared.Api.HealthChecks;
 
 namespace Lylink.Analytics.Api.Controllers;
 
@@ -18,6 +19,7 @@ public class AnalyticsController : Controller
 
     [Authorize(Policy = "create_analytics")]
     [HttpPost("/analytics/visit/success")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<int> CreateSuccessAnalytic([FromBody] NewSuccessVisitAnalytic analytic)
     {
         try
@@ -39,6 +41,7 @@ public class AnalyticsController : Controller
 
     [Authorize(Policy = "create_analytics")]
     [HttpPost("/analytics/visit/failure")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<int> CreateFailureAnalytic([FromBody] NewFailureVisitAnalytic analytic)
     {
         try
