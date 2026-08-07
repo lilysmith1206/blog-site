@@ -6,11 +6,16 @@ public static class Errors
 {
     private const string FailingHealthChecksKey = "healthChecks";
 
+    extension(ErrorType)
+    {
+        public static ErrorType NotAvailable => (ErrorType)100;
+    }
+
     extension(Error error)
     {
         public static Error NotAvailable(List<string> failingHealthChecks, string? description = null)
             => Error.Custom(
-                100,
+                (int)ErrorType.NotAvailable,
                 "NOT_AVAILABLE",
                 description ?? "The system requested is not available at this moment.",
                 metadata: new()

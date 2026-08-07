@@ -1,8 +1,10 @@
 ﻿@namespace Lylink.Site.Blog.Components.Pages
 
 @page "/404"
+@using Lylink.Shared.Api.Client.Base
 
 @inject IBlogApiClient BlogApiClient
+@inject NavigationManager Navigation
 @inject ILogger<Index> Logger
 
 @layout MainLayout
@@ -46,6 +48,9 @@
             var error = errors.First();
 
             Logger.LogError("An error occurred when fetching the page: {error}", error);
+
+            if (errors.First().Type == ErrorType.NotAvailable)
+                Navigation.NavigateTo("/unavailable");
         });
 
         Loading = false;

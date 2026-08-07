@@ -1,6 +1,7 @@
 ﻿@namespace Lylink.Site.Blog.Components.Pages
 
 @page "/{slug:nonfile?}"
+@using Lylink.Shared.Api.Client.Base
 
 @inject IBlogApiClient BlogApiClient
 @inject IAnalyticsApiClient AnalyticsApiClient
@@ -104,6 +105,8 @@
 
                 NavigationManager.NavigateTo("/404");
             }
+            else if (errors.First().Type == ErrorType.NotAvailable)
+                NavigationManager.NavigateTo("/unavailable");
         });
 
         Loading = false;
