@@ -39,7 +39,9 @@ public class Program
         builder.Services.AddTransient<IPageManagementRepository, PageManagementRepository>();
         builder.Services.AddHttpClient();
 
-        builder.Services.AddHealthChecks()
+        builder.Services
+            .AddCachingHealthCheckPublisher()
+            .AddHealthChecks()
             .AddLylinkDatabaseHealthCheck()
             .AddInboundKeycloakConnectivityHealthCheck();
 
