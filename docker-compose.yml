@@ -60,6 +60,11 @@ services:
       - ConnectionStrings__MariaDbConnection=server=mariadb;port=3306;database=lylinkdb;user=root;password=${MariaDB__Root__Password}
     ports:
       - "9090:8080"
+    labels:
+      kuma.lylink.group.name: "Lylink"
+      kuma.analytics-api.http.name: "Analytics API"
+      kuma.analytics-api.http.url: "http://analytics-api:8080/health"
+      kuma.analytics-api.http.parent_name: "lylink"
 
   blog-api:
     build:
@@ -73,6 +78,10 @@ services:
       - ConnectionStrings__MariaDbConnection=server=mariadb;port=3306;database=lylinkdb;user=root;password=${MariaDB__Root__Password}
     ports:
       - "9091:8080"
+    labels:
+      kuma.blog-api.http.name: "Blog API"
+      kuma.blog-api.http.url: "http://blog-api:8080/health"
+      kuma.blog-api.http.parent_name: "lylink"
 
   management-api:
     build:
@@ -86,6 +95,10 @@ services:
       - ConnectionStrings__MariaDbConnection=server=mariadb;port=3306;database=lylinkdb;user=root;password=${MariaDB__Root__Password}
     ports:
       - "9092:8080"
+    labels:
+      kuma.management-api.http.name: "Management API"
+      kuma.management-api.http.url: "http://management-api:8080/health"
+      kuma.management-api.http.parent_name: "lylink"
 
   blog-site:
     build:
@@ -103,6 +116,10 @@ services:
       - AnalyticsApiClient__ClientSecret=${BlogSite__ClientSecret}
     ports:
       - "10000:8080"
+    labels:
+      kuma.blog-site.http.name: "Blog Site"
+      kuma.blog-site.http.url: "http://blog-site:8080/api/health"
+      kuma.blog-site.http.parent_name: "lylink"
 
   management-site:
     build:
@@ -119,6 +136,10 @@ services:
       - ManagementApiClient__ClientSecret=${ManagementSite__ClientSecret}
     ports:
       - "10001:8080"
+    labels:
+      kuma.management-site.http.name: "Management Site"
+      kuma.management-site.http.url: "http://management-site:8080/health"
+      kuma.management-site.http.parent_name: "lylink"
 
 volumes:
   mariadb_data:

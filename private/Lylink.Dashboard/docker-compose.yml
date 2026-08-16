@@ -1,0 +1,28 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:2
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "3001:3001"
+  autokuma:
+    image: ghcr.io/bigboot/autokuma:latest
+    restart: unless-stopped
+    environment:
+      AUTOKUMA__KUMA__URL: http://uptime-kuma:3001
+      AUTOKUMA__KUMA__USERNAME: ${KUMA__USERNAME}
+      AUTOKUMA__KUMA__PASSWORD: ${KUMA__PASSWORD}
+      AUTOKUMA__DEFAULT_SETTINGS: |-
+        docker.docker_container: {{container_name}}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - autokuma-data:/data
+
+volumes:
+  autokuma-data:
+  
+networks:
+  default:
+    external: true
+    name: lylink_network

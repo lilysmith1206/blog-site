@@ -19,3 +19,4 @@ private/mysqldump.sql
 *appsettings.Development.json
 *.env
 *realm.lylink.json
+/private/Lylink.Dashboard/data/*
