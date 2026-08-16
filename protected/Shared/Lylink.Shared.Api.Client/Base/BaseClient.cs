@@ -47,7 +47,19 @@ public abstract class BaseClient : IHealthClient
         return await _resiliencePipeline.ExecuteAsync(async token =>
         {
             var client = GetHttpClient();
-            var response = await sendFunction(client);
+
+            HttpResponseMessage? response;
+
+            try
+            {
+                response = await sendFunction(client);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Request failed due to an exception.");
+
+                return Error.NotAvailable([], description: "Request failed.");
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -84,7 +96,19 @@ public abstract class BaseClient : IHealthClient
         return await _resiliencePipeline.ExecuteAsync(async token =>
         {
             var client = GetHttpClient();
-            var response = await sendFunction(client);
+
+            HttpResponseMessage? response;
+
+            try
+            {
+                response = await sendFunction(client);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Request failed due to an exception.");
+
+                return Error.NotAvailable([], description: "Request failed.");
+            }
 
             if (response.IsSuccessStatusCode)
             {
