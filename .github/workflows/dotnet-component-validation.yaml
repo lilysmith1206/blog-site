@@ -1,0 +1,44 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      id: dotnetbuild
+      run: dotnet build --no-restore
+    - name: Create realm.lylink.json for Keycloak build
+      run: cp ./private/Lylink.Keycloak/realm.lylink.template.json ./private/Lylink.Keycloak/realm.lylink.json
+    - parallel:
+      - name: Build Lylink service containers
+        run: docker compose -f ./docker-compose.yml build
+      - name: Build Keycloak containers
+        run: docker compose -f ./private/Lylink.Keycloak/docker-compose.yml build
+      - name: Build Dashboard containers
+        run: docker compose -f ./private/Lylink.Dashboard/docker-compose.yml build 

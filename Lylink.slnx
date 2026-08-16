@@ -2,7 +2,6 @@
   <Folder Name="/private/">
     <Project Path="private/Lylink.Database.Context/Lylink.Database.Context.csproj" />
     <Project Path="private/Lylink.Database.Migration/Lylink.Database.Migration.csproj" />
-    <Project Path="private/Lylink.Database.Repositories.Tests/Lylink.Database.Repositories.Tests.csproj" />
     <Project Path="private/Lylink.Database.Repositories/Lylink.Database.Repositories.csproj" />
     <Project Path="private/Lylink.Shared.Models/Lylink.Shared.Models.csproj" />
   </Folder>
