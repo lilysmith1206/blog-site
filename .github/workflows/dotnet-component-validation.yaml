@@ -25,7 +25,10 @@ jobs:
     - name: Build
       id: dotnetbuild
       run: dotnet build --no-restore
-    - uses: actions/checkout@v4
-    - name: Build all Lylink service docker images via the compose.
-      if: steps.dotnetbuild.outcome == 'success'
-      run: docker compose -f ./docker-compose.yml -f ./private/Lylink.Keycloak/docker-compose.yml -f ./private/Lylink.Dashboard/docker-compose.yml build
+    - parallel:
+      - name: Build Lylink service containers
+        run: docker compose -f ./docker-compose.yml build
+      - name: Build Keycloak containers
+        run: docker compose -f ./private/Lylink.Keycloak/docker-compose.yml build
+      - name: Build Dashboard containers
+        run: docker compose -f ./private/Lylink.Dashboard/docker-compose.yml build 
