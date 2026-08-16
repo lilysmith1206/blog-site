@@ -852,7 +852,7 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "${MANAGEMENT_SITE_CLIENT_SECRET}",
       "redirectUris": [
-        "/"
+        "*"
       ],
       "webOrigins": [],
       "notBefore": 0,
