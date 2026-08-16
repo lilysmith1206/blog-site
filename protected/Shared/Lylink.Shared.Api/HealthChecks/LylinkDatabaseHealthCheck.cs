@@ -7,6 +7,8 @@ namespace Lylink.Shared.Api.HealthChecks;
 
 public class LylinkDatabaseHealthCheck : IHealthCheck
 {
+    public const string NameKey = "lylink-database-connectivity";
+
     private readonly ILogger<LylinkDatabaseHealthCheck> _logger;
     private readonly IDbContextFactory<LylinkdbContext> _contextFactory;
 

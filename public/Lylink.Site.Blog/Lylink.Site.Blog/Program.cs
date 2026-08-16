@@ -55,6 +55,7 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseStaticFiles();
+        app.MapStaticAssets();
         app.UseAntiforgery();
 
         app.MapRazorComponents<App>()
@@ -64,7 +65,6 @@ public class Program
 
         app.MapHealthChecks("/api/health");
         
-        app.UseStatusCodePagesWithRedirects("/404");
         app.Run();
     }
 }

@@ -9,6 +9,11 @@ namespace Lylink.Analytics.Api.Client;
 
 public static class ServiceCollectionExtensions
 {
+    extension(ClientConnectivityHealthCheck<IAnalyticsApiClient>)
+    {
+        public static string NameKey => "analytics-api-connectivity";
+    }
+
     public static IServiceCollection RegisterAnalyticsApiClient(
         this IServiceCollection services,
         AnalyticsApiClientOptions options
@@ -34,8 +39,9 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient();
 
         services.AddHealthChecks()
-            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IAnalyticsApiClient>>("analytics-api-connectivity")
-            .AddTimeLimitedTypeActivatedHealthCheck<TokenIssuerConnectivityHealthCheck>("analytics-api-token-issuer-connectivity", [options]);
+            .AddTimeLimitedHealthCheck<ClientConnectivityHealthCheck<IAnalyticsApiClient>>(
+                ClientConnectivityHealthCheck<IAnalyticsApiClient>.NameKey
+            ).AddTimeLimitedTypeActivatedHealthCheck<TokenIssuerConnectivityHealthCheck>(TokenIssuerConnectivityHealthCheck.NameKey, [options]);
 
         return services.AddScoped<IAnalyticsApiClient, AnalyticsApiClient>();
     }

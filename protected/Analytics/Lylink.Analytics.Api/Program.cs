@@ -47,7 +47,9 @@ public class Program
         builder.Services.AddScoped<IVisitAnalyticsRepository, VisitAnalyticsRepository>();
         builder.Services.AddHttpClient();
 
-        builder.Services.AddHealthChecks()
+        builder.Services
+            .AddCachingHealthCheckPublisher()
+            .AddHealthChecks()
             .AddLylinkDatabaseHealthCheck()
             .AddInboundKeycloakConnectivityHealthCheck();
             

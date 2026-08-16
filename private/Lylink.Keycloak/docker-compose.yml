@@ -19,6 +19,11 @@ services:
       KC_DB_PASSWORD: ${KEYCLOAK_POSTGRES_PASSWORD}
       KC_BOOTSTRAP_ADMIN_USERNAME: bootstrap-admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_BOOTSTRAP_ADMIN_PASSWORD}
+    labels:
+      kuma.lylink.group.name: "Lylink"
+      kuma.keycloak.http.name: "Keycloak"
+      kuma.keycloak.http.url: "http://keycloak:9000/health"
+      kuma.keycloak.http.parent_name: "lylink"
     depends_on:
       - postgres
     ports:

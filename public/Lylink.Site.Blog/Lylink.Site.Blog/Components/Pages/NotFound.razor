@@ -1,15 +1,10 @@
 ﻿@namespace Lylink.Site.Blog.Components.Pages
 
 @page "/404"
-
-@using ErrorOr
-@using Lylink.Blog.Shared.Page
-@using Lylink.Blog.Api.Client
-@using Lylink.Site.Shared
-@using Lylink.Shared.Models
-@using Microsoft.AspNetCore.Components.Sections
+@using Lylink.Shared.Api.Client.Base
 
 @inject IBlogApiClient BlogApiClient
+@inject NavigationManager Navigation
 @inject ILogger<Index> Logger
 
 @layout MainLayout
@@ -53,6 +48,9 @@
             var error = errors.First();
 
             Logger.LogError("An error occurred when fetching the page: {error}", error);
+
+            if (errors.First().Type == ErrorType.NotAvailable)
+                Navigation.NavigateTo("/unavailable");
         });
 
         Loading = false;

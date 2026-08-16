@@ -1,15 +1,7 @@
 ﻿@namespace Lylink.Site.Blog.Components.Pages
 
 @page "/{slug:nonfile?}"
-
-@using ErrorOr
-@using Lylink.Analytics.Api.Client
-@using Lylink.Blog.Shared.Page
-@using Lylink.Blog.Api.Client
-@using Lylink.Site.Shared
-@using Lylink.Site.Shared.Services
-@using Lylink.Shared.Models
-@using Microsoft.AspNetCore.Components.Sections
+@using Lylink.Shared.Api.Client.Base
 
 @inject IBlogApiClient BlogApiClient
 @inject IAnalyticsApiClient AnalyticsApiClient
@@ -113,6 +105,8 @@
 
                 NavigationManager.NavigateTo("/404");
             }
+            else if (errors.First().Type == ErrorType.NotAvailable)
+                NavigationManager.NavigateTo("/unavailable");
         });
 
         Loading = false;

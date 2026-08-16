@@ -1,5 +1,6 @@
 ﻿using Lylink.Blog.Shared.Page;
 using Lylink.Database.Repositories.Pages;
+using Lylink.Shared.Api.HealthChecks;
 using Lylink.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace Lylink.Blog.Api.Controllers
     public class PageController(IPageRepository pageRepository) : Controller
     {
         [HttpGet("/pages/index")]
+        [RequireHealthy(LylinkDatabaseHealthCheck.NameKey)]
         public ActionResult<Page> GetIndexPageData()
         {
             CategoryPage category = pageRepository.GetCategory("/") ?? throw new NullReferenceException($"Index category not found for some reason?");
@@ -30,6 +32,7 @@ namespace Lylink.Blog.Api.Controllers
         }
 
         [HttpGet("/pages/by-slug/{slug}")]
+        [RequireHealthy(LylinkDatabaseHealthCheck.NameKey)]
         public ActionResult<Page> GetPageBySlug(string slug)
         {
             var post = pageRepository.GetPost(slug);
@@ -91,6 +94,7 @@ namespace Lylink.Blog.Api.Controllers
         }
 
         [HttpGet("/pages/most-recent")]
+        [RequireHealthy(LylinkDatabaseHealthCheck.NameKey)]
         public ActionResult<List<PageLink>> GetIndexPageData([FromQuery] int limit = 10)
         {
             var posts = pageRepository.GetRecentlyUpdatedPostInfos(limit);

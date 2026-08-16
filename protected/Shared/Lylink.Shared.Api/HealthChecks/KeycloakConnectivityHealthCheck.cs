@@ -10,6 +10,8 @@ namespace Lylink.Shared.Api.HealthChecks;
 /// </summary>
 public class InboundKeycloakConnectivityHealthCheck : IHealthCheck
 {
+    public const string NameKey = "oauth2-connectivity";
+
     private readonly ILogger<InboundKeycloakConnectivityHealthCheck> _logger;
     private readonly Uri _authority;
     private readonly IHttpClientFactory _httpClientFactory;

@@ -1,11 +1,27 @@
 using Lylink.Shared.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using static Lylink.Shared.Api.HealthChecks.CachingHealthChecksPublisher;
 
 namespace Lylink.Shared.Api.HealthChecks;
 
 public static class ServiceCollectionExtensions
 {
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddCachingHealthCheckPublisher()
+        {
+            services.AddSingleton<HealthReportWrapper>();
+            services.Configure<HealthCheckPublisherOptions>(options =>
+            {
+                options.Delay = TimeSpan.FromSeconds(3);
+                options.Period = TimeSpan.FromSeconds(30);
+            });
+
+            return services.AddSingleton<IHealthCheckPublisher, CachingHealthChecksPublisher>();
+        }
+    }
+
     extension(IHealthChecksBuilder builder)
     {
         /// <summary>
@@ -13,8 +29,8 @@ public static class ServiceCollectionExtensions
         /// </summary>
         /// <param name="name">The name to use for the health check.</param>
         /// <returns>The <see cref="IHealthChecksBuilder"/> for further calls.</returns>
-        public IHealthChecksBuilder AddLylinkDatabaseHealthCheck(string name = "lylink-database-connectivity")
-            => builder.AddTimeLimitedHealthCheck<LylinkDatabaseHealthCheck>(name);
+        public IHealthChecksBuilder AddLylinkDatabaseHealthCheck()
+            => builder.AddTimeLimitedHealthCheck<LylinkDatabaseHealthCheck>(LylinkDatabaseHealthCheck.NameKey);
 
         /// <summary>
         /// Adds the <see cref="InboundKeycloakConnectivityHealthCheck"/> to the builder.
@@ -25,7 +41,7 @@ public static class ServiceCollectionExtensions
         /// <param name="name">The name to use for the health check.</param>
         /// <param name="healthStatus">The health status for this to be, if the check finds it is unhealthy.</param>
         /// <returns>The <see cref="IHealthChecksBuilder"/> for further calls.</returns>
-        public IHealthChecksBuilder AddInboundKeycloakConnectivityHealthCheck(HealthStatus healthStatus = HealthStatus.Unhealthy, string name = "oauth2-connectivity")
-            => builder.AddTimeLimitedHealthCheck<InboundKeycloakConnectivityHealthCheck>(name, healthStatus);
+        public IHealthChecksBuilder AddInboundKeycloakConnectivityHealthCheck(HealthStatus healthStatus = HealthStatus.Unhealthy)
+            => builder.AddTimeLimitedHealthCheck<InboundKeycloakConnectivityHealthCheck>(InboundKeycloakConnectivityHealthCheck.NameKey, healthStatus);
     }
 }

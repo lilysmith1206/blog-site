@@ -3,13 +3,7 @@
 @rendermode InteractiveServer
 
 @page "/"
-@using Lylink.Analytics.Api.Client
-@using Lylink.Blog.Shared.Page
-@using Lylink.Blog.Api.Client
-@using Lylink.Site.Shared
-@using Lylink.Site.Shared.Services
-@using Lylink.Shared.Models
-@using Microsoft.AspNetCore.Components.Sections
+@using Lylink.Shared.Api.Client.Base
 
 @inject IBlogApiClient BlogApiClient
 @inject IAnalyticsApiClient AnalyticsApiClient
@@ -70,7 +64,10 @@
 
         page.Switch(page => Page = page, error =>
         {
-            Logger.LogError("An error occurred when fetching the index page: {error}", error);
+            Logger.LogError("An error occurred when fetching the index page: {error}", error.First());
+
+            if (error.First().Type == ErrorType.NotAvailable)
+                Navigation.NavigateTo("/unavailable");
         });
 
         var mostRecentPages = await BlogApiClient.GetMostRecentPosts(10);

@@ -1,5 +1,6 @@
 ﻿using Lylink.Database.Repositories.Management;
 using Lylink.Management.Shared;
+using Lylink.Shared.Api.HealthChecks;
 using Lylink.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ public class CategoryController : Controller
     }
 
     [HttpGet("/categories")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<IEnumerable<ReferenceById>> GetCategories()
     {
         IEnumerable<ReferenceById> categories = _pageManagementRepository.GetAllCategories()
@@ -34,6 +36,7 @@ public class CategoryController : Controller
     }
 
     [HttpPost("/categories")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<int> CreateCategory([FromBody] CategoryInfo category)
     {
         if (category.Slug is null)
@@ -60,6 +63,7 @@ public class CategoryController : Controller
     }
 
     [HttpGet("/categories/{id}")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult<CategoryInfo> GetCategory(int id)
     {
         using var _ = _logger.BeginScope(new { CategoryId = id });
@@ -81,6 +85,7 @@ public class CategoryController : Controller
     }
 
     [HttpPut("/categories/{id}")]
+    [RequireHealthy(LylinkDatabaseHealthCheck.NameKey, InboundKeycloakConnectivityHealthCheck.NameKey)]
     public ActionResult UpdateCategory([FromRoute] int id, [FromBody] CategoryInfo category)
     {
         if (category.Slug is null)

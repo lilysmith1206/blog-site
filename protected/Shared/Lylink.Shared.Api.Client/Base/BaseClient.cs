@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using ErrorOr;
+using Lylink.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Polly;
 
@@ -24,7 +26,7 @@ public abstract class BaseClient : IHealthClient
             return client.GetAsync($"/health", cancellationToken);
         }, new() {
             { HttpStatusCode.NotFound, _ => Error.NotFound("Health endpoint was not found." )},
-            { HttpStatusCode.ServiceUnavailable, _ => Error.Failure("Service is unhealthy." )}
+            { HttpStatusCode.ServiceUnavailable, _ => Error.NotAvailable([])}
         }, cancellationToken);
 
         if (result.IsError)
@@ -35,14 +37,29 @@ public abstract class BaseClient : IHealthClient
 
     protected async Task<ErrorOr<T?>> SendAsync<T>(
         Func<HttpClient, Task<HttpResponseMessage>> sendFunction,
-        Dictionary<HttpStatusCode, Func<HttpContent, ErrorOr<T?>>> errorCodeMapping,
+        Dictionary<HttpStatusCode, Func<string, ErrorOr<T?>>> errorCodeMapping,
         CancellationToken cancellationToken = default
     )
     {
+        if (!errorCodeMapping.ContainsKey(HttpStatusCode.ServiceUnavailable))
+            errorCodeMapping.Add(HttpStatusCode.ServiceUnavailable, HandleServiceUnavailable<T>);
+
         return await _resiliencePipeline.ExecuteAsync(async token =>
         {
             var client = GetHttpClient();
-            var response = await sendFunction(client);
+
+            HttpResponseMessage? response;
+
+            try
+            {
+                response = await sendFunction(client);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Request failed due to an exception.");
+
+                return Error.NotAvailable([], description: "Request failed.");
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -53,7 +70,8 @@ public abstract class BaseClient : IHealthClient
 
             if (errorCodeMapping.TryGetValue(response.StatusCode, out var error))
             {
-                var mappedError = error(response.Content);
+                var responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+                var mappedError = error(responseString);
 
                 _logger.LogInformation("Message failed with expected failure state: {code}, {message}", response.StatusCode, mappedError.FirstError.Description);
 
@@ -68,14 +86,29 @@ public abstract class BaseClient : IHealthClient
 
     protected async Task<ErrorOr<Success>> SendAsync(
         Func<HttpClient, Task<HttpResponseMessage>> sendFunction,
-        Dictionary<HttpStatusCode, Func<HttpContent, ErrorOr<Success>>> errorCodeMapping,
+        Dictionary<HttpStatusCode, Func<string, ErrorOr<Success>>> errorCodeMapping,
         CancellationToken cancellationToken = default
     )
     {
+        if (!errorCodeMapping.ContainsKey(HttpStatusCode.ServiceUnavailable))
+            errorCodeMapping.Add(HttpStatusCode.ServiceUnavailable, HandleServiceUnavailable<Success>);
+
         return await _resiliencePipeline.ExecuteAsync(async token =>
         {
             var client = GetHttpClient();
-            var response = await sendFunction(client);
+
+            HttpResponseMessage? response;
+
+            try
+            {
+                response = await sendFunction(client);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Request failed due to an exception.");
+
+                return Error.NotAvailable([], description: "Request failed.");
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -86,7 +119,8 @@ public abstract class BaseClient : IHealthClient
 
             if (errorCodeMapping.TryGetValue(response.StatusCode, out var error))
             {
-                var mappedError = error(response.Content);
+                var responseString = await response.Content.ReadAsStringAsync(cancellationToken);
+                var mappedError = error(responseString);
 
                 _logger.LogInformation("Message failed with expected failure state: {code}, {message}", response.StatusCode, mappedError.FirstError.Description);
 
@@ -102,4 +136,11 @@ public abstract class BaseClient : IHealthClient
     protected abstract ResiliencePipeline GetResiliencePipeline();
 
     protected abstract HttpClient GetHttpClient();
+
+    private static ErrorOr<T?> HandleServiceUnavailable<T>(string content)
+    {
+        var repsonse = JsonSerializer.Deserialize<ServiceUnavailableResponse>(content);
+
+        return Error.NotAvailable(repsonse?.FailedChecks ?? []);
+    }
 }

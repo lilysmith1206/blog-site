@@ -26,7 +26,9 @@ public class Program
         });
         builder.Services.AddTransient<IPageRepository, PageRepository>();
 
-        builder.Services.AddHealthChecks()
+        builder.Services
+            .AddCachingHealthCheckPublisher()
+            .AddHealthChecks()
             .AddLylinkDatabaseHealthCheck();
 
         var app = builder.Build();

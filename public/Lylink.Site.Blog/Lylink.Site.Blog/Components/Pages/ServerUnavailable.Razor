@@ -1,0 +1,27 @@
+@namespace Lylink.Site.Blog.Components.Pages
+
+@page "/unavailable"
+
+@inject ILogger<Index> Logger
+
+@layout MainLayout
+
+<PageTitle>Site Unavaialable</PageTitle>
+
+<SectionContent SectionName="HeadContent">
+    <meta name="keywords" content="lylink, static, server unavailable" />
+    <meta name="description" content="An error-handling page for when the server backing the site is not accessible." />
+</SectionContent>
+
+<SectionContent SectionName="Header">
+    <PageHeader PageName="Blog Unavailable"
+                Parents="@(parents)" />
+</SectionContent>
+
+<main>
+    <p>The blog site is currently unavailable due to the backend being inaccessible. Please try again later.</p>
+</main>
+
+@code {
+    private List<PageLink> parents = [new PageLink() { Slug = "/", Name = "Index" }];
+}
