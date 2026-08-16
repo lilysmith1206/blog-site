@@ -33,8 +33,6 @@ jobs:
     - name: Build
       id: dotnetbuild
       run: dotnet build --no-restore
-    - name: Create realm.lylink.json for Keycloak build
-      run: cp ./private/Lylink.Keycloak/realm.lylink.template.json ./private/Lylink.Keycloak/realm.lylink.json
     - parallel:
       - name: Build Lylink service containers
         run: docker compose -f ./docker-compose.yml build

@@ -10,14 +10,14 @@ ENV KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true
 ENV KC_LOG_LEVEL=info
 ENV KC_DB=postgres
 
-
-# Copies all of realm configuration files for use to import on docker run.
-COPY realm.lylink.json /opt/keycloak/data/import/realm.lylink.json
+# Copies the relevant files to initialize the Lylink Keycloak realm.
+COPY --chmod=0755 initialize-keycloak.sh /opt/keycloak/initialize-keycloak.sh
 
 RUN /opt/keycloak/bin/kc.sh build --health-enabled=true
 
 FROM quay.io/keycloak/keycloak:latest
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
+COPY realm.lylink.template.json /tmp/realm.lylink.template.json
 
 ENV KC_HTTP_ENABLED=true
 ENV KC_PROXY_HEADERS=xforwarded
@@ -29,4 +29,4 @@ ENV KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true
 ENV KC_LOG_LEVEL=info
 ENV KC_DB=postgres
 
-ENTRYPOINT ["/opt/keycloak/bin/kc.sh", "start",  "--import-realm", "--optimized", "--http-port", "7080"]
+ENTRYPOINT ["/opt/keycloak/initialize-keycloak.sh"]
