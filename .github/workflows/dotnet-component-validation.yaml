@@ -23,4 +23,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
+      id: dotnetbuild
       run: dotnet build --no-restore
+    - uses: actions/checkout@v4
+    - name: Build all Lylink service docker images via the compose.
+      if: steps.dotnetbuild.outcome == 'success'
+      run: docker compose build -f ./docker-compose.yml -f ./private/Lylink.Keycloak/docker-compose.yml -f ./private/Lylink.Dashboard/docker-compose.yml
