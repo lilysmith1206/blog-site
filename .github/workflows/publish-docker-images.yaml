@@ -1,0 +1,108 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push_to_registry:
+    name: Push Docker images to GHCR Package Registry
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v6
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - parallel:
+        - name: Build and push Blog Site
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ./public/Lylink.Site.Blog/Lylink.Site.Blog/Dockerfile
+            push: true
+            tags: |
+              ghcr.io/lilysmith1206/blog-site:latest
+              ghcr.io/lilysmith1206/blog-site:${{ github.sha }}
+        - name: Build and push Management Site
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ./public/Lylink.Site.Management/Dockerfile
+            push: true
+            tags: |
+              ghcr.io/lilysmith1206/management-site:latest
+              ghcr.io/lilysmith1206/management-site:${{ github.sha }}
+        - name: Build and push Assets API
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ./protected/Assets/Lylink.Assets.Api/Dockerfile
+            push: true
+            tags: |
+              ghcr.io/lilysmith1206/assets-api:latest
+              ghcr.io/lilysmith1206/assets-api:${{ github.sha }}
+        - name: Build and push Analytics API
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ./protected/Analytics/Lylink.Analytics.Api/Dockerfile
+            push: true
+            tags: |
+              ghcr.io/lilysmith1206/analytics-api:latest
+              ghcr.io/lilysmith1206/analytics-api:${{ github.sha }}
+        - name: Build and push Blog API
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ./protected/Blog/Lylink.Blog.Api/Dockerfile
+            push: true
+            tags: |
+              ghcr.io/lilysmith1206/blog-api:latest
+              ghcr.io/lilysmith1206/blog-api:${{ github.sha }}
+        - name: Build and push Management API
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ./protected/Management/Lylink.Management.Api/Dockerfile
+            push: true
+            tags: |
+              ghcr.io/lilysmith1206/management-api:latest
+              ghcr.io/lilysmith1206/management-api:${{ github.sha }}
+        - name: Build and push Email Worker
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ./protected/Workers/Lylink.Workers.Email/Dockerfile
+            push: true
+            tags: |
+              ghcr.io/lilysmith1206/email-worker:latest
+              ghcr.io/lilysmith1206/email-worker:${{ github.sha }}
+        - name: Build and push Keycloak
+          uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+          with:
+            context: .
+            file: ./private/Lylink.Keycloak/Dockerfile
+            push: true
+            tags: |
+              ghcr.io/lilysmith1206/keycloak:latest
+              ghcr.io/lilysmith1206/keycloak:${{ github.sha }}
+
