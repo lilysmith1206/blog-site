@@ -5,8 +5,8 @@ COPY . .
 
 RUN dotnet restore protected/Management/Lylink.Management.Api/Lylink.Management.Api.csproj
 RUN dotnet publish protected/Management/Lylink.Management.Api/Lylink.Management.Api.csproj --no-restore -o out && \
-    rm /app/out/appsettings.json && \
-    rm /app/out/appsettings.Development.json
+    rm -f /app/out/appsettings.json && \
+    rm -f /app/out/appsettings.Development.json
 
 FROM ghcr.io/lilysmith1206/aspnet-with-health-check:latest AS runtime
 WORKDIR /app
