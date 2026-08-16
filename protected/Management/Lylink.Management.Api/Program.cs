@@ -4,9 +4,8 @@ using Lylink.Shared.Api.Authentication;
 using Lylink.Database.Context.Models;
 using Microsoft.EntityFrameworkCore;
 using Lylink.Shared.Api.HealthChecks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace LylinkBackend.ManagementApi;
+namespace Lylink.Management.Api;
 
 public class Program
 {

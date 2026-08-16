@@ -5,7 +5,7 @@ using Lylink.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LylinkBackend.ManagementApi.Controllers;
+namespace Lylink.Management.Api.Controllers;
 
 [ApiController]
 [Authorize]
