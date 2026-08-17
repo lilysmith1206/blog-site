@@ -1,0 +1,25 @@
+name: SSH into Production VPS and Deploy
+
+on:
+  workflow_run:
+    workflows: ["Publish Docker image"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy over SSH
+
+    steps:
+      - name: Deploy project over SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PRODUCTION_HOST_URL }}
+          username: ${{ secrets.PRODUCTION_SSH_USERNAME }}
+          password: ${{ secrets.PRODUCTION_SSH_PASSWORD }}
+          port: ${{ secrets.PRODUCTION_HOST_SSH_PORT }}
+          script: |
+            docker compose -f ./lylink/docker-compose.yml pull 
+            docker compose -f ./lylink/docker-compose.yml up -d  keycloak
+            docker compose -f ./lylink/docker-compose.yml up -d 
