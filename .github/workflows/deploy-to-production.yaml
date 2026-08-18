@@ -33,4 +33,5 @@ jobs:
               sleep 5
             done
             
-            docker compose -f ./lylink/docker-compose.yml up -d 
+            docker compose -f ./lylink/docker-compose.yml up -d
+            docker compose -f ./lylink/docker-compose.yml restart nginx
