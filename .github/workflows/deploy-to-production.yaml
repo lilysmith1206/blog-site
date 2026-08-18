@@ -22,4 +22,15 @@ jobs:
           script: |
             docker compose -f ./lylink/docker-compose.yml pull 
             docker compose -f ./lylink/docker-compose.yml up -d  keycloak
+
+            echo "Waiting for Keycloak to be healthy..."
+            for i in $(seq 1 30); do
+              if curl -sf https://keycloak.lylink.org/health/ready > /dev/null; then
+                echo "Keycloak is ready!"
+                break
+              fi
+              echo "Not ready yet, waiting... ($i/30)"
+              sleep 5
+            done
+            
             docker compose -f ./lylink/docker-compose.yml up -d 
