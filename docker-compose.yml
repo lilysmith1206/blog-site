@@ -103,7 +103,7 @@ services:
   blog-site:
     build:
       context: .
-      dockerfile: public/Lylink.Site.Blog/Lylink.Site.Blog/Dockerfile
+      dockerfile: public/Lylink.Site.Blog/Dockerfile
     depends_on:
       blog-api:
         condition: service_healthy
@@ -114,6 +114,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - AnalyticsApiClient__ClientSecret=${BlogSite__ClientSecret}
+      - AssetsOriginOptions__AssetsEndpointHttps=http://localhost:9089
     ports:
       - "10000:8080"
     labels:
@@ -134,6 +135,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - InboundAuthentication__OpenIdConnect__ClientSecret=${ManagementSite__ClientSecret}
       - ManagementApiClient__ClientSecret=${ManagementSite__ClientSecret}
+      - AssetsOriginOptions__AssetsEndpointHttps=http://localhost:9089
     ports:
       - "10001:8080"
     labels:
