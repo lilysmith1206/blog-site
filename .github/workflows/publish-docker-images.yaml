@@ -37,7 +37,7 @@ jobs:
           uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
           with:
             context: .
-            file: ./public/Lylink.Site.Blog/Lylink.Site.Blog/Dockerfile
+            file: ./public/Lylink.Site.Blog/Dockerfile
             push: true
             tags: |
               ghcr.io/lilysmith1206/blog-site:latest
