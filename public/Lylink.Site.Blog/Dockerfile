@@ -3,8 +3,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN dotnet restore public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.csproj
-RUN dotnet publish public/Lylink.Site.Blog/Lylink.Site.Blog/Lylink.Site.Blog.csproj --no-restore -o out && \
+RUN dotnet restore public/Lylink.Site.Blog/Lylink.Site.Blog.csproj
+RUN dotnet publish public/Lylink.Site.Blog/Lylink.Site.Blog.csproj --no-restore -o out && \
     rm -f /app/out/appsettings.json && \
     rm -f /app/out/appsettings.Development.json
 

@@ -59,9 +59,7 @@ public class Program
         app.UseAntiforgery();
 
         app.MapRazorComponents<App>()
-            .AddInteractiveServerRenderMode()
-            .AddInteractiveWebAssemblyRenderMode()
-            .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
+            .AddInteractiveServerRenderMode();
 
         app.MapHealthChecks("/api/health");
         
